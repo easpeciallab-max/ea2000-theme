@@ -1,0 +1,28 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / local tooling
+.idea/
+.vscode/
+.claude/
+*.sublime-*
+*.swp
+*~
+
+# Logs / temp
+*.log
+*.tmp
+
+# ไม่มี build step และห้าม commit ไฟล์ EA หรือ archive ใด ๆ ลง repo นี้
+*.zip
+*.ex5
+*.ex4
+*.mq5
+*.set
+node_modules/
+vendor/
+
+# ค่าลับทั้งหมด (LINE, ราคา, token) อยู่ใน WordPress Customizer ไม่อยู่ในโค้ด
+*.env

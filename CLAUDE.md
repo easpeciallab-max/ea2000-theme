@@ -1,0 +1,92 @@
+# CLAUDE.md · EA2000 (ea2000.co)
+
+ไฟล์นี้คือบริบทตั้งต้นของโปรเจกต์ EA2000 เขียนเมื่อ 7 กันยายน 2026 จากผลสำรวจแบบอ่านอย่างเดียว อ่านให้ครบก่อนเริ่มงาน
+
+## 1) โปรเจกต์นี้คืออะไร
+- แบรนด์ใหม่ชื่อ **EA2000** · โดเมน **https://ea2000.co/** · ภาษาไทย · เป้าหมายเดียวกับ FENIX PRO: หน้า landing ขาย EA (MetaTrader 5) ให้คนทัก LINE
+- สร้างโดย **โคลนธีม FENIX PRO แล้วรีแบรนด์** (ไม่เขียนธีมใหม่) ต้นทางอยู่ที่ `D:\EA VIDEO\fenix-pro-repo\fenix-pro` (อ่านอย่างเดียว)
+- **ห้ามแตะ** repo/เว็บ FENIX (`fenix-pro-repo`, github easpeciallab-max/fenix-pro-theme, fenixpro-th.com) และ repo `falcon-pro-repo`, `easpecial-repo` ทุกกรณี
+- โฟลเดอร์งานนี้: `D:\EA VIDEO\ea2000-repo` · GitHub repo ใหม่ (เจ้าของเป็นคนสร้าง ชื่อแนะนำ `ea2000-theme`) · ธีมอยู่ใน subfolder `ea2000/`
+
+## 2) สถานะ ea2000.co ตอนนี้ (สำรวจ 7 ก.ย. 2026)
+- เป็น WordPress 7.1 / PHP 8.3 ที่รันธีมเก่า `easpecial` v0.4.0 ("EA Special" เว็บรวม EA หลายตัว โทนเขียว-ขาว) ซึ่ง**จะถูกแทนที่**ด้วยธีม EA2000
+- โครงเปล่า: 0 โพสต์, 0 สินค้า (CPT `ea_product`), หน้า results/guides/articles เป็น placeholder, ตั้ง `noindex,nofollow` ทั้งเว็บ, ไม่มีโลโก้/og:image, privacy policy เป็นข้อความ default อังกฤษ
+- ปุ่ม LINE ยังชี้ `@fenixpro` (ของ FENIX) ต้องเปลี่ยนเป็น LINE OA ของ EA2000
+- ปลั๊กอินที่เห็น: Yoast SEO, Elementor (ฟรี), Site Kit, PixelYourSite (ยังไม่มี pixel id), Cloudflare อยู่หน้าเว็บ, origin ส่ง header แบบ LiteSpeed/Nginx cache
+- หน้าที่มีอยู่: /, /ea-products/, /results/, /guides/, /articles/, /about/, /risk-warning/, /privacy-policy/, /data-deletion/ · ต้องตัดสินใจกับเจ้าของว่าจะลบ/รีไดเรกต์อะไรตอนเปลี่ยนธีม
+
+## 3) หลักการธีม (สืบทอดจาก FENIX ห้ามทำผิด)
+1. **Customizer-driven**: ทุกข้อความ/รูป/ราคา/ลิงก์ ต้องเป็น setting (`fenix_defaults()` + `inc/customizer.php` loop) ห้าม hardcode ใน template
+2. **ห้ามแต่งรีวิวปลอม** (`show_reviews` ปิดจนมีรีวิวจริง) · **ห้ามใส่ตัวเลขผลทดสอบสมมติ** (ปล่อยเป็น placeholder ให้เจ้าของกรอก)
+3. **ห้ามลบหรือลดทอน** disclaimer / risk warning
+4. อังกฤษพิมพ์ใหญ่ด้วย CSS (`text-transform: uppercase` บน body ยกเว้น `.keep-case`)
+5. Escape ทุก output (`esc_html/esc_url/esc_attr`)
+6. ไม่มี build step · WP 6.0+ · แนะนำ PHP 8.1+
+7. ห้ามใช้ em dash / en dash ในโค้ด เนื้อหา และแชท ใช้ `·` หรือ `:` แทน
+
+## 4) เช็กลิสต์รีแบรนด์ (ต้องเสร็จก่อน live) · อ้างอิงบรรทัดในธีม FENIX ณ commit 5fbb811
+**อันตรายสูง ทำก่อน**
+- `functions.php:213` token ยืนยัน Google Search Console ของ FENIX ฝังเป็น default และ `fenix_mod()` บังคับใช้ค่านี้เมื่อค่าว่าง (`:723-725`) → ตั้ง default เป็น `''` และ**ลบ fallback นี้ทิ้ง**
+- `functions.php:660-735` ตาราง migration + fallback ของ LINE/โซเชียล (`:727-733`) ที่เด้งกลับค่าของ FENIX เมื่อเว้นว่าง → ลบ/เขียนใหม่ทั้งบล็อกให้เป็นของ EA2000 หรือไม่มี fallback
+- ไฟล์ EA ของ FENIX `assets/downloads/FENIX_Fast_V4.0.zip` และ `fenix-pro-ea.zip` **ห้ามนำมา** และแก้ `.gitignore` ที่ whitelist ชื่อไฟล์นี้ (`*.zip` + `!...FENIX_Fast_V4.0.zip`)
+- ลิงก์ Zaurix ref ของ FENIX (`:222`) และ Myfxbook fenix-smart-core (`:242`) → ใช้ลิงก์ของ EA2000 หรือเว้นว่างแล้วซ่อนปุ่ม
+
+**แบรนด์ที่ฝังในโค้ด**
+- `header.php:24`, `footer.php:63` ชื่อแบรนด์ hardcode "FENIX PRO EA for MT5" → ทำเป็น setting
+- `functions.php:851-921` เมนูสำรอง + `wp_nav_menu_items` มี slug/label FENIX และ Zaurix → เขียนใหม่
+- `fenix_defaults()` 387 ค่า: 34 ค่ามีคำ FENIX, LINE/โซเชียล/อีเมล/OG description/hero_title/links_fast_* → เขียน default ทั้งหมดใหม่เป็น EA2000
+- `style.css:2-13` Theme Name/Author/Description/Text Domain → EA2000 · โทนสี `:root` (ember/flare/gold) เปลี่ยนตามแบรนด์ใหม่เมื่อเจ้าของกำหนดสี
+- `assets/img/logo.png`, `logo-128.png`, `screenshot.png`, `img/install/step-01..06.jpg` (มีโลโก้ FENIX), รูปการ์ดดาวน์โหลด → เปลี่ยนทั้งหมด
+- ชื่อ Template `FENIX · ...` ใน template-*.php 10 ไฟล์ · ชื่อ panel/section ใน `inc/customizer.php` (`:32`, `:94`, `:565`) · `readme.txt` เขียนใหม่
+- `tests/link-hub-downloads.php` ผูกกับ FENIX FAST → เขียนใหม่ตามของ EA2000
+- REST namespace `fenix/v1` (authcheck, mods) → เปลี่ยนเป็น `ea2000/v1` · prefix ฟังก์ชัน `fenix_` **เก็บไว้ได้** (ผู้ใช้ไม่เห็น เปลี่ยนแล้วเสี่ยงพัง ~900 จุด)
+- **ไม่นำมา**: `content-drafts/`, `elementor-templates/`, `launch-content/`, `CLAUDE-HANDOFF.md`, `AGENTS.md`, `CLAUDE.md` ของ FENIX, บทความ 50 บท (duplicate content)
+
+**ตรวจจบ**: `grep -ri "fenix\|fenixpro\|zaurix\|speccub\|@fenixpro"` ใน repo ใหม่ต้องเหลือเฉพาะ prefix `fenix_` ของโค้ด · `php -l` ทุกไฟล์ผ่าน
+
+## 5) กันไม่ให้ปนกับ FENIX
+- ก่อน `git push` ทุกครั้ง: `git remote -v` ต้องเป็น repo EA2000 และ `git rev-parse --show-toplevel` ต้องอยู่ใน `ea2000-repo`
+- รหัส WordPress ของ EA2000 เก็บที่ `~/.ea2000-wp.env` เท่านั้น (WP_URL / WP_USER / WP_APP_PASSWORD) ห้ามอ่านหรืออ้าง `~/.fenix-wp.env`
+- WP Pusher ของ ea2000.co ชี้ repo EA2000 · subdirectory `ea2000` · **ปิด Push-to-Deploy** จนตรวจรอบแรกผ่าน
+- ไม่ restore backup/All-in-One export ของ FENIX ลงเว็บนี้
+- อย่าเปิด template page ด้วย Elementor
+
+## 6) เครื่องมือในเครื่อง
+- PHP CLI (ไม่อยู่บน PATH): `C:\Users\THANAWUT HR\AppData\Local\Microsoft\WinGet\Packages\PHP.PHP.8.4_Microsoft.Winget.Source_8wekyb3d8bbwe\php.exe` · lint: `"<path>" -l <file>` ก่อน commit ทุกครั้ง
+- Node มีบน PATH · Git Bash และ PowerShell 5.1
+- API WordPress: บนโฮสต์ FENIX header `Authorization` ถูกตัด ต้องส่ง `X-Authorization` แทน (ธีมมี shim) · บน ea2000.co ให้ทดสอบด้วย `GET /wp-json/ea2000/v1/authcheck` ก่อน อย่าสรุปว่าเหมือนกัน · ทดสอบ REST ให้ใส่ query กันแคชและ `Cache-Control: no-cache` เสมอ · payload ภาษาไทยส่งจากไฟล์ UTF-8 (`--data-binary @file`) ห้ามใส่ inline
+
+## 7) ลำดับงาน
+| ขั้น | ใคร | งาน |
+|---|---|---|
+| 1 | เจ้าของ | ยืนยันโลโก้ สี LINE OA ใหม่ โซเชียลใหม่ · สร้าง GitHub repo เปล่า · ยืนยันว่าใช้ WordPress เดิมที่ ea2000.co |
+| 2 | Claude | สร้าง repo ในโฟลเดอร์นี้ ก๊อปเฉพาะไฟล์ธีมจาก FENIX เข้า `ea2000/` เขียน readme · `git init` · ตั้ง remote ตามที่เจ้าของให้ · ยังไม่ push |
+| 3 | Claude | รีแบรนด์ตามข้อ 4 ทั้งหมด · lint · grep ตรวจ 0 ร่องรอย · commit |
+| 4 | เจ้าของ | ติดตั้ง/ตั้ง WP Pusher บน ea2000.co ชี้ repo ใหม่ (Push-to-Deploy ปิด) · สร้าง Application Password · เขียนไฟล์ `~/.ea2000-wp.env` เอง |
+| 5 | Claude | push รอบแรก → เจ้าของกด Update/Activate ธีม → Claude สร้างเพจ+เทมเพลต (slug: backtest, forward-test, pricing, how-to-install, risk-disclosure, go) กรอก Customizer ผ่าน API ตรวจหน้าเว็บจริงแบบไม่ล็อกอิน |
+| 6 | เจ้าของ | GA4 + GSC property ใหม่ · Yoast/Site Kit ตั้งใหม่ · เอา noindex ออกเมื่อพร้อม → Claude ใส่ค่า ตรวจว่ามี google-site-verification แค่แท็กเดียว |
+| 7 | ทั้งคู่ | จัดการเนื้อหาเก่าของ EA Special (ลบ/รีไดเรกต์), Privacy/Terms ของ EA2000, เปิด Push-to-Deploy |
+
+## 8) ตอนเปิดโปรเจกต์ครั้งแรก
+ตรวจแบบอ่านอย่างเดียว สรุปสถานะ ถามค่าที่ยังขาด (ข้อ 7 ขั้น 1) แล้วเริ่มขั้น 2 ได้เลยเมื่อเจ้าของบอก "เริ่ม" · ไม่ push จนเจ้าของยืนยัน remote · ทุกอย่างที่เป็นข้อมูลจริง (ผลเทรด ราคา รีวิว) รอเจ้าของกรอก
+
+## 9) การตัดสินใจของเจ้าของและสถานะล่าสุด (อัปเดต 7 ก.ย. 2026)
+- GitHub repo: https://github.com/easpeciallab-max/ea2000-theme.git (public, สร้างเปล่า 7 ก.ย. 2026) · remote `origin` ตั้งแล้ว · **ยังไม่ push**
+- ขั้น 2 เสร็จ: ธีมจาก FENIX commit 5fbb811 อยู่ใน `ea2000/` (ดึงด้วย `git archive` เฉพาะไฟล์ที่ track) โดย**ไม่นำมา** `assets/downloads/`, `assets/content/`, `logo.png`, `logo-128.png`, การ์ดดาวน์โหลด 2 รูป, `img/install/step-01..06.jpg`, `screenshot.png` · `tests/link-hub-downloads.php` ก๊อปมารอเขียนใหม่
+- **ยังไม่ commit** จนกว่ารีแบรนด์ขั้น 3 เสร็จ เพื่อไม่ให้ประวัติ repo สาธารณะมี token/ลิงก์/แบรนด์ของ FENIX แม้แต่ commit เดียว
+- Line endings: repo นี้ใช้ LF (`.gitattributes`) · เครื่องเจ้าของมี core.autocrlf=true จึงตั้ง `core.autocrlf=false` เฉพาะ repo นี้แล้ว
+- LINE OA, โซเชียล, อีเมล, โลโก้, สี: เจ้าของยืนยันว่าจะมีแน่แต่ยังไม่ส่ง → ใช้ค่าว่าง/placeholder และทุกปุ่มต้องซ่อนเมื่อค่าว่าง
+- ใช้ WordPress เดิมที่ ea2000.co และเปลี่ยนธีมทับ easpecial (ยืนยันแล้ว)
+- หน้า /go/ (link hub): เปิดส่วนการ์ดดาวน์โหลดไว้ รอไฟล์และรูปของ EA2000
+- ราคาและแพ็กเกจ: ใช้โครงเดียวกับ FENIX (pricing_mode `price`, 3 แพ็กเกจ, ราคาเดิม) ตามคำสั่งเจ้าของ · ไม่ใช่ตัวเลขผลทดสอบ จึงไม่ขัดหลักข้อ 3.2
+- ทิศทางดีไซน์: **หน้าตาต้องไม่เหมือน FENIX** แต่โครงหน้าและฟังก์ชันใช้ FENIX เป็นต้นแบบ · เปลี่ยนสี ฟอนต์ องค์ประกอบ เมื่อได้โลโก้และสี
+- (ก) prefix โค้ด `fenix_`/`fenix-`/camelCase: รอเจ้าของเลือก (Claude แนะนำ rename ทั้งหมดเป็น `ea2000` ทีเดียว เพราะ class/handle/cookie โผล่ใน page source)
+- ผลตรวจต้นทาง 7 ก.ย. 2026: เลขบรรทัดในข้อ 4 บางจุดคลาดเคลื่อน ใช้ค่าจริงนี้แทน: `fenix_mod()` `:660-736` ลบ `:665-733` ทั้งก้อน (ตาราง stale เขียนทับค่าจริงด้วย ไม่ใช่แค่ค่าว่าง) · เมนู `:851-941` และ hotfix `wp_nav_menu_items` `:782-813` ลบได้ · template มี 9 ไฟล์ (Elementor 2 ไฟล์ใช้ `FENIX - ` ขีดกลาง) · `tests/`, `.gitignore`, `README.md` อยู่รากรีโป · `screenshot.png` อยู่รากธีม
+- เพิ่มในเช็กลิสต์ข้อ 4: OpenChat FENIX `:229` · slug Zaurix `:224`, `:226` · `links_fast_enabled` `:230` · `links_guide1_*` `:253-254` · fallback hardcode ใน `template-links.php:32-41` และ `:143-155` · รีวิวตัวอย่าง `:406-411` · วันที่ risk page `:607` · `fenix_verification_meta` `:1424-1434` ไม่มี guard ปลั๊กอิน SEO · text domain `fenix-pro` (`functions.php:18, :994, :1054, :1857`, `style.css:13`) · `@package fenix-pro` 19 ไฟล์ · REST `fenix/v1` ที่ `:1732`, `:1767` · สี ember/gold hardcode ใน `style.css` ราว 100 จุดนอก `:root` · `logo-128.png` และ `assets/content/covers/` ไม่มีโค้ดอ้าง
+
+### สถานะขั้น 3 (เสร็จ 7 ก.ย. 2026 · ยังไม่ push)
+- rename ตัวระบุโค้ดทั้งหมด `fenix` → `ea2000` (1003 จุด ฟังก์ชัน 56 ตัวครบ) · text domain/@package `ea2000` · REST `ea2000/v1` · cookie `ea2000_consent` · CSS `.ea2000-*` · เลขบรรทัดในข้อ 4 ถือเป็นประวัติ ให้ใช้ grep แทน
+- รีแบรนด์ครบ: `ea2000_defaults()` เขียนใหม่ทั้ง 389 key (เพิ่ม `brand_name`, `brand_tagline`) · `ea2000_mod()` เป็น lookup ล้วน **ไม่มี fallback** · `ea2000_verification_meta()` มี guard `ea2000_has_seo_plugin()` (Yoast/RankMath/SEOPress ไม่รวม Site Kit) · เมนู fallback ใช้ slug ตามแผน · ลบ hotfix chatgpt และ injection Zaurix · header/footer ใช้ setting แบรนด์ · ทุกปุ่ม LINE/โซเชียล/อีเมลซ่อนเมื่อค่าว่างหรือ `#` · การ์ดดาวน์โหลดใน /go/ แสดงเป็นรูปไม่มีลิงก์เมื่อ url ว่าง
+- ตรวจแล้ว: `php -l` ผ่านทุกไฟล์ · grep `fenix|zaurix|speccub|myfxbook` ในโค้ด = 0 (เหลือเฉพาะคำสั่ง grep ใน README และบริบทใน CLAUDE.md) · ไม่มี em/en dash · LF ทั้งหมด · `tests/link-hub-downloads.php` ผ่าน
+- **ค่าชั่วคราว** รอเจ้าของ: พาเลตน้ำเงิน (`--primary #3B82F6`, `--accent #22D3EE`, `--accent-2 #7DD3FC`) และฟอนต์ Chakra Petch + Bai Jamjuree ใน `style.css :root` (สี hardcode ถูก tokenize แล้ว เปลี่ยนที่เดียว) · รูป placeholder `assets/img/logo.png`, `og-default.png`, `link-download-ea2000.png`, `install/step-01..06.jpg`, `screenshot.png` ต้องแทนด้วยของจริง · `Tested up to: 6.8` ใน style.css ให้ปรับหลังทดสอบบน WP 7.1
+- **รอเจ้าของยืนยัน**: ราคา/แพ็กเกจที่คัดลอกจาก FENIX (Starter ฟรี · Pro 6,990 บาท · VIP 9,990 บาท และตารางเปรียบเทียบ) · คำสัญญาบริการที่ติดมา (ทีมช่วยติดตั้ง/VPS, ไฟล์ Preset, Dashboard ใน EA, อัปเดตตามรอบ, Support ผ่าน LINE) · ป้ายเมนู fallback · slug `/risk-disclosure/` ที่ hardcode ใน footer/404/single/front-page · schema/og:site_name ใช้ Site Title ของ WordPress (ตั้งเป็น EA2000)
