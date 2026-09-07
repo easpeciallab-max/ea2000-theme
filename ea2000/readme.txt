@@ -99,7 +99,7 @@ Repository subdirectory = ea2000
 - แก้ข้อความ ปุ่ม รูปโชว์ และลิงก์ได้ใน Customizer หมวดหน้า Link Hub
 - ปุ่มเสริม (สมัครบัญชี คู่มือ โหลด MT5 กลุ่มแชท) จะแสดงเฉพาะเมื่อกรอก url แล้ว
 - การ์ดดาวน์โหลด (links_fast_enabled) เปิดอยู่เป็นค่าเริ่มต้น ใช้รูป
-  assets/img/link-download-ea2000.png ถ้า links_fast_url ว่าง การ์ดจะแสดงแบบไม่มีลิงก์
+  assets/img/link-download-ea2000-light.png ถ้า links_fast_url ว่าง การ์ดจะแสดงแบบไม่มีลิงก์
 - ห้ามเก็บไฟล์ EA (.zip / .ex5) ไว้ใน repo นี้ (.gitignore กันไว้แล้ว)
   ถ้าต้องการให้โหลดไฟล์ ให้ใส่ลิงก์ภายนอกใน Customizer แทน
 

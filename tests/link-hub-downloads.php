@@ -56,8 +56,8 @@ foreach ( $legacy_tokens as $token ) {
 }
 
 /* 2) รูปการ์ดดาวน์โหลด placeholder ของ EA2000 */
-$card = $theme_dir . '/assets/img/link-download-ea2000.png';
-check( is_file( $card ) && filesize( $card ) > 0, 'placeholder download card assets/img/link-download-ea2000.png exists' );
+$card = $theme_dir . '/assets/img/link-download-ea2000-light.png';
+check( is_file( $card ) && filesize( $card ) > 0, 'placeholder download card assets/img/link-download-ea2000-light.png exists' );
 
 $png_signature = "\x89PNG\x0d\x0a\x1a\x0a";
 $card_header   = is_file( $card ) ? (string) file_get_contents( $card, false, null, 0, 8 ) : '';

@@ -107,3 +107,11 @@
 - **Deploy**: WP Pusher "Update theme" ไม่เขียนไฟล์ (ไม่มี GitHub token ใน WP Pusher > GitHub และ log ปิด) จึงอัปเดตด้วยการอัปโหลด zip จาก `git archive HEAD:ea2000` ผ่าน Themes > Add > Upload > Replace แทน · ถ้าเจ้าของใส่ GitHub token ใน WP Pusher แล้วให้ลอง Update theme ใหม่ก่อนใช้ zip
 - ผล audit สด 8 หน้า (workflow): เทมเพลตถูกทุกหน้า ไม่มี PHP error ไม่มีร่องรอย FENIX เมนูตรงสเปก · แก้แล้ว: footer ไม่ auto-link about/terms, ปุ่มแพ็กเกจและ footer CTA ชี้ /go/ เมื่อยังไม่มี LINE, hint อัปโหลดรูปเห็นเฉพาะแอดมิน (commit 22826cf)
 - ค้างสำหรับขั้น 6: Yoast meta description รายหน้า, breadcrumb "Home" → "หน้าแรก", GA4/GSC, เอา noindex ออก · ค้างขั้น 7: เพจเก่า, Privacy Policy, ธีม EA Special ยังติดตั้ง, PHPSESSID จากปลั๊กอินทำให้ cache BYPASS (ไม่ใช่ธีม)
+
+### สถานะรีสไตล์โทนสว่าง (7 ก.ย. 2026 · commit 7401a3a · deploy แล้ว)
+- เจ้าของส่งโลโก้ (ต้นฉบับใน `D:\EA VIDEO\EA2000\`), LINE OA `https://lin.ee/ye11pwm6`, OpenChat (ตั้งใน Customizer แล้ว) และสั่ง: สีตามโลโก้แต่เว็บโทนสว่าง มินิมอล โมเดิร์น
+- `style.css` แปลงเป็นธีมสว่างทั้งไฟล์: token `--bg #FFFFFF`, `--surface #F6F8F7`, `--text #0B1210`, `--muted #5B6660`, `--primary #1A7F11` (ปรับจาก #1E8E14 ให้ผ่าน 4.5:1), `--primary-deep #166B0F`, `--accent #7CE43A`, `--accent-2 #C9F5A6`, `--steel #8A9199` · กล่องเตือนความเสี่ยงใช้โทนอุ่น `--warn-bg/--warn-text/--warn-border` · ตรวจ contrast แล้วทุกคู่หลัก
+- แบรนด์: setting ใหม่ `brand_wordmark` (default `assets/img/logo-wordmark.webp`) header/footer แสดง wordmark เมื่อมีค่า ว่าง = โลโก้กลม + ชื่อ · `hero_image` default = `assets/img/hero-box.webp` (กล่องสินค้าพื้นโปร่ง) · ไอคอน badge hero = chart · site icon = media 76 (ตรากลมจริง)
+- รูปที่สร้างจากโลโก้จริง: `logo.png` (ตรากลม 512), `logo-wordmark.webp`, `hero-box.webp`, `og-default.png`, การ์ดดาวน์โหลดและ step-01..06 แบบพื้นขาว, `screenshot.png` ชั่วคราว (ควรแทนด้วยภาพจริงของหน้าเว็บ) · สคริปต์สร้างอยู่ใน scratchpad `make-brand-assets.ps1`
+- Deploy ผ่านอัปโหลด zip (WP Pusher ยังไม่มี token) · ตรวจแล้วหน้าเว็บจริงใช้ธีมสว่าง ไม่มี PHP error
+- ค้าง: ให้เจ้าของดูภาพหน้าจอแล้วปรับตามคำสั่ง · ภาพ screenshot.png จริง · `Tested up to` ใน style.css
