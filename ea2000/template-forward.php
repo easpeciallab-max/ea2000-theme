@@ -69,7 +69,7 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 				<div class="shot-empty">
 					<img src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="" loading="lazy" width="110" height="110">
 					<span class="chip">ภาพประกอบ</span>
-					<p>อัปโหลดภาพผล Forward Test ได้ที่ ปรับแต่ง → หน้า Forward Test</p>
+					<?php if ( current_user_can( 'customize' ) ) : ?><p>อัปโหลดภาพผล Forward Test ได้ที่ ปรับแต่ง : หน้า Forward Test (ข้อความนี้เห็นเฉพาะแอดมิน)</p><?php endif; ?>
 				</div>
 			</figure>
 		<?php endif; ?>

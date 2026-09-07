@@ -7,6 +7,8 @@
 
 $ea2000_line  = trim( (string) ea2000_mod( 'line_url' ) );
 $ea2000_line  = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_line; // ยังไม่กรอก LINE OA: ซ่อนทุกปุ่ม LINE
+$ea2000_go_page = get_page_by_path( 'go' );
+$ea2000_go_url  = ( $ea2000_go_page && 'publish' === $ea2000_go_page->post_status ) ? get_permalink( $ea2000_go_page ) : ''; // หน้าติดต่อ/ลิงก์รวม ใช้แทนปุ่ม LINE เมื่อยังไม่กรอก line_url
 $ea2000_intro = ea2000_lines( ea2000_mod( 'footer_tagline' ) );
 $ea2000_prep  = ea2000_lines( ea2000_mod( 'footer_prep_items' ) );
 $ea2000_mobile_nav = array(
@@ -57,6 +59,11 @@ if ( $ea2000_line ) {
 				<?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				<span><?php echo esc_html( ea2000_mod( 'footer_line_text' ) ); ?></span>
 			</a>
+			<?php elseif ( $ea2000_go_url ) : /* ยังไม่กรอก LINE: ส่งไปหน้าติดต่อ /go/ แทน */ ?>
+			<a class="footer-primary" href="<?php echo esc_url( $ea2000_go_url ); ?>">
+				<?php echo ea2000_icon( 'chat' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span>ติดต่อทีมงาน</span>
+			</a>
 			<?php endif; ?>
 		</div>
 
@@ -99,10 +106,9 @@ if ( $ea2000_line ) {
 			<p class="footer-copy">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?> สงวนลิขสิทธิ์</p>
 			<nav class="footer-legal" aria-label="ลิงก์ทางกฎหมาย">
 				<?php
+				/* ลิงก์อัตโนมัติเฉพาะ privacy-policy · ไม่ auto-link slug about/terms เพราะอาจเป็นเพจของแบรนด์เก่า ให้เพิ่มในเมนู footer แทน */
 				foreach ( array(
-					'about'          => 'เกี่ยวกับเรา',
 					'privacy-policy' => 'นโยบายความเป็นส่วนตัว',
-					'terms'          => 'เงื่อนไขการใช้บริการ',
 				) as $ea2000_slug => $ea2000_label ) :
 					$ea2000_legal_page = get_page_by_path( $ea2000_slug );
 					if ( $ea2000_legal_page ) :

@@ -90,3 +90,10 @@
 - ตรวจแล้ว: `php -l` ผ่านทุกไฟล์ · grep `fenix|zaurix|speccub|myfxbook` ในโค้ด = 0 (เหลือเฉพาะคำสั่ง grep ใน README และบริบทใน CLAUDE.md) · ไม่มี em/en dash · LF ทั้งหมด · `tests/link-hub-downloads.php` ผ่าน
 - **ค่าชั่วคราว** รอเจ้าของ: พาเลตน้ำเงิน (`--primary #3B82F6`, `--accent #22D3EE`, `--accent-2 #7DD3FC`) และฟอนต์ Chakra Petch + Bai Jamjuree ใน `style.css :root` (สี hardcode ถูก tokenize แล้ว เปลี่ยนที่เดียว) · รูป placeholder `assets/img/logo.png`, `og-default.png`, `link-download-ea2000.png`, `install/step-01..06.jpg`, `screenshot.png` ต้องแทนด้วยของจริง · `Tested up to: 6.8` ใน style.css ให้ปรับหลังทดสอบบน WP 7.1
 - **รอเจ้าของยืนยัน**: ราคา/แพ็กเกจที่คัดลอกจาก FENIX (Starter ฟรี · Pro 6,990 บาท · VIP 9,990 บาท และตารางเปรียบเทียบ) · คำสัญญาบริการที่ติดมา (ทีมช่วยติดตั้ง/VPS, ไฟล์ Preset, Dashboard ใน EA, อัปเดตตามรอบ, Support ผ่าน LINE) · ป้ายเมนู fallback · slug `/risk-disclosure/` ที่ hardcode ใน footer/404/single/front-page · schema/og:site_name ใช้ Site Title ของ WordPress (ตั้งเป็น EA2000)
+
+### สถานะขั้น 4 ถึง 5 (7 ก.ย. 2026)
+- push รอบแรกขึ้น `easpeciallab-max/ea2000-theme` แล้ว (commit `3386d8d`) · บัญชี git ในเครื่องคือ `easpecial-th` ซึ่งเจ้าของเพิ่มเป็น collaborator (write) แล้ว
+- WP Pusher 3.0.17 มีอยู่บน ea2000.co อยู่แล้ว (เคยใช้กับธีม easpecial) · เพิ่มธีม EA2000 จาก repo นี้ branch `main` subdirectory `ea2000` **Push-to-Deploy ปิด** · อัปเดตธีมครั้งถัดไป: WP Pusher > Themes > Update theme
+- ธีม EA2000 **เปิดใช้งานแล้ว** บนเว็บจริง · ธีม EA Special ยังติดตั้งอยู่แต่ไม่ active (ลบได้ในขั้น 7)
+- ยังค้าง: Application Password (`~/.ea2000-wp.env`) · เพจ+เทมเพลต 6 หน้า · Customizer · Yoast title ของหน้าแรกยังเป็น "EA Special | ..." และ Search Engine Visibility ยังปิดการ index (ขั้น 6)
+- ควบคุมเบราว์เซอร์ผ่านส่วนขยาย Claude in Chrome ในโปรไฟล์ Chrome "SATOSHI" (easpeciallab@gmail.com) ซึ่งล็อกอิน wp-admin เป็น ADMIN · Claude ไม่พิมพ์รหัสผ่านให้

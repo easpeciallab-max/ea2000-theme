@@ -15,6 +15,8 @@ ea2000_page_hero( 'Pricing', $ea2000_title ? $ea2000_title : 'แพ็กเก
 
 $ea2000_line     = trim( (string) ea2000_mod( 'line_url' ) );
 $ea2000_has_line = '' !== $ea2000_line && '#' !== $ea2000_line; /* เว้นว่าง LINE = ซ่อนปุ่มทัก LINE ทั้งหน้า */
+$ea2000_go_page  = get_page_by_path( 'go' );
+$ea2000_go_url   = ( $ea2000_go_page && 'publish' === $ea2000_go_page->post_status ) ? get_permalink( $ea2000_go_page ) : ''; /* ยังไม่มี LINE: ปุ่มแพ็กเกจส่งไปหน้าติดต่อ /go/ แทน */
 $ea2000_mode = ea2000_mod( 'pricing_mode' );
 ?>
 
@@ -62,6 +64,10 @@ $ea2000_mode = ea2000_mod( 'pricing_mode' );
 					</ul>
 					<?php if ( $ea2000_has_line ) : ?>
 					<a class="btn <?php echo $k_featured ? 'btn-fire' : 'btn-ghost'; ?> btn-block" href="<?php echo esc_url( $ea2000_line ); ?>" target="_blank" rel="noopener">
+						<?php echo esc_html( ea2000_mod( 'pricing_btn_text' ) ); ?>
+					</a>
+					<?php elseif ( $ea2000_go_url ) : ?>
+					<a class="btn <?php echo $k_featured ? 'btn-fire' : 'btn-ghost'; ?> btn-block" href="<?php echo esc_url( $ea2000_go_url ); ?>">
 						<?php echo esc_html( ea2000_mod( 'pricing_btn_text' ) ); ?>
 					</a>
 					<?php endif; ?>
