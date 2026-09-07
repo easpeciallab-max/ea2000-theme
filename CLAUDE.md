@@ -97,3 +97,13 @@
 - ธีม EA2000 **เปิดใช้งานแล้ว** บนเว็บจริง · ธีม EA Special ยังติดตั้งอยู่แต่ไม่ active (ลบได้ในขั้น 7)
 - ยังค้าง: Application Password (`~/.ea2000-wp.env`) · เพจ+เทมเพลต 6 หน้า · Customizer · Yoast title ของหน้าแรกยังเป็น "EA Special | ..." และ Search Engine Visibility ยังปิดการ index (ขั้น 6)
 - ควบคุมเบราว์เซอร์ผ่านส่วนขยาย Claude in Chrome ในโปรไฟล์ Chrome "SATOSHI" (easpeciallab@gmail.com) ซึ่งล็อกอิน wp-admin เป็น ADMIN · Claude ไม่พิมพ์รหัสผ่านให้
+
+### สถานะขั้น 5 (เสร็จ 7 ก.ย. 2026)
+- Application Password ใช้งานได้: `Authorization: Basic` ถึง PHP บนโฮสต์นี้ (ต่างจาก FENIX) และ `X-Authorization` ก็ใช้ได้ · helper อ่าน env อยู่ที่ scratchpad `wpapi.sh` (รหัสมีช่องว่าง ต้องอ่านแบบไม่ source และตัดช่องว่างออก)
+- เพจใหม่ (publish): backtest 49 · forward-test 50 · pricing 51 · how-to-install 52 · risk-disclosure 53 · go 54 (ชื่อ "ติดต่อและลิงก์รวม EA2000") · หน้าแรกใหม่ `home-ea2000` id 65 ตั้งเป็น page_on_front (ไม่มี Elementor data) · posts page ยังเป็น articles 35
+- เมนูใหม่: id 6 "EA2000 เมนูหลัก" (primary) · id 7 "EA2000 เมนูท้ายเว็บ" (footer) · เมนูเก่า id 4, 5 ยังอยู่แต่ไม่ผูก location
+- ตั้งค่า: tagline "ระบบเทรดอัตโนมัติสำหรับ MetaTrader 5" · site icon = media 67 · featured image ทุกเพจ = og-default (ให้ Yoast ออก og:image) · GTranslate: Translate from = Thai และเปิด th ในรายการ
+- เพจเก่า EA Special: `home` 20 และ `about` 27 เปลี่ยนเป็น draft (แบรนด์เก่าหลุดผ่าน footer) · ยัง publish: results 23, guides 25, risk-warning 29, data-deletion 11, privacy-policy 3 (ข้อความ default อังกฤษ) → ขั้น 7 ตัดสินใจลบ/redirect/เขียนใหม่
+- **Deploy**: WP Pusher "Update theme" ไม่เขียนไฟล์ (ไม่มี GitHub token ใน WP Pusher > GitHub และ log ปิด) จึงอัปเดตด้วยการอัปโหลด zip จาก `git archive HEAD:ea2000` ผ่าน Themes > Add > Upload > Replace แทน · ถ้าเจ้าของใส่ GitHub token ใน WP Pusher แล้วให้ลอง Update theme ใหม่ก่อนใช้ zip
+- ผล audit สด 8 หน้า (workflow): เทมเพลตถูกทุกหน้า ไม่มี PHP error ไม่มีร่องรอย FENIX เมนูตรงสเปก · แก้แล้ว: footer ไม่ auto-link about/terms, ปุ่มแพ็กเกจและ footer CTA ชี้ /go/ เมื่อยังไม่มี LINE, hint อัปโหลดรูปเห็นเฉพาะแอดมิน (commit 22826cf)
+- ค้างสำหรับขั้น 6: Yoast meta description รายหน้า, breadcrumb "Home" → "หน้าแรก", GA4/GSC, เอา noindex ออก · ค้างขั้น 7: เพจเก่า, Privacy Policy, ธีม EA Special ยังติดตั้ง, PHPSESSID จากปลั๊กอินทำให้ cache BYPASS (ไม่ใช่ธีม)
