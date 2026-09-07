@@ -19,10 +19,17 @@
 <header class="site-header" id="top">
 	<div class="container header-inner">
 
+		<?php $ea2000_wordmark = trim( (string) ea2000_mod( 'brand_wordmark' ) ); ?>
+		<?php if ( $ea2000_wordmark ) : /* โลโก้แนวนอน */ ?>
+		<a class="brand brand--wordmark" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+			<img class="brand-wordmark" src="<?php echo esc_url( $ea2000_wordmark ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" width="1400" height="255">
+		</a>
+		<?php else : /* โลโก้กลม + ชื่อแบรนด์ */ ?>
 		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 			<img class="brand-logo" src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="46" height="46">
 			<span class="brand-name"><?php echo esc_html( ea2000_mod( 'brand_name' ) ); ?><small><?php echo esc_html( ea2000_mod( 'brand_tagline' ) ); ?></small></span>
 		</a>
+		<?php endif; ?>
 
 		<nav class="site-nav" id="site-nav" aria-label="เมนูหลัก">
 			<?php

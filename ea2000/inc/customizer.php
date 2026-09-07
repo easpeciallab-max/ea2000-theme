@@ -47,6 +47,7 @@ function ea2000_customize_register( $wp_customize ) {
 			'fields'      => array(
 				'brand_name'      => array( 'ชื่อแบรนด์ (แสดงข้างโลโก้)', 'text', 'ค่าเริ่มต้น EA2000' ),
 				'brand_tagline'   => array( 'คำต่อท้ายชื่อแบรนด์ (บรรทัดเล็กใต้ชื่อ)', 'text', 'เช่น EA for MT5' ),
+				'brand_wordmark'  => array( 'โลโก้แบบ wordmark (แนวนอน)', 'image', 'แสดงแทนโลโก้กลม + ชื่อแบรนด์บนเมนูและ footer · เว้นว่างเพื่อกลับไปแสดงโลโก้กลมพร้อมชื่อแบรนด์ · แนะนำ PNG พื้นโปร่ง กว้างประมาณ 1400px' ),
 				'line_url'        => array( 'ลิงก์ LINE OA', 'url', 'เช่น https://lin.ee/xxxxx หรือ https://line.me/R/ti/p/@xxxxx' ),
 				'facebook_url'    => array( 'ลิงก์ Facebook Page (ถ้ามี)', 'url' ),
 				'instagram_url'   => array( 'ลิงก์ Instagram (ถ้ามี)', 'url' ),
@@ -71,7 +72,7 @@ function ea2000_customize_register( $wp_customize ) {
 				'hero_btn1_text' => array( 'ข้อความปุ่มหลัก (ลิงก์ไป LINE)', 'text' ),
 				'hero_btn2_text' => array( 'ข้อความปุ่มรอง (เลื่อนไปส่วนรู้จักระบบ)', 'text' ),
 				'hero_note'      => array( 'ข้อความเตือนความเสี่ยงใต้ปุ่ม', 'text' ),
-				'hero_image'     => array( 'ภาพประกอบ Hero (ไม่ใส่ = ใช้โลโก้)', 'image', 'แนะนำภาพ Dashboard หรือหน้าจอ MT5 ขนาดกว้างอย่างน้อย 900px' ),
+				'hero_image'     => array( 'ภาพประกอบ Hero (ไม่ใส่ = ใช้โลโก้)', 'image', 'ค่าเริ่มต้นคือภาพกล่องสินค้าพื้นโปร่ง · ใส่ภาพ Dashboard หรือหน้าจอ MT5 ได้ แนะนำกว้างอย่างน้อย 900px' ),
 			),
 		),
 

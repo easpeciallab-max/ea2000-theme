@@ -53,7 +53,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 	<div class="container hero-inner">
 		<div class="hero-copy reveal">
 			<span class="badge">
-				<?php echo ea2000_icon( 'flame', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<?php echo ea2000_icon( 'chart', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				<?php echo esc_html( ea2000_mod( 'hero_badge' ) ); ?>
 			</span>
 			<h1 class="hero-title"><?php echo esc_html( ea2000_mod( 'hero_title' ) ); ?></h1>
@@ -87,7 +87,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 		<div class="hero-visual <?php echo $ea2000_is_photo ? 'hero-visual--photo' : 'hero-visual--orb'; ?> reveal">
 			<?php if ( $ea2000_is_photo ) : ?>
 				<figure class="hero-frame">
-					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'hero_title' ) ); ?>" loading="eager" fetchpriority="high" decoding="async">
+					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" loading="eager" fetchpriority="high" decoding="async" width="1000" height="1000">
 				</figure>
 			<?php else : ?>
 				<div class="hero-orb">

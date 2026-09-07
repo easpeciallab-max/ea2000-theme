@@ -10,6 +10,7 @@ $ea2000_line  = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_
 $ea2000_go_page = get_page_by_path( 'go' );
 $ea2000_go_url  = ( $ea2000_go_page && 'publish' === $ea2000_go_page->post_status ) ? get_permalink( $ea2000_go_page ) : ''; // หน้าติดต่อ/ลิงก์รวม ใช้แทนปุ่ม LINE เมื่อยังไม่กรอก line_url
 $ea2000_intro = ea2000_lines( ea2000_mod( 'footer_tagline' ) );
+$ea2000_wordmark = trim( (string) ea2000_mod( 'brand_wordmark' ) ); // โลโก้แนวนอน (เว้นว่าง = โลโก้กลม + ชื่อแบรนด์)
 $ea2000_prep  = ea2000_lines( ea2000_mod( 'footer_prep_items' ) );
 $ea2000_mobile_nav = array(
 	array(
@@ -70,10 +71,16 @@ if ( $ea2000_line ) {
 		<div class="footer-main">
 
 			<div class="footer-brand">
+				<?php if ( $ea2000_wordmark ) : ?>
+				<a class="brand brand--wordmark" href="<?php echo esc_url( home_url( '/' ) ); ?>">
+					<img class="brand-wordmark" src="<?php echo esc_url( $ea2000_wordmark ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" width="1400" height="255" loading="lazy">
+				</a>
+				<?php else : ?>
 				<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">
 					<img class="brand-logo" src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="<?php echo esc_attr( get_bloginfo( 'name' ) ); ?>" width="64" height="64">
 					<span class="brand-name"><?php echo esc_html( ea2000_mod( 'brand_name' ) ); ?><small><?php echo esc_html( ea2000_mod( 'brand_tagline' ) ); ?></small></span>
 				</a>
+				<?php endif; ?>
 				<?php if ( $ea2000_intro ) : ?>
 				<div class="footer-tagline">
 					<?php foreach ( $ea2000_intro as $ea2000_paragraph ) : ?>

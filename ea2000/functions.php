@@ -186,8 +186,9 @@ function ea2000_defaults() {
 
 	$d = array(
 		/* แบรนด์ */
-		'brand_name'    => 'EA2000',
-		'brand_tagline' => 'EA for MT5',
+		'brand_name'     => 'EA2000',
+		'brand_tagline'  => 'EA for MT5',
+		'brand_wordmark' => $img_assets . 'logo-wordmark.webp', // โลโก้แนวนอน (เว้นว่าง = แสดงโลโก้กลม + ชื่อแบรนด์)
 
 		/* ทั่วไป (เว้นว่าง = ซ่อนปุ่ม/ลิงก์นั้น จนกว่าเจ้าของจะกรอก) */
 		'line_url'        => '',
@@ -283,7 +284,7 @@ function ea2000_defaults() {
 		'hero_btn1_text' => 'สอบถามรายละเอียด',
 		'hero_btn2_text' => 'รู้จักระบบ',
 		'hero_note'      => 'การเทรดมีความเสี่ยง โปรดศึกษาข้อมูลก่อนตัดสินใจใช้งาน',
-		'hero_image'     => '',
+		'hero_image'     => $img_assets . 'hero-box.webp', // ภาพกล่องสินค้าพื้นโปร่ง 1000×1000
 
 		/* ปัญหานักเทรด */
 		'show_pain'     => true,
@@ -1694,7 +1695,7 @@ function ea2000_mods_sanitize( $key, $value, $default ) {
 	if ( is_bool( $default ) ) {
 		return in_array( $value, array( true, 1, '1', 'true', 'on' ), true );
 	}
-	if ( preg_match( '/(_url|_img|_image|_logo)$/', $key ) ) {
+	if ( preg_match( '/(_url|_img|_image|_logo|_wordmark)$/', $key ) ) {
 		return esc_url_raw( (string) $value );
 	}
 	return sanitize_textarea_field( (string) $value );
