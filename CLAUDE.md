@@ -142,3 +142,14 @@
 - style.css: ลบบล็อก GTranslate ที่ตายแล้ว 170 บรรทัด · `Tested up to: 7.1`
 - **เนื้อหาที่เขียนแล้วบน WordPress**: `/privacy-policy/` เป็น PDPA ภาษาไทย (publish แล้ว ใช้ LINE OA เป็นช่องทางใช้สิทธิ์) · `/data-deletion/` เดิมว่างเปล่า ตอนนี้มีขั้นตอนขอลบข้อมูลจริง (publish แล้ว) · `/about/` (id 27) และ `/terms-of-use/` (id 33) เขียนเป็น **ฉบับร่าง** รอเจ้าของเติมส่วนที่ต้องตัดสินใจเอง · ลบเมนูเก่า id 4, 5 แล้ว
 - **ค้าง deploy**: เบราว์เซอร์ที่ล็อกอิน wp-admin หลุดการเชื่อมต่อ · zip พร้อมที่ scratchpad `ea2000-theme.zip` (682 KB) · หลัง deploy ต้องทำต่อ: ตั้ง title/meta 8 หน้าผ่าน REST, ตรวจว่า 301 ทำงาน, ตรวจ SoftwareApplication ด้วย Rich Results Test
+
+## 12) วิธี deploy ที่ถูกต้อง (แก้ไข 8 ก.ย. 2026) และงานที่ทำเสร็จรอบนี้
+- **Push-to-Deploy เปิดแล้วสำหรับธีม EA2000** ที่ WP Pusher > Themes > Edit EA2000 · ต่อจากนี้ push ขึ้น GitHub แล้วเว็บดึงเอง ไม่ต้องอัปโหลด zip อีก
+- **ข้อเท็จจริงที่ผมเคยสรุปผิด**: WP Pusher **ไม่ต้องใช้ GitHub token** สำหรับ repo public (ทดสอบแล้ว API และไฟล์ zip ตอบ 200 โดยไม่ยืนยันตัวตน) · ปุ่ม "Update theme" ใช้ได้จริง แต่ต้องคลิกผ่าน JS (`btn.click()`) เพราะการคลิกด้วย ref บางครั้งไม่ส่งฟอร์ม · เหตุผล "ไม่มี token" ที่เคยบันทึกไว้ในข้อ 5 **ไม่ถูกต้อง**
+- **UI wp-admin คลิกไม่ติดบ่อย**: ปุ่ม Install Now, Replace installed with uploaded, Update theme และ media picker ของ Yoast · แก้ด้วยการเรียก `javascript_tool` สั่ง `.click()` ตรง ๆ หรือเปิด href ของลิงก์โดยตรง
+- **Yoast ตั้งค่าแล้ว**: Site representation = Organization ชื่อ `EA2000` ชื่อรอง `EA2000 EA MT5` (แก้ปัญหาชื่อชนหูฟัง SIMGOT) โลโก้ = media 76 · Site image (og:image) = media 84 `ea2000-share.jpg` · breadcrumb แปลไทยครบ (หน้าแรก, คลังบทความของ, ผลการค้นหาสำหรับ, ไม่พบหน้าที่ค้นหา)
+- **title และ meta description ตั้งครบ 10 หน้าผ่าน REST** (`_yoast_wpseo_title`, `_yoast_wpseo_metadesc` ที่ inc/seo.php register ไว้) · ทุก title ไม่เกิน 60 ตัวอักษร ทุก description ไม่เกิน 155 · **ไม่มีคำว่าทองหรือ XAUUSD** ตามที่เจ้าของยืนยันว่าเทรดหลายคู่เงิน
+- **redirect ทำงานจริงแล้ว**: /results/ → /backtest/ · /guides/ → /how-to-install/ · /risk-warning/ → /risk-disclosure/ · /ea-products/ → /pricing/ (301 ทั้งหมด) · **Cloudflare แคชหน้าเก่าไว้** ผู้เข้าชมบางคนจะยังเห็น 200 จนแคชหมดอายุ ควร purge จาก Cloudflare
+- **น้ำหนักหน้าแรกหลังปรับ**: HTML 72 KB · CSS+JS 12.5 KB (เดิมเกือบ 500 KB) · รูป 151 KB
+- **เจ้าของยืนยัน 8 ก.ย. 2026**: FENIX กับ EA2000 เป็นเครือเดียวกัน แยกแบรนด์เพื่อสร้างฐานลูกค้าคนละกลุ่ม → ราคา แพ็กเกจ คำสัญญาบริการ และเงื่อนไข **ใช้ตาม FENIX ได้เลย ไม่ต้องถามอีก** · เนื้อหาให้เรียบเรียงใหม่ ไม่ก๊อปคำต่อคำ เพื่อเลี่ยง duplicate content
+- **คำสั่งเจ้าของ: ห้ามปลด noindex จนกว่าจะสั่ง** และห้ามทำงานนอกเหนือคำสั่ง
