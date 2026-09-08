@@ -6,7 +6,7 @@ Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
 Version: 1.0.0
 Requires at least: 6.0
-Tested up to: 6.8
+Tested up to: 7.1
 Requires PHP: 8.1
 License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -824,176 +824,7 @@ h3 {
 	letter-spacing: 0.06em;
 }
 
-.language-switcher--gtranslate select,
-.language-switcher--gtranslate .gt_selector {
-	min-width: 84px;
-	height: 40px;
-	padding: 0 34px 0 14px;
-	border: 1px solid var(--border);
-	border-radius: 999px;
-	background: var(--surface);
-	color: var(--text);
-	font-family: var(--font-display);
-	font-weight: 700;
-	font-size: 0.82rem;
-	letter-spacing: 0.04em;
-	cursor: pointer;
-}
-
-.language-switcher--gtranslate select:hover,
-.language-switcher--gtranslate .gt_selector:hover {
-	border-color: var(--border-primary);
-	background-color: rgba(var(--primary-rgb), 0.08);
-}
-
-.language-switcher--gtranslate select:focus-visible,
-.language-switcher--gtranslate .gt_selector:focus-visible {
-	outline: 2px solid var(--primary);
-	outline-offset: 3px;
-	border-color: var(--border-primary);
-}
-
-.language-switcher--gtranslate img {
-	display: inline-block;
-	width: 18px;
-	height: auto;
-	margin-right: 6px;
-	vertical-align: middle;
-}
-
-.site-header .language-switcher--gtranslate #gt_float_wrapper {
-	position: relative !important;
-	display: flex !important;
-	align-items: center !important;
-	justify-content: flex-end !important;
-	height: var(--header-h) !important;
-	overflow: visible !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher {
-	overflow: visible !important;
-	position: static !important;
-	border: 1px solid var(--border) !important;
-	border-radius: 999px !important;
-	background: var(--surface) !important;
-	box-shadow: none !important;
-	color: var(--text) !important;
-	font-family: var(--font-display) !important;
-	font-size: 0.82rem !important;
-	line-height: 1 !important;
-}
-
-.site-header .language-switcher--gtranslate .gtranslate_wrapper,
-.site-header .language-switcher--gtranslate .gt_float_switcher,
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected,
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected .gt-current-lang {
-	width: auto !important;
-	min-width: 100px !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher:hover {
-	border-color: var(--border-primary) !important;
-	background: rgba(var(--primary-rgb), 0.08) !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected {
-	overflow: visible !important;
-	border-radius: 999px !important;
-	background: transparent !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected .gt-current-lang {
-	display: flex !important;
-	align-items: center !important;
-	gap: 8px !important;
-	height: 40px !important;
-	padding: 0 14px !important;
-	color: var(--text) !important;
-	font-weight: 700 !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected .gt-current-lang img,
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options img {
-	display: inline-block !important;
-	width: 24px !important;
-	height: 16px !important;
-	margin: 0 !important;
-	object-fit: cover !important;
-	border-radius: 3px !important;
-	box-shadow: 0 0 0 1px var(--border) !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected .gt-current-lang span.gt-lang-code {
-	top: 0 !important;
-	color: var(--text) !important;
-	font-size: 0.82rem !important;
-	line-height: 1 !important;
-	letter-spacing: 0.08em !important;
-	text-transform: uppercase !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt-selected .gt-current-lang span.gt_float_switcher-arrow {
-	width: 12px !important;
-	height: 18px !important;
-	filter: none !important;
-	opacity: 0.72 !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options {
-	position: absolute !important;
-	top: calc(100% + 1px) !important;
-	right: 0 !important;
-	z-index: 9999 !important;
-	width: min(240px, calc(100vw - 32px)) !important;
-	min-width: 210px !important;
-	max-height: 340px !important;
-	padding: 6px !important;
-	border: 1px solid var(--border) !important;
-	border-radius: 16px !important;
-	background: var(--bg) !important;
-	box-shadow: var(--shadow-lg) !important;
-	transform: translateY(0) !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options.gt-open {
-	display: flex !important;
-	flex-direction: column !important;
-	gap: 2px !important;
-	opacity: 1 !important;
-	transform: translateY(0) !important;
-}
-
-/* ดันภาษาไทยขึ้นเป็นอันแรก (ทำงานเมื่อ gt_options เป็น flex ตอนเปิด) */
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options a[data-gt-lang="th"] {
-	order: -1 !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options a {
-	display: flex !important;
-	align-items: center !important;
-	gap: 12px !important;
-	width: 100% !important;
-	min-width: 0 !important;
-	margin: 0 !important;
-	padding: 11px 14px !important;
-	border: 0 !important;
-	border-radius: 10px !important;
-	background: transparent !important;
-	box-shadow: none !important;
-	color: var(--muted) !important;
-	font-family: var(--font-display) !important;
-	font-size: 0.92rem !important;
-	font-weight: 500 !important;
-	line-height: 1.2 !important;
-	text-transform: none !important;
-	transition: background-color 0.15s ease, color 0.15s ease, transform 0.15s ease !important;
-}
-
-.site-header .language-switcher--gtranslate .gt_float_switcher .gt_options a:hover {
-	background: rgba(var(--primary-rgb), 0.08) !important;
-	color: var(--primary-deep) !important;
-	transform: translateX(3px) !important;
-}
+/* กฎ CSS ของปลั๊กอิน GTranslate ถูกลบเมื่อ 8 ก.ย. 2026 เพราะปิดการใช้งานปลั๊กอินแล้ว · ถ้าต้องใช้อีก ดูของเดิมได้ใน git history ที่ commit 9c231c0 ไฟล์ ea2000/style.css บรรทัด 827 ถึง 996 */
 
 .nav-toggle {
 	display: none;
@@ -5911,12 +5742,7 @@ a.lh-feature-frame:hover {
 	text-wrap: balance;
 }
 
-/* หน้านี้เป็น LP ยิงแอด · ซ่อนวิดเจ็ตแปลภาษา (GTranslate) + ตัวสลับภาษาที่ลอยมาทับ ให้สะอาดตรงดีไซน์ */
-.link-hub-page [class*="gtranslate"],
-.link-hub-page [id*="gtranslate"],
-.link-hub-page [class*="gt_float"],
-.link-hub-page [id*="gt_float"],
-.link-hub-page [class*="gt-translate"],
+/* หน้านี้เป็น LP ยิงแอด · ซ่อนตัวสลับภาษาที่ลอยมาทับ ให้สะอาดตรงดีไซน์ */
 .link-hub-page .language-switcher {
 	display: none !important;
 }
@@ -6009,7 +5835,7 @@ a.lh-feature-frame:hover {
 	color: var(--header-accent);
 }
 
-/* ตัวสลับภาษาของธีม (ชิป + แผง) · ส่วนของ GTranslate ไม่แตะ */
+/* ตัวสลับภาษาของธีม (ชิป + แผง) */
 .site-header .language-switcher summary {
 	border-color: var(--ink-border-strong);
 	background: var(--header-chip);

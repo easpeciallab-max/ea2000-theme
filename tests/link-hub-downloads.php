@@ -56,12 +56,13 @@ foreach ( $legacy_tokens as $token ) {
 }
 
 /* 2) รูปการ์ดดาวน์โหลด placeholder ของ EA2000 */
-$card = $theme_dir . '/assets/img/link-download-ea2000-light.png';
-check( is_file( $card ) && filesize( $card ) > 0, 'placeholder download card assets/img/link-download-ea2000-light.png exists' );
+$card = $theme_dir . '/assets/img/card-download.webp';
+check( is_file( $card ) && filesize( $card ) > 0, 'placeholder download card assets/img/card-download.webp exists' );
 
-$png_signature = "\x89PNG\x0d\x0a\x1a\x0a";
-$card_header   = is_file( $card ) ? (string) file_get_contents( $card, false, null, 0, 8 ) : '';
-check( $png_signature === $card_header, 'download card image is a valid PNG file' );
+$card_header = is_file( $card ) ? (string) file_get_contents( $card, false, null, 0, 12 ) : '';
+$is_png      = 0 === strpos( $card_header, "\x89PNG" );
+$is_webp     = 0 === strpos( $card_header, 'RIFF' ) && 'WEBP' === substr( $card_header, 8, 4 );
+check( $is_png || $is_webp, 'download card image is a valid PNG or WebP file' );
 
 /* 3) ต้องไม่มีไฟล์ EA หรือ archive ใต้ ea2000/ */
 $found = array();

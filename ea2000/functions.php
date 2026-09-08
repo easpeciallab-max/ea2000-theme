@@ -186,9 +186,13 @@ function ea2000_defaults() {
 
 	$d = array(
 		/* แบรนด์ */
-		'brand_name'     => 'EA2000',
-		'brand_tagline'  => 'EA for MT5',
-		'brand_wordmark' => $img_assets . 'logo-wordmark.webp', // โลโก้แนวนอน (เว้นว่าง = แสดงโลโก้กลม + ชื่อแบรนด์)
+		'brand_name'           => 'EA2000',
+		'brand_tagline'        => 'EA for MT5',
+		'brand_wordmark'       => $img_assets . 'wordmark.webp', // โลโก้แนวนอน (เว้นว่าง = แสดงโลโก้กลม + ชื่อแบรนด์)
+		'product_name'         => 'EA2000', // ชื่อสินค้าที่ส่งให้ Google ในข้อมูลโครงสร้าง (SoftwareApplication) · เว้นว่าง = ใช้ชื่อแบรนด์
+		'product_os'           => 'Windows', // ระบบปฏิบัติการที่รันโปรแกรมได้จริง (operatingSystem) · MT5 เป็นแพลตฟอร์ม ไม่ใช่ OS จึงอยู่ในช่องถัดไป
+		'product_requirements' => 'MetaTrader 5', // แพลตฟอร์มที่ต้องมี (softwareRequirements)
+		'product_version'      => '', // เวอร์ชันของ EA (softwareVersion) · เว้นว่าง = ไม่ประกาศเวอร์ชัน
 
 		/* ทั่วไป (เว้นว่าง = ซ่อนปุ่ม/ลิงก์นั้น จนกว่าเจ้าของจะกรอก) */
 		'line_url'        => '',
@@ -215,7 +219,7 @@ function ea2000_defaults() {
 		'mobile_nav_line_label'    => 'ทัก LINE',
 
 		/* SEO / แชร์ลิงก์ (Open Graph) */
-		'og_default_image'       => $img_assets . 'og-default.png',
+		'og_default_image'       => $img_assets . 'og-share.jpg',
 		'og_default_description' => 'EA2000 · ระบบช่วยเทรดอัตโนมัติ (Expert Advisor) บน MetaTrader 5 เน้นวินัยและการบริหารความเสี่ยง',
 		'search_console_verify'  => '',
 		'bing_verify'            => '',
@@ -235,10 +239,10 @@ function ea2000_defaults() {
 		'links_openchat_label' => 'เข้ากลุ่ม EA2000 OpenChat',
 		'links_openchat_url'   => '',
 		'links_fast_enabled' => true,
-		'links_fast_img'     => $img_assets . 'link-download-ea2000-light.png',
+		'links_fast_img'     => $img_assets . 'card-download.webp',
 		'links_fast_url'     => '',
 		'links_fast_alt'     => 'ดาวน์โหลด EA2000 สำหรับ MetaTrader 5',
-		'links_feature_img'     => $img_assets . 'link-download-ea2000-light.png',
+		'links_feature_img'     => $img_assets . 'card-download.webp',
 		'links_feature_url'     => '',
 		'links_feature_caption' => '',
 		'links_feature2_img'     => '',
@@ -357,7 +361,7 @@ function ea2000_defaults() {
 		'stat1_label'       => 'ช่วงเวลาทดสอบ',
 		'stat1_value'       => 'ระบุช่วงเวลา',
 		'stat2_label'       => 'คู่เงินที่ทดสอบ',
-		'stat2_value'       => 'เช่น XAUUSD',
+		'stat2_value'       => 'ระบุคู่เงินที่ทดสอบ',
 		'stat3_label'       => 'Timeframe',
 		'stat3_value'       => 'เช่น M15',
 		'stat4_label'       => 'ทุนเริ่มต้น',
@@ -381,12 +385,13 @@ function ea2000_defaults() {
 		'fit_bad_items'  => "คนที่หวังกำไรเร็วหรือรวยทางลัด\nคนที่รับความเสี่ยงและการขาดทุนไม่ได้\nคนที่ไม่ต้องการศึกษาการใช้งานเลย\nคนที่คิดว่า EA จะทำเงินให้ได้ตลอดเวลา\nคนที่ไม่ได้ใช้เงินเย็นในการเทรด",
 
 		/* แพ็กเกจ (ราคาและเงื่อนไขรอเจ้าของยืนยัน) */
-		'show_pricing'     => true,
-		'pricing_title'    => 'แพ็กเกจการใช้งาน',
-		'pricing_subtitle' => 'เลือกแพ็กเกจที่เหมาะกับระดับการใช้งานของคุณ หรือทักมาปรึกษาทีมงานก่อนตัดสินใจได้',
-		'pricing_mode'     => 'price',
-		'pricing_btn_text' => 'สอบถามแพ็กเกจนี้',
-		'pricing_note'     => 'ราคาและเงื่อนไขเป็นไปตามแพ็กเกจที่เลือก สอบถามรายละเอียดล่าสุดและความเหมาะสมกับบัญชีของคุณได้ทาง LINE',
+		'show_pricing'      => true,
+		'pricing_title'     => 'แพ็กเกจการใช้งาน',
+		'pricing_subtitle'  => 'เลือกแพ็กเกจที่เหมาะกับระดับการใช้งานของคุณ หรือทักมาปรึกษาทีมงานก่อนตัดสินใจได้',
+		'pricing_mode'      => 'price',
+		'pricing_confirmed' => false, // เปิดเมื่อเจ้าของยืนยันราคาแล้วเท่านั้น · ควบคุมว่าจะประกาศราคาให้ Google (Offer/AggregateOffer) หรือไม่
+		'pricing_btn_text'  => 'สอบถามแพ็กเกจนี้',
+		'pricing_note'      => 'ราคาและเงื่อนไขเป็นไปตามแพ็กเกจที่เลือก สอบถามรายละเอียดล่าสุดและความเหมาะสมกับบัญชีของคุณได้ทาง LINE',
 		'pkg1_name'        => 'Starter',
 		'pkg1_tag'         => 'สำหรับสอบถามข้อมูลและเริ่มประเมินความเหมาะสม',
 		'pkg1_price'       => 'Free',
@@ -525,7 +530,7 @@ function ea2000_defaults() {
 			'bt_stat1_label'      => 'ช่วงเวลาทดสอบ',
 			'bt_stat1_value'      => 'ระบุช่วงเวลา',
 			'bt_stat2_label'      => 'คู่เงิน / สินทรัพย์',
-			'bt_stat2_value'      => 'เช่น XAUUSD',
+			'bt_stat2_value'      => 'ระบุคู่เงินที่ทดสอบ',
 			'bt_stat3_label'      => 'Timeframe',
 			'bt_stat3_value'      => 'เช่น M15',
 			'bt_stat4_label'      => 'ทุนเริ่มต้น',
@@ -551,7 +556,7 @@ function ea2000_defaults() {
 			'fw_stat2_label'     => 'ประเภทบัญชี',
 			'fw_stat2_value'     => 'เช่น Real / Demo',
 			'fw_stat3_label'     => 'คู่เงิน / สินทรัพย์',
-			'fw_stat3_value'     => 'เช่น XAUUSD',
+			'fw_stat3_value'     => 'ระบุคู่เงินที่ทดสอบ',
 			'fw_stat4_label'     => 'ทุนเริ่มต้น',
 			'fw_stat4_value'     => 'ระบุทุน',
 			'fw_stat5_label'     => 'ผลตอบแทนสะสม',
@@ -571,22 +576,22 @@ function ea2000_defaults() {
 			'install_req'       => "บัญชีเทรดของโบรกเกอร์ที่รองรับ MetaTrader 5\nโปรแกรม MetaTrader 5 (PC หรือ VPS)\nไฟล์ EA2000 ที่ได้รับหลังสั่งซื้อ\nแนะนำใช้ VPS เพื่อให้ระบบทำงานต่อเนื่อง 24 ชม.",
 			'inst_step1_title'  => 'ติดตั้ง MetaTrader 5 / เตรียม VPS',
 			'inst_step1_desc'   => 'ดาวน์โหลดและติดตั้ง MT5 จากโบรกเกอร์ของคุณ หากต้องการให้ระบบรันตลอด 24 ชม. แนะนำให้เช่า VPS แล้วติดตั้ง MT5 บน VPS แทนเครื่องส่วนตัว',
-			'inst_step1_img'    => $install_assets . 'step-01.jpg',
+			'inst_step1_img'    => $install_assets . 'guide-01.webp',
 			'inst_step2_title'  => 'เปิดโฟลเดอร์ Experts แล้วนำไฟล์ EA เข้า',
 			'inst_step2_desc'   => 'ใน MT5 ไปที่เมนู File → Open Data Folder → MQL5 → Experts จากนั้นวางไฟล์ EA2000 ลงในโฟลเดอร์นี้ แล้วปิด-เปิด MT5 หรือกด Refresh',
-			'inst_step2_img'    => $install_assets . 'step-02.jpg',
+			'inst_step2_img'    => $install_assets . 'guide-02.webp',
 			'inst_step3_title'  => 'ลาก EA ขึ้นกราฟและตั้งค่า',
 			'inst_step3_desc'   => 'เปิดกราฟคู่เงินที่ต้องการ แล้วลาก EA2000 จากหน้าต่าง Navigator ขึ้นกราฟ ตั้งค่าพารามิเตอร์ตามคำแนะนำ เช่น Lot และระดับความเสี่ยงให้เหมาะกับทุน',
-			'inst_step3_img'    => $install_assets . 'step-03.jpg',
+			'inst_step3_img'    => $install_assets . 'guide-03.webp',
 			'inst_step4_title'  => 'เปิด AutoTrading',
 			'inst_step4_desc'   => 'กดปุ่ม AutoTrading (Algo Trading) ด้านบนให้เป็นสีเขียว และตรวจสอบว่ามีชื่อ EA พร้อมไอคอนหมวกสีน้ำเงินที่มุมขวาบนของกราฟ แสดงว่า EA พร้อมทำงาน',
-			'inst_step4_img'    => $install_assets . 'step-04.jpg',
+			'inst_step4_img'    => $install_assets . 'guide-04.webp',
 			'inst_step5_title'  => 'ตรวจสอบการทำงานผ่าน Dashboard',
 			'inst_step5_desc'   => 'สังเกตสถานะระบบบนกราฟและแท็บ Experts/Journal ว่าทำงานปกติ ติดตามผลและเงื่อนไขการเทรดได้จาก Dashboard ของระบบ',
-			'inst_step5_img'    => $install_assets . 'step-05.jpg',
+			'inst_step5_img'    => $install_assets . 'guide-05.webp',
 			'inst_step6_title'  => 'ปรับความเสี่ยงให้เหมาะกับตัวเอง',
 			'inst_step6_desc'   => 'ทบทวนการตั้งค่าความเสี่ยงเป็นระยะ ใช้เงินเย็น และปรับ Lot ให้สอดคล้องกับทุน เพื่อให้ Drawdown อยู่ในระดับที่รับได้',
-			'inst_step6_img'    => $install_assets . 'step-06.jpg',
+			'inst_step6_img'    => $install_assets . 'guide-06.webp',
 			'install_note'      => 'ต้องการให้ทีมงานช่วยติดตั้งให้? ทักมาทาง LINE ได้เลย',
 
 			/* หน้า Pricing (เพิ่มเติม) */
@@ -726,7 +731,7 @@ function ea2000_logo_url() {
 			return $url;
 		}
 	}
-	return get_template_directory_uri() . '/assets/img/logo.png';
+	return get_template_directory_uri() . '/assets/img/logo-mark.webp';
 }
 
 /**
@@ -816,6 +821,12 @@ add_filter( 'wp_nav_menu_items', 'ea2000_add_contact_to_primary_menu', 10, 2 );
  * This prefers multilingual plugins for real translated URLs, hreflang, SEO,
  * and Elementor compatibility. The manual fallback is only a visible starter
  * until a plugin such as TranslatePress, Polylang, or WPML owns translations.
+ *
+ * GTranslate is deliberately not supported: it translates on the client only,
+ * so it creates no indexable URLs, and its widget is injected by JavaScript
+ * with inline styles that the theme can only fight with !important. Those CSS
+ * rules were removed on 8 Sep 2026 (see the note in style.css), so the theme
+ * falls through to its own switcher even when that plugin is active.
  */
 function ea2000_language_switcher() {
 	if ( ! ea2000_mod( 'show_language_switcher' ) ) {
@@ -823,12 +834,8 @@ function ea2000_language_switcher() {
 	}
 
 	$plugin_markup = '';
-	$plugin_class  = '';
 
-	if ( shortcode_exists( 'gtranslate' ) ) {
-		$plugin_markup = do_shortcode( '[gtranslate]' );
-		$plugin_class  = ' language-switcher--gtranslate';
-	} elseif ( shortcode_exists( 'language-switcher' ) ) {
+	if ( shortcode_exists( 'language-switcher' ) ) {
 		$plugin_markup = do_shortcode( '[language-switcher]' );
 	} elseif ( function_exists( 'pll_the_languages' ) ) {
 		$plugin_markup = pll_the_languages(
@@ -861,7 +868,7 @@ function ea2000_language_switcher() {
 	}
 
 	if ( $plugin_markup ) {
-		echo '<div class="language-switcher language-switcher--plugin' . esc_attr( $plugin_class ) . '" aria-label="' . esc_attr__( 'Language switcher', 'ea2000' ) . '">';
+		echo '<div class="language-switcher language-switcher--plugin" aria-label="' . esc_attr__( 'Language switcher', 'ea2000' ) . '">';
 		echo wp_kses_post( $plugin_markup );
 		echo '</div>';
 		return;
@@ -1206,19 +1213,167 @@ if ( ! defined( 'WPSEO_VERSION' ) && ! class_exists( 'RankMath' ) && ! defined( 
 }
 
 /* --------------------------------------------------------------
- * Structured data: Organization + WebSite (ทั้งเว็บ) + FAQPage (หน้าแรก)
- * ปิดอัตโนมัติถ้ามีปลั๊ก SEO
+ * Structured data (JSON-LD)
+ * ไม่มีปลั๊ก SEO : Organization + WebSite (ทั้งเว็บ) + FAQPage (หน้าแรก) + สินค้า
+ * มีปลั๊ก SEO   : ออกเฉพาะ SoftwareApplication ของสินค้า เพราะ WebPage / WebSite /
+ *                Organization / BreadcrumbList ปลั๊กออกให้อยู่แล้ว ห้ามออกซ้ำ
  * -------------------------------------------------------------- */
-function ea2000_schema_jsonld() {
-	$blocks = array();
 
-	$org = array(
-		'@context' => 'https://schema.org',
-		'@type'    => 'Organization',
-		'name'     => get_bloginfo( 'name' ),
-		'url'      => home_url( '/' ),
-		'logo'     => ea2000_logo_url(),
+/**
+ * แปลงราคาแพ็กเกจเป็นตัวเลขจริง
+ * คืน null ถ้าเป็นข้อความ (เช่น Free หรือ ทัก LINE) เพื่อไม่ประกาศราคาที่ไม่มีอยู่จริง
+ *
+ * @param string $key คีย์ราคาใน ea2000_defaults() เช่น pkg2_price.
+ * @return float|null
+ */
+function ea2000_numeric_price( $key ) {
+	$raw = trim( (string) ea2000_mod( $key ) );
+	if ( '' === $raw ) {
+		return null;
+	}
+
+	$clean = str_replace( array( ',', ' ', "\xc2\xa0" ), '', $raw );
+
+	/* ตัดหน่วยเงินหน้า/ท้ายค่า (เช่น 6,990 บาท หรือ ฿6,990) ก่อนตรวจว่าเป็นตัวเลข
+	   เพื่อไม่ให้ราคาที่เจ้าของพิมพ์พร้อมหน่วยหลุดหายไปจาก offers เงียบ ๆ */
+	$stripped = preg_replace( '/^(?:฿|thb|baht)|(?:บาท|thb|baht|฿)$/iu', '', $clean );
+	if ( null !== $stripped ) {
+		$clean = trim( $stripped );
+	}
+
+	if ( ! is_numeric( $clean ) || (float) $clean <= 0 ) {
+		return null;
+	}
+
+	return (float) $clean;
+}
+
+/**
+ * ฟอร์แมตราคาให้อยู่ในรูปที่ schema.org รับ (ตัวเลขล้วน ไม่มีคอมมา)
+ *
+ * @param float $price ราคา.
+ * @return string
+ */
+function ea2000_schema_price( $price ) {
+	$decimals = ( floor( $price ) === $price ) ? 0 : 2;
+
+	return number_format( $price, $decimals, '.', '' );
+}
+
+/**
+ * ราคาแพ็กเกจสำหรับข้อมูลโครงสร้าง
+ * เหมือน ea2000_numeric_price แต่ถือว่าแพ็กเกจฟรีคือราคา 0 เพื่อให้จำนวน offer
+ * ตรงกับจำนวนแพ็กเกจที่ผู้เข้าชมเห็นบนหน้าเว็บ (Google กำหนดให้ตรงกัน)
+ * คืน null เมื่อเป็นข้อความที่ไม่ใช่ราคา เช่น "ทัก LINE"
+ *
+ * @param string $key คีย์ราคาใน ea2000_defaults() เช่น pkg1_price.
+ * @return float|null
+ */
+function ea2000_offer_price( $key ) {
+	$raw = trim( (string) ea2000_mod( $key ) );
+	if ( '' === $raw ) {
+		return null;
+	}
+
+	/* strtolower พอ เพราะแปลงเฉพาะตัวอักษร ASCII ไม่แตะไบต์ภาษาไทย */
+	$free = array( 'free', '0', 'ฟรี', 'ฟรี!', 'ไม่มีค่าใช้จ่าย' );
+	if ( in_array( strtolower( $raw ), $free, true ) ) {
+		return 0.0;
+	}
+
+	return ea2000_numeric_price( $key );
+}
+
+/**
+ * offers ของสินค้า
+ * ออกให้ Google เฉพาะเมื่อครบสามข้อ
+ * 1) โหมดราคา (pricing_mode = price)
+ * 2) เจ้าของยืนยันราคาแล้ว (setting pricing_confirmed หรือฟิลเตอร์ ea2000_emit_offers)
+ * 3) แปลงราคาเป็นตัวเลขได้ครบทุกแพ็กเกจที่แสดงอยู่บนหน้าเว็บ (อ่านได้ไม่ครบ = ไม่ประกาศเลย)
+ * นอกนั้นคืน null เพื่อให้ node ไม่มีคีย์ offers เลย ซึ่งยังเป็น schema.org ที่ถูกต้อง
+ * เหตุผลของข้อ 2: ราคาที่ประกาศผ่านข้อมูลโครงสร้างจะไปโผล่ในผลค้นหา แก้ทีหลังช้ากว่าแก้หน้าเว็บ
+ *
+ * @return array|null
+ */
+function ea2000_product_offers() {
+	if ( 'price' !== ea2000_mod( 'pricing_mode' ) ) {
+		return null;
+	}
+
+	if ( ! (bool) apply_filters( 'ea2000_emit_offers', (bool) ea2000_mod( 'pricing_confirmed' ) ) ) {
+		return null;
+	}
+
+	/* สกุลเงินของราคาบนหน้าเว็บ (ค่าเริ่มต้นบาท) เปลี่ยนได้ด้วยฟิลเตอร์ถ้าย้ายไปสกุลอื่น */
+	$currency  = (string) apply_filters( 'ea2000_schema_price_currency', 'THB' );
+	$offer_url = home_url( '/pricing/' );
+	$offers    = array();
+	$prices    = array();
+	$visible   = 0;
+
+	foreach ( array( 'pkg1', 'pkg2', 'pkg3' ) as $ea2000_pkg ) {
+		/* แพ็กเกจที่ไม่มีชื่อจะไม่ถูกแสดงใน template-pricing.php จึงไม่นับว่ามองเห็น */
+		$ea2000_pkg_name = trim( (string) ea2000_mod( $ea2000_pkg . '_name' ) );
+		if ( '' === $ea2000_pkg_name ) {
+			continue;
+		}
+
+		++$visible;
+
+		$ea2000_price = ea2000_offer_price( $ea2000_pkg . '_price' );
+		if ( null === $ea2000_price ) {
+			continue;
+		}
+
+		$prices[] = $ea2000_price;
+
+		$offers[] = array(
+			'@type'         => 'Offer',
+			'name'          => wp_strip_all_tags( $ea2000_pkg_name ),
+			'price'         => ea2000_schema_price( $ea2000_price ),
+			'priceCurrency' => $currency,
+			'availability'  => 'https://schema.org/InStock',
+			'url'           => $offer_url,
+		);
+	}
+
+	/* ถ้าอ่านราคาได้ไม่ครบทุกแพ็กเกจที่แสดงบนหน้าเว็บ ให้ไม่ประกาศราคาเลย
+	   ดีกว่าประกาศบางส่วนแล้วข้อมูลโครงสร้างขัดกับสิ่งที่ผู้เข้าชมเห็น */
+	if ( empty( $offers ) || count( $offers ) < $visible ) {
+		return null;
+	}
+
+	if ( 1 === count( $offers ) ) {
+		return $offers[0];
+	}
+
+	sort( $prices, SORT_NUMERIC );
+
+	return array(
+		'@type'         => 'AggregateOffer',
+		'lowPrice'      => ea2000_schema_price( $prices[0] ),
+		'highPrice'     => ea2000_schema_price( end( $prices ) ),
+		'offerCount'    => count( $offers ),
+		'priceCurrency' => $currency,
+		'offers'        => $offers,
 	);
+}
+
+/**
+ * Organization node ของแบรนด์ (ไม่ใส่ @context เพื่อให้ฝังในกราฟอื่นได้)
+ * ใช้ทั้งเป็น node เดี่ยวตอนไม่มีปลั๊ก SEO และเป็น publisher แบบเต็มของ node สินค้า
+ *
+ * @return array
+ */
+function ea2000_organization_node() {
+	$org = array(
+		'@type' => 'Organization',
+		'@id'   => home_url( '/' ) . '#organization',
+		'name'  => get_bloginfo( 'name' ),
+		'url'   => home_url( '/' ),
+		'logo'  => ea2000_logo_url(),
+	);
+
 	$ea2000_same = array();
 	foreach ( array( 'facebook_url', 'instagram_url', 'tiktok_url', 'youtube_url', 'line_url' ) as $ea2000_same_key ) {
 		$ea2000_same_url = trim( (string) ea2000_mod( $ea2000_same_key ) );
@@ -1230,65 +1385,174 @@ function ea2000_schema_jsonld() {
 	if ( ! empty( $ea2000_same ) ) {
 		$org['sameAs'] = array_values( array_unique( $ea2000_same ) );
 	}
-	$blocks[] = $org;
 
-	$blocks[] = array(
-		'@context' => 'https://schema.org',
-		'@type'    => 'WebSite',
-		'name'     => get_bloginfo( 'name' ),
-		'url'      => home_url( '/' ),
+	return $org;
+}
+
+/**
+ * publisher ของ node สินค้า
+ *
+ * อ้าง @id เฉย ๆ ได้เฉพาะตอนธีมเป็นคนออก Organization node เอง · เมื่อมีปลั๊ก SEO
+ * ธีมจะไม่ออก node นั้น และไม่มีอะไรรับประกันว่าปลั๊กอินจะออก Organization ให้
+ * (Yoast ออกให้ต่อเมื่อตั้ง Site representation = Organization ถ้าตั้งเป็น Person
+ * จะได้ node ชนิด Person คนละ @id) จึงฝัง Organization แบบเต็มไปเลย
+ * @id เดียวกันทำให้กราฟรวมเป็นตัวตนเดียว ไม่เกิด node ซ้ำ
+ *
+ * @return array
+ */
+function ea2000_publisher_ref() {
+	if ( ea2000_has_seo_plugin() ) {
+		return ea2000_organization_node();
+	}
+
+	return array(
+		'@id' => home_url( '/' ) . '#organization',
+	);
+}
+
+/**
+ * หน้าที่ควรออก node ของสินค้า: หน้าแรกและหน้าแพ็กเกจ
+ *
+ * @return bool
+ */
+function ea2000_is_product_page() {
+	return is_front_page() || is_page_template( 'template-pricing.php' );
+}
+
+/**
+ * SoftwareApplication node ของ EA2000 (ออกทั้งตอนมีและไม่มีปลั๊ก SEO)
+ *
+ * ข้อควรรู้เรื่อง rich result: Google ให้ผลพิเศษกับ SoftwareApplication ก็ต่อเมื่อมี name
+ * บวกอย่างน้อยหนึ่งใน offers / aggregateRating / review · เว็บนี้จะไม่มี aggregateRating
+ * และ review จนกว่าจะมีรีวิวจริง (ห้ามแต่งขึ้นมา) ดังนั้น node นี้จะได้ rich result
+ * เฉพาะตอนโหมดราคาและเจ้าของยืนยันราคาแล้วเท่านั้น · ในโหมด contact node ยังถูกต้อง
+ * ตาม schema.org แต่ไม่เข้าเงื่อนไข rich result ซึ่งยอมรับได้ เพราะยังช่วยระบุตัวตนแบรนด์
+ * (ชื่อ EA2000 ชนกับหูฟัง SIMGOT EA2000 และ Energy Absolute)
+ *
+ * @return array
+ */
+function ea2000_product_schema() {
+	$name = trim( (string) ea2000_mod( 'product_name' ) );
+	if ( '' === $name ) {
+		$name = trim( (string) ea2000_mod( 'brand_name' ) );
+	}
+	if ( '' === $name ) {
+		$name = get_bloginfo( 'name' );
+	}
+
+	/* @id และ url คงที่ทุกหน้า เพื่อให้เป็นตัวตนเดียวของสินค้าทั้งเว็บ
+	   ส่วนหน้าที่กำลังแสดง node นี้อยู่ ใส่ไว้ใน mainEntityOfPage */
+	$product_url = home_url( '/' );
+	$page_url    = $product_url;
+	if ( ! is_front_page() ) {
+		$permalink = get_permalink();
+		if ( $permalink ) {
+			$page_url = $permalink;
+		}
+	}
+
+	$node = array(
+		'@context'            => 'https://schema.org',
+		'@type'               => 'SoftwareApplication',
+		'@id'                 => home_url( '/' ) . '#product',
+		'name'                => wp_strip_all_tags( $name ),
+		'applicationCategory' => 'FinanceApplication',
+		'url'                 => $product_url,
+		'mainEntityOfPage'    => $page_url,
+		'publisher'           => ea2000_publisher_ref(),
 	);
 
-	if ( is_front_page() ) {
-		$faqs = array();
-		for ( $i = 1; $i <= 10; $i++ ) {
-			$q = ea2000_mod( 'faq' . $i . '_q' );
-			$a = ea2000_mod( 'faq' . $i . '_a' );
-			if ( $q && $a ) {
-				$faqs[] = array(
-					'@type'          => 'Question',
-					'name'           => wp_strip_all_tags( $q ),
-					'acceptedAnswer' => array(
-						'@type' => 'Answer',
-						'text'  => wp_strip_all_tags( $a ),
-					),
+	/* operatingSystem คือระบบปฏิบัติการที่รันโปรแกรม ส่วน MT5 เป็นแพลตฟอร์มจึงอยู่ใน softwareRequirements */
+	$os = trim( (string) ea2000_mod( 'product_os' ) );
+	if ( '' !== $os ) {
+		$node['operatingSystem'] = wp_strip_all_tags( $os );
+	}
+
+	$requirements = trim( (string) ea2000_mod( 'product_requirements' ) );
+	if ( '' !== $requirements ) {
+		$node['softwareRequirements']   = wp_strip_all_tags( $requirements );
+		$node['applicationSubCategory'] = 'Trading';
+	}
+
+	$version = trim( (string) ea2000_mod( 'product_version' ) );
+	if ( '' !== $version ) {
+		$node['softwareVersion'] = wp_strip_all_tags( $version );
+	}
+
+	$image = trim( (string) ea2000_mod( 'og_default_image' ) );
+	if ( '' !== $image ) {
+		$node['image'] = esc_url_raw( $image );
+	}
+
+	$desc = trim( (string) ea2000_mod( 'og_default_description' ) );
+	if ( '' !== $desc ) {
+		$node['description'] = wp_strip_all_tags( $desc );
+	}
+
+	$offers = ea2000_product_offers();
+	if ( null !== $offers ) {
+		$node['offers'] = $offers;
+	}
+
+	return $node;
+}
+
+function ea2000_schema_jsonld() {
+	$blocks = array();
+
+	if ( ! ea2000_has_seo_plugin() ) {
+		/* @id ตรงกับที่ node สินค้าอ้างถึงใน publisher (รูปแบบเดียวกับที่ Yoast ใช้) */
+		$blocks[] = array_merge(
+			array( '@context' => 'https://schema.org' ),
+			ea2000_organization_node()
+		);
+
+		$blocks[] = array(
+			'@context'  => 'https://schema.org',
+			'@type'     => 'WebSite',
+			'@id'       => home_url( '/' ) . '#website',
+			'name'      => get_bloginfo( 'name' ),
+			'url'       => home_url( '/' ),
+			'publisher' => array(
+				'@id' => home_url( '/' ) . '#organization',
+			),
+		);
+
+		if ( is_front_page() ) {
+			$faqs = array();
+			for ( $i = 1; $i <= 10; $i++ ) {
+				$q = ea2000_mod( 'faq' . $i . '_q' );
+				$a = ea2000_mod( 'faq' . $i . '_a' );
+				if ( $q && $a ) {
+					$faqs[] = array(
+						'@type'          => 'Question',
+						'name'           => wp_strip_all_tags( $q ),
+						'acceptedAnswer' => array(
+							'@type' => 'Answer',
+							'text'  => wp_strip_all_tags( $a ),
+						),
+					);
+				}
+			}
+			if ( $faqs ) {
+				$blocks[] = array(
+					'@context'   => 'https://schema.org',
+					'@type'      => 'FAQPage',
+					'mainEntity' => $faqs,
 				);
 			}
 		}
-		if ( $faqs ) {
-			$blocks[] = array(
-				'@context'   => 'https://schema.org',
-				'@type'      => 'FAQPage',
-				'mainEntity' => $faqs,
-			);
-		}
+	}
 
-		$ea2000_app = array(
-			'@context'            => 'https://schema.org',
-			'@type'               => 'SoftwareApplication',
-			'name'                => ea2000_mod( 'hero_title' ),
-			'applicationCategory' => 'FinanceApplication',
-			'operatingSystem'     => 'MetaTrader 5',
-			'url'                 => home_url( '/' ),
-			'publisher'           => array(
-				'@type' => 'Organization',
-				'name'  => get_bloginfo( 'name' ),
-			),
-		);
-		$ea2000_app_desc = trim( (string) ea2000_mod( 'og_default_description' ) );
-		if ( '' !== $ea2000_app_desc ) {
-			$ea2000_app['description'] = $ea2000_app_desc;
-		}
-		$blocks[] = $ea2000_app;
+	if ( ea2000_is_product_page() ) {
+		$blocks[] = ea2000_product_schema();
 	}
 
 	foreach ( $blocks as $ea2000_block ) {
 		echo '<script type="application/ld+json">' . wp_json_encode( $ea2000_block, JSON_UNESCAPED_UNICODE ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput
 	}
 }
-if ( ! defined( 'WPSEO_VERSION' ) && ! class_exists( 'RankMath' ) && ! defined( 'SEOPRESS_VERSION' ) ) {
-	add_action( 'wp_head', 'ea2000_schema_jsonld', 6 );
-}
+add_action( 'wp_head', 'ea2000_schema_jsonld', 6 );
 
 /* --------------------------------------------------------------
  * SEO เสริม: canonical (archive), robots, sitemap, verification,
@@ -1365,11 +1629,25 @@ function ea2000_robots_noindex( $robots ) {
 }
 add_filter( 'wp_robots', 'ea2000_robots_noindex' );
 
-/* ชี้ sitemap ใน robots.txt (เฉพาะตอนไม่มีปลั๊ก SEO ที่จัดการ sitemap เอง) */
+/* ชี้ sitemap ของ WP core ใน robots.txt (เฉพาะตอนไม่มีปลั๊ก SEO ที่จัดการ sitemap เอง)
+   WP core เองก็เติมบรรทัดนี้ผ่าน WP_Sitemaps::add_robots() อยู่แล้ว จึงต้องเช็กก่อนว่ามีหรือยัง
+   ไม่งั้นได้บรรทัด Sitemap ซ้ำสองบรรทัด · esc_url_raw เพราะ robots.txt เป็น plain text
+   (esc_url จะแปลง & เป็น &#038;) */
 function ea2000_robots_txt( $output, $public ) {
-	if ( '1' === (string) $public && ! ea2000_has_seo_plugin() ) {
-		$output .= 'Sitemap: ' . esc_url( home_url( '/wp-sitemap.xml' ) ) . "\n";
+	if ( '1' !== (string) $public || ea2000_has_seo_plugin() ) {
+		return $output;
 	}
+
+	if ( false !== strpos( (string) $output, 'wp-sitemap.xml' ) ) {
+		return $output;
+	}
+
+	if ( '' !== trim( (string) $output ) && "\n" !== substr( $output, -1 ) ) {
+		$output .= "\n";
+	}
+
+	$output .= 'Sitemap: ' . esc_url_raw( home_url( '/wp-sitemap.xml' ) ) . "\n";
+
 	return $output;
 }
 add_filter( 'robots_txt', 'ea2000_robots_txt', 10, 2 );
@@ -1778,6 +2056,75 @@ function ea2000_remove_powered_by_header() {
 add_action( 'send_headers', 'ea2000_remove_powered_by_header', 100 );
 
 /* --------------------------------------------------------------
+ * ลดขนาดหน้าเว็บ: ตัด CSS/JS ที่ธีมนี้ไม่ได้ใช้ (block editor และอีโมจิ)
+ * ทำเฉพาะฝั่งผู้ชมเท่านั้น หน้าแอดมินและตัวแก้ไขบล็อกไม่ถูกแตะ
+ * -------------------------------------------------------------- */
+
+/**
+ * หน้านี้ต้องใช้ CSS ของบล็อก Gutenberg หรือไม่
+ * เทมเพลตของธีมไม่ได้ใช้บล็อก แต่ถ้าเนื้อหาเพจหรือบทความเขียนด้วยบล็อก ต้องคง CSS ไว้ ไม่งั้นเลย์เอาต์เพี้ยน
+ *
+ * @return bool
+ */
+function ea2000_needs_block_styles() {
+	if ( is_singular() && function_exists( 'has_blocks' ) && has_blocks( get_queried_object_id() ) ) {
+		return true;
+	}
+
+	/* เปิดคืนได้ด้วยฟิลเตอร์ ถ้าอนาคตมีหน้าที่ต้องใช้ CSS ของบล็อกจริง */
+	return (bool) apply_filters( 'ea2000_keep_block_styles', false );
+}
+
+/**
+ * ถอด stylesheet ของ block editor และอีโมจิออกจากหน้าเว็บฝั่งผู้ชม
+ */
+function ea2000_trim_front_assets() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	/* สไตล์อีโมจิไม่ได้ใช้ในทุกกรณี */
+	wp_dequeue_style( 'wp-emoji-styles' );
+
+	if ( ea2000_needs_block_styles() ) {
+		return;
+	}
+
+	$handles = array( 'wp-block-library', 'wp-block-library-theme', 'global-styles', 'classic-theme-styles' );
+	foreach ( $handles as $ea2000_handle ) {
+		wp_dequeue_style( $ea2000_handle );
+	}
+}
+add_action( 'wp_enqueue_scripts', 'ea2000_trim_front_assets', 100 );
+
+/**
+ * ปิดสคริปต์ตรวจอีโมจิของ WordPress เฉพาะฝั่งผู้ชม
+ * ค้น priority จริงด้วย has_action() เพื่อให้ยังทำงานแม้ WordPress ย้าย hook ในเวอร์ชันใหม่
+ */
+function ea2000_disable_emoji() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$hooks     = array( 'wp_head', 'wp_footer', 'wp_print_styles', 'wp_print_scripts', 'wp_print_head_scripts', 'wp_print_footer_scripts', 'wp_enqueue_scripts' );
+	$callbacks = array( 'print_emoji_detection_script', 'wp_print_emoji_detection_script', 'wp_enqueue_emoji_detection_script', 'print_emoji_styles', 'wp_enqueue_emoji_styles' );
+
+	foreach ( $hooks as $ea2000_hook ) {
+		foreach ( $callbacks as $ea2000_callback ) {
+			$ea2000_priority = has_action( $ea2000_hook, $ea2000_callback );
+			if ( false !== $ea2000_priority ) {
+				remove_action( $ea2000_hook, $ea2000_callback, $ea2000_priority );
+			}
+		}
+	}
+
+	remove_filter( 'the_content_feed', 'wp_staticize_emoji' );
+	remove_filter( 'comment_text_rss', 'wp_staticize_emoji' );
+}
+add_action( 'init', 'ea2000_disable_emoji', 20 );
+
+/* --------------------------------------------------------------
  * Customizer
  * -------------------------------------------------------------- */
 require get_template_directory() . '/inc/customizer.php';
+require_once get_template_directory() . '/inc/seo.php';

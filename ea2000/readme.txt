@@ -99,7 +99,7 @@ Repository subdirectory = ea2000
 - แก้ข้อความ ปุ่ม รูปโชว์ และลิงก์ได้ใน Customizer หมวดหน้า Link Hub
 - ปุ่มเสริม (สมัครบัญชี คู่มือ โหลด MT5 กลุ่มแชท) จะแสดงเฉพาะเมื่อกรอก url แล้ว
 - การ์ดดาวน์โหลด (links_fast_enabled) เปิดอยู่เป็นค่าเริ่มต้น ใช้รูป
-  assets/img/link-download-ea2000-light.png ถ้า links_fast_url ว่าง การ์ดจะแสดงแบบไม่มีลิงก์
+  assets/img/card-download.webp ถ้า links_fast_url ว่าง การ์ดจะแสดงแบบไม่มีลิงก์
 - ห้ามเก็บไฟล์ EA (.zip / .ex5) ไว้ใน repo นี้ (.gitignore กันไว้แล้ว)
   ถ้าต้องการให้โหลดไฟล์ ให้ใส่ลิงก์ภายนอกใน Customizer แทน
 
@@ -176,12 +176,12 @@ Repository subdirectory = ea2000
    ถ้ายังไม่อยากแสดงราคา ให้ใช้โหมดสอบถามทาง LINE
 
 6. ตรวจรูปภาพ (ทั้งหมดเป็น placeholder ต้องเปลี่ยน)
-   - โลโก้ assets/img/logo.png
+   - โลโก้ assets/img/logo-mark.webp
    - Hero image
    - Gallery
    - Install guide
    - รูปการ์ดดาวน์โหลดหน้า /go/
-   - OG default image (assets/img/og-default.png) สำหรับแชร์ LINE/Facebook
+   - OG default image (assets/img/og-share.jpg) สำหรับแชร์ LINE/Facebook
 
 7. ตรวจคำเตือนความเสี่ยง
    คงข้อความไว้ครบ โดยเฉพาะหน้า Risk Disclosure และ disclaimer ใต้ผลทดสอบ
