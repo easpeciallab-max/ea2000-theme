@@ -76,6 +76,69 @@ Tags: one-column, custom-logo, custom-menu, landing-page
 	--radius: 12px;
 	--radius-lg: 18px;
 	--header-h: 72px;
+
+	/* ----------------------------------------------------------
+	   โทนมืด · ใช้กับแถบหัวเว็บ แถบท้ายเว็บ ลิ้นชักเมนูมือถือ
+	   และบาร์ล่างมือถือเท่านั้น · เนื้อหาในหน้ายังสว่างเหมือนเดิม
+	   ---------------------------------------------------------- */
+	/* สเกลพื้น */
+	--ink: #08150E;          /* พื้นหลักของแถบบนและแถบล่าง */
+	--ink-deep: #05100A;     /* ลึกกว่า: header ตอนเลื่อน, บาร์ล่างมือถือ */
+	--ink-raise: #0F2016;    /* แผงยกระดับ: dropdown, การ์ดใน footer */
+	--ink-chip: #16301F;     /* ชิป/ปุ่มกลม: ตัวสลับภาษา, ปุ่มเมนู, social */
+	/* สำรอง ยังไม่มีกฎไหนเรียกใช้: คู่ rgba() ของ --ink เผื่อพื้นโปร่งโทนมืดในอนาคต
+	   พื้นโปร่งทุกจุดตอนนี้ใช้ --ink-accent-rgb ไม่ใช่ค่านี้ */
+	--ink-rgb: 8, 21, 14;
+
+	/* ตัวอักษรบนพื้นมืด */
+	--ink-text: #F2F7F3;     /* ข้อความหลัก */
+	--ink-muted: #AEBEB2;    /* ข้อความรอง, ลิงก์เมนูตอนพัก */
+	--ink-dim: #8B9C90;      /* ข้อความจาง (copyright) */
+
+	/* สีเน้นบนพื้นมืด · สว่างกว่า --accent เล็กน้อยเพื่อให้เด้งบนพื้นดำ */
+	--ink-accent: #8CEC4E;
+	--ink-accent-rgb: 140, 236, 78;
+
+	/* เส้นขอบบนพื้นมืด (ขาวโปร่ง เพราะเส้นเข้มมองไม่เห็น)
+	   --ink-border-soft / --ink-border: เส้นคั่นและกล่องที่ไม่ใช่ปุ่ม (ตกแต่ง ไม่ต้องถึง 3:1)
+	   --ink-border-strong: ขอบของชิปที่กดได้ (ปุ่มเมนู ตัวสลับภาษา social ไอคอนบาร์ล่าง)
+	   ค่า 0.34 ผสมบน --ink-chip #16301F ได้ #617467 = 3.74:1 บน --ink · ผ่าน 1.4.11
+	   ต่ำกว่านี้ (0.20 → #304838 = 1.88:1) ชิปจะดูแบนจนไม่รู้ว่ากดได้ */
+	--ink-border-soft: rgba(242, 247, 243, 0.07);
+	--ink-border: rgba(242, 247, 243, 0.12);
+	--ink-border-strong: rgba(242, 247, 243, 0.34);
+
+	/* หมายเหตุค่า 0.34: ขอบด้านนอกของชิปได้ 3.74:1 บน --ink ซึ่งเป็นด้านที่ 1.4.11 กำหนด
+	   ด้านในเทียบกับพื้นชิปเองได้ 2.85:1 (บนบาร์ล่างมือถือ 3.87:1) เป็นค่าที่คาดไว้และรับได้
+	   เพราะเกณฑ์ไม่ได้บังคับให้ขอบต้องตัดกับพื้นที่มันล้อมด้วย · ถ้าเร่งเป็น ~0.45 ให้ผ่านทั้งสองด้าน
+	   ชิปจะกลายเป็นเม็ดยาขอบขาวชัด ผิดโทนเกือบดำที่เจ้าของสั่ง */
+
+	/* วงแหวนรอบโลโก้กลม · ผสมลงบน --ink โดยตรง ไม่ได้ผสมบน --ink-chip เหมือนขอบชิป
+	   0.34 บน --ink ได้แค่ 2.95:1 จึงต้องใช้ 0.40 (3.60:1) · ใช้ทั้งแถบหัวเว็บและแถบท้ายเว็บ */
+	--ink-ring-logo: rgba(242, 247, 243, 0.40);
+
+	/* alias เชิงความหมาย · CSS ของ header/footer เรียกใช้ชื่อกลุ่มนี้
+	   ถ้าจะปรับให้ footer เข้มกว่า header หรือกลับเป็นสว่าง แก้ที่ alias จุดเดียว */
+	--header-bg: var(--ink);
+	--header-bg-scrolled: var(--ink-deep);
+	--header-text: var(--ink-text);
+	--header-muted: var(--ink-muted);
+	--header-border: var(--ink-border-soft);
+	--header-panel: var(--ink-raise);
+	--header-chip: var(--ink-chip);
+	--header-accent: var(--ink-accent);
+
+	--footer-bg: var(--ink);
+	/* สำรอง ยังไม่มีกฎไหนเรียกใช้: เผื่อทำแถวล่างสุดของแถบท้ายเว็บให้เข้มกว่าอีกขั้น
+	   ตอนนี้ยังไม่มี .footer-bottom-bar ในเทมเพลต อย่าเข้าใจว่ามีอยู่แล้ว */
+	--footer-bg-deep: var(--ink-deep);
+	--footer-text: var(--ink-text);
+	--footer-muted: var(--ink-muted);
+	--footer-dim: var(--ink-dim);
+	--footer-border: var(--ink-border);
+	--footer-card: var(--ink-raise);
+	--footer-chip: var(--ink-chip);
+	--footer-accent: var(--ink-accent);
 }
 
 /* ข้อความเฉพาะ screen reader (ซ่อนจากสายตา) */
@@ -3246,6 +3309,13 @@ h3 {
 	transform: none;
 }
 
+/* ไม่มี JavaScript = ไม่มี IntersectionObserver · เนื้อหาต้องอ่านได้ตามปกติ
+   (คลาส no-js อยู่บน <html> ใน header.php และถูกสคริปต์เปลี่ยนเป็น js เมื่อ JS ทำงาน) */
+.no-js .reveal {
+	opacity: 1;
+	transform: none;
+}
+
 /* ==========================================================
    24) Responsive
    ========================================================== */
@@ -3426,6 +3496,14 @@ h3 {
 		transform: none;
 		box-shadow: none;
 		background: transparent;
+	}
+
+	/* แก้บั๊ก: กฎเดสก์ท็อป `.nav-list li.is-open > .sub-menu` (specificity 0,3,1)
+	   ชนะกฎ `.nav-list .sub-menu` (0,2,0) ข้างบน เมนูย่อยจึงถูก translate(-50%)
+	   ออกไปนอกจอบนมือถือ · ต้องประกาศด้วย selector เดิมเป๊ะเพื่อให้ชนะด้วยลำดับ */
+	.nav-list li.is-open > .sub-menu {
+		transform: none;
+		left: auto;
 	}
 
 	.nav-list .sub-menu::before {
@@ -5841,4 +5919,426 @@ a.lh-feature-frame:hover {
 .link-hub-page [class*="gt-translate"],
 .link-hub-page .language-switcher {
 	display: none !important;
+}
+
+/* ==========================================================
+   39) โทนมืด · แถบหัวเว็บ + แถบท้ายเว็บ + เมนูมือถือ
+   เนื้อหาในหน้า (body / section / card) ยังสว่างเหมือนเดิมทุกประการ
+   รวมกฎโทนมืดไว้บล็อกเดียว เพื่อให้ย้อนกลับหรือปิดทั้งชุดได้ในคราวเดียว
+   ทุกกฎอยู่ในขอบเขตแถบหัว แถบท้าย เมนู หรือบาร์ล่างมือถือ จึงไม่กระทบ
+   หน้า /go/ (template-links.php) ที่ไม่เรียก get_header() / get_footer()
+   ========================================================== */
+
+/* ---------- แถบหัวเว็บ ----------
+   ใช้พื้นทึบ ไม่ใช้ backdrop-filter: พื้นโปร่งสีเข้มทับเนื้อหาสว่างจะผสมออกมาเป็นเทาซีด
+   และ backdrop-filter ที่ไม่ใช่ none ทำให้ .site-header กลายเป็น containing block
+   ของ .site-nav (position: fixed ในโหมดมือถือ) ด้วย
+   ห้ามใส่ transform / filter / will-change / contain / perspective บน .site-header */
+.site-header {
+	background: var(--header-bg);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+	border-bottom: 1px solid var(--header-border);
+}
+
+.site-header.scrolled {
+	border-bottom-color: var(--ink-border);
+	background: var(--header-bg-scrolled);
+	/* เงานี้ตกลงบนเนื้อหาพื้นสว่าง ไม่ใช่บนพื้นมืด · alpha สูงจะกลายเป็นแถบเทาสกปรกใต้แถบ
+	   (0.42 ทำให้แถวพิกเซลแรกใต้แถบเป็น #ACACAC และจางกลับเป็นขาวกินระยะราว 30px)
+	   0.16 ยังคุมให้แถวแรกอ่อนกว่า #D8D8D8 · ถ้าอยากแยกชั้นชัดกว่านี้ ให้เพิ่มความเข้มของ
+	   border-bottom-color แทนการเร่ง alpha ของเงา */
+	box-shadow: 0 6px 18px rgba(8, 21, 14, 0.16);
+}
+
+/* .header-inner เป็นแค่ flex container ไม่มีสีของตัวเอง จึงไม่ต้องมีกฎโทนมืด */
+
+/* แบรนด์ในแถบหัวเว็บ */
+.site-header .brand,
+.site-header .brand:hover,
+.site-header .brand-name {
+	color: var(--header-text);
+}
+
+.site-header .brand-name em {
+	color: var(--header-accent);
+}
+
+.site-header .brand-name small {
+	color: var(--header-muted);
+}
+
+/* โลโก้กลมพื้นดำ: บนพื้นมืดไม่ต้องมีวงแหวนแบบพื้นสว่างแล้ว
+   ใช้เส้นขาวโปร่งบาง ๆ แทน เพื่อให้ขอบวงกลมยังอ่านออก
+   เหตุผลที่ค่าต่างจาก --ink-border-strong อยู่ที่คำอธิบายของ --ink-ring-logo ใน :root */
+.site-header .brand-logo {
+	box-shadow: 0 0 0 1px var(--ink-ring-logo);
+}
+
+/* ลิงก์เมนู · ขีดใต้ตอน hover · ลูกศร ::before ใช้ currentColor อยู่แล้วจึงไม่ต้องแก้ */
+.nav-list a {
+	color: var(--header-muted);
+}
+
+.nav-list a:hover {
+	color: var(--header-text);
+}
+
+.nav-list a::after {
+	background: linear-gradient(90deg, var(--header-accent), var(--accent-2));
+}
+
+/* แผงเมนูย่อย (dropdown) · ::before เป็นสะพาน hover ใส ไม่มีสี จึงไม่ต้องแก้ */
+.nav-list .sub-menu {
+	border-color: var(--ink-border);
+	background: var(--header-panel);
+	box-shadow: 0 22px 46px rgba(0, 0, 0, 0.50);
+}
+
+.nav-list .sub-menu a {
+	color: var(--header-muted);
+}
+
+/* พื้น hover โปร่ง 0.14 ผสมบนแผงได้แค่ 1.41:1 มองไม่ออกว่าแถวไหนถูก hover
+   จึงเพิ่มขีดซ้าย 2px สีเน้นทึบ (12.65:1 บนแผง) ให้แถวมีขอบคมชัดแทนการเร่ง alpha
+   เร่ง alpha ให้ถึง 3:1 จะดันตัวอักษรสีเน้นบนพื้นนั้นตกลงมาเหลือ 3.48:1 */
+.nav-list .sub-menu a:hover,
+.nav-list .sub-menu a:focus-visible {
+	background: rgba(var(--ink-accent-rgb), 0.14);
+	box-shadow: inset 2px 0 0 var(--ink-accent);
+	color: var(--header-accent);
+}
+
+/* ตัวสลับภาษาของธีม (ชิป + แผง) · ส่วนของ GTranslate ไม่แตะ */
+.site-header .language-switcher summary {
+	border-color: var(--ink-border-strong);
+	background: var(--header-chip);
+	color: var(--header-text);
+}
+
+.site-header .language-switcher[open] summary {
+	border-color: rgba(var(--ink-accent-rgb), 0.45);
+	background: rgba(var(--ink-accent-rgb), 0.16);
+	color: var(--header-accent);
+}
+
+.site-header .language-switcher-menu {
+	border-color: var(--ink-border);
+	background: var(--header-panel);
+	box-shadow: 0 22px 46px rgba(0, 0, 0, 0.50);
+	backdrop-filter: none;
+	-webkit-backdrop-filter: none;
+}
+
+.site-header .language-switcher-menu a {
+	color: var(--header-muted);
+}
+
+.site-header .language-switcher-menu a:hover,
+.site-header .language-switcher-menu a.is-active {
+	background: rgba(var(--ink-accent-rgb), 0.14);
+	box-shadow: inset 2px 0 0 var(--ink-accent);
+	color: var(--header-accent);
+}
+
+.site-header .language-switcher-menu a .language-switcher-code {
+	border-color: rgba(var(--ink-accent-rgb), 0.42);
+	color: var(--ink-accent);
+}
+
+/* แบบ --plugin ใช้เมื่อมีปลั๊กอินแปลภาษา (ea2000_language_switcher() ใน functions.php)
+   ต้องประกาศทั้งตอนพักและตอน hover/active เพราะกฎโทนสว่างจับคู่ทั้งสองสถานะไว้ในกฎเดียว
+   ถ้าไม่ประกาศ hover จะเหลือ --primary-deep บน --ink-chip = 2.54:1 ตก AA */
+.site-header .language-switcher--plugin a {
+	border-color: var(--ink-border-strong);
+	background: var(--header-chip);
+	color: var(--header-muted);
+}
+
+/* พื้น hover โปร่งกับสีตัวอักษรอย่างเดียวไม่ถึง 3:1 (พื้นต่างกัน 1.04:1) ภาษาที่เลือกอยู่จึงแยกไม่ออก
+   ใช้ขอบสีเน้นเป็นตัวบอกสถานะเหมือนชิปพี่น้อง (summary[open] และ .social-link:hover)
+   ขอบผสมแล้วได้ #4F8930 = 4.39:1 บนพื้นแถบ และ 3.34:1 บนพื้นชิปตอนพัก */
+.site-header .language-switcher--plugin a:hover,
+.site-header .language-switcher--plugin a.is-active {
+	border-color: rgba(var(--ink-accent-rgb), 0.45);
+	background: rgba(var(--ink-accent-rgb), 0.16);
+	color: var(--header-accent);
+}
+
+/* ปุ่มเปิดเมนูมือถือ */
+.nav-toggle {
+	border-color: var(--ink-border-strong);
+	background: var(--header-chip);
+}
+
+.nav-toggle span {
+	background: var(--header-text);
+}
+
+/* social ในแถบหัวเว็บ (แสดงในลิ้นชักเมนูมือถือ) */
+.site-header .social-link {
+	border-color: var(--ink-border-strong);
+	background: var(--header-chip);
+	color: var(--header-muted);
+}
+
+.site-header .social-link:hover {
+	border-color: rgba(var(--ink-accent-rgb), 0.45);
+	background: rgba(var(--ink-accent-rgb), 0.16);
+	color: var(--header-accent);
+}
+
+/* แถบความคืบหน้าการอ่าน · z-index 200 ทับแถบหัวเว็บ จึงต้องเป็นสีที่เด้งบนพื้นมืด */
+.reading-progress span {
+	background: linear-gradient(90deg, var(--ink-accent), var(--accent-2));
+}
+
+/* วงแหวนโฟกัสคีย์บอร์ด: --primary บนพื้นมืดได้ 3.64:1 (ผ่านขั้นต่ำของ UI แต่จาง)
+   เฉพาะในแถบมืดจึงใช้สีเน้นสว่างแทน ได้ 12.65:1 · พื้นสว่างในหน้ายังใช้ค่าเดิม
+   .mobile-app-nav อยู่นอก <header> และ <footer> (footer.php) จึงต้องระบุแยก
+   ไม่งั้นบาร์ล่างมือถือจะเหลือวงแหวน --primary บน --ink-deep = 3.77:1 จางที่สุดในเว็บ */
+.site-header :focus-visible,
+.site-footer :focus-visible,
+.mobile-app-nav :focus-visible {
+	outline-color: var(--ink-accent);
+}
+
+/* ---------- แถบท้ายเว็บ ---------- */
+.site-footer {
+	border-top: 0;
+	background: var(--footer-bg);
+	color: var(--footer-text);
+}
+
+.site-footer .brand,
+.site-footer .brand:hover,
+.site-footer .brand-name {
+	color: var(--footer-text);
+}
+
+.site-footer .brand-name em {
+	color: var(--footer-accent);
+}
+
+.site-footer .brand-name small {
+	color: var(--footer-muted);
+}
+
+/* วงแหวนเดียวกับในแถบหัวเว็บ · ดูเหตุผลของค่าที่ --ink-ring-logo ใน :root */
+.site-footer .brand-logo {
+	box-shadow: 0 0 0 1px var(--ink-ring-logo);
+}
+
+/* กล่อง CTA · เป็นบล็อกเปลี่ยนใจหลักของแถบท้ายเว็บ จึงเป็นชิ้นเดียวที่ยกขอบให้เข้มขึ้น
+   พื้น --footer-card บน --footer-bg ต่างกันแค่ 1.24:1 · ถ้าใช้ --ink-border ด้วย (ผสมได้ 1.41:1)
+   กล่องจะแทบไม่มีขอบให้เห็น · .footer-prep และชิปข้างในยังใช้ --ink-border ตามเดิม
+   เพื่อให้ CTA เป็นชิ้นที่ยกขึ้นชิ้นเดียว และแถบท้ายเว็บยังอ่านเป็นก้อนเดียว */
+.footer-cta {
+	border-color: var(--ink-border-strong);
+	background: var(--footer-card);
+	box-shadow: none;
+}
+
+.footer-kicker {
+	color: var(--footer-accent);
+}
+
+.footer-cta h2 {
+	color: var(--footer-text);
+}
+
+.footer-cta p:not(.footer-kicker) {
+	color: var(--footer-muted);
+}
+
+/* ปุ่ม LINE (.footer-primary) คงสีเขียว LINE เดิม · บนพื้นมืดยิ่งเด่นกว่าเดิม */
+
+/* โครงและการ์ด */
+.footer-main {
+	border-bottom-color: var(--footer-border);
+}
+
+.footer-tagline {
+	color: var(--footer-muted);
+}
+
+/* หมายเหตุ: .footer-trust ไม่มีเทมเพลตไหนพิมพ์ออกมาแล้ว (ตกทอดมาจากธีมต้นแบบ)
+   เก็บกฎไว้คู่กับกฎโทนสว่างที่ยังอยู่ เพื่อไม่ให้สองชุดหลุดจากกัน · ตรวจแล้วไม่ต้องไล่หา
+   เป็นกล่องไม่ใช่ปุ่ม จึงใช้ --ink-border ตามเดิม ไม่ต้องถึง 3:1 */
+.footer-trust li {
+	border-color: var(--ink-border);
+	background: var(--footer-chip);
+	color: var(--footer-muted);
+}
+
+.footer-prep {
+	border-color: var(--ink-border);
+	background: var(--footer-card);
+	box-shadow: none;
+}
+
+.footer-head {
+	color: var(--footer-text);
+}
+
+.footer-prep p {
+	color: var(--footer-muted);
+}
+
+.footer-prep-list li {
+	border-color: var(--ink-border);
+	background: var(--footer-chip);
+	color: var(--footer-muted);
+}
+
+.footer-prep-list .icon {
+	color: var(--footer-accent);
+}
+
+/* แถวล่างสุด */
+.footer-copy {
+	color: var(--footer-dim);
+}
+
+/* .footer-links-mini ก็ไม่มีเทมเพลตไหนพิมพ์ออกมาแล้วเช่นกัน · เก็บไว้คู่กฎโทนสว่าง */
+.footer-legal a,
+.footer-links-mini,
+.footer-links-mini a {
+	color: var(--footer-muted);
+}
+
+.footer-legal a:hover,
+.footer-links-mini a:hover {
+	color: var(--footer-accent);
+}
+
+/* social ในแถบท้ายเว็บ */
+.site-footer .social-link {
+	border-color: var(--ink-border-strong);
+	background: var(--footer-chip);
+	color: var(--footer-muted);
+}
+
+.site-footer .social-link:hover {
+	border-color: rgba(var(--ink-accent-rgb), 0.45);
+	background: rgba(var(--ink-accent-rgb), 0.16);
+	color: var(--footer-accent);
+}
+
+/* ---------- ลิ้นชักเมนูมือถือ ---------- */
+@media (max-width: 960px) {
+	/* ไม่ใส่เส้นบนของลิ้นชัก: .site-header มี border-bottom อยู่แล้ว ต้องการรอยต่อเส้นเดียว
+	   ถ้าใส่ทั้งสองเส้นจะซ้อนกันเป็นเส้นสว่างหนา ~1.6px ตรงรอยต่อ
+	   หมายเหตุ: พื้นสองส่วนไม่ได้เท่ากันเสมอ · .scrolled ติดตั้งแต่ scrollY > 10 และไม่ถูกถอด
+	   ตอนเปิดเมนู ดังนั้นเมื่อเลื่อนหน้าแล้วเปิดเมนู แถบหัวเว็บเป็น --ink-deep ส่วนลิ้นชักเป็น --ink
+	   ต่างกัน 1.02:1 ซึ่งมองไม่ออกด้วยตาเปล่า จึงปล่อยไว้ */
+	.site-nav {
+		border-top: 0;
+		background: var(--header-bg);
+	}
+
+	/* ขีดซ้ายสีเน้นเช่นเดียวกับเมนูย่อยเดสก์ท็อป · พื้น hover โปร่ง 0.12 บน --ink ได้แค่ 1.30:1 */
+	.nav-list a:hover,
+	.nav-list a:focus-visible {
+		background: rgba(var(--ink-accent-rgb), 0.12);
+		box-shadow: inset 2px 0 0 var(--ink-accent);
+		color: var(--header-text);
+	}
+
+	/* ในลิ้นชัก เมนูย่อยไม่ใช่แผงลอย แต่เป็นรายการเยื้องที่มีเส้นซ้าย
+	   ต้องประกาศซ้ำ เพราะกฎแผงลอยของเดสก์ท็อปข้างบนอยู่หลังกฎเดิมในไฟล์
+	   เส้นซ้ายคือสัญญาณเดียวที่บอกว่ารายการนี้เป็นลูกของหัวข้อด้านบน จึงต้องเห็นจริง
+	   alpha 0.45 คือค่าแรกที่ผสมบน --ink แล้วได้ #43762B = 3.44:1 ผ่าน 1.4.11
+	   (0.34 ได้ 2.47:1 · 0.40 ได้ 2.96:1 ยังไม่ผ่าน) */
+	.nav-list .sub-menu {
+		border: 0;
+		border-left: 2px solid rgba(var(--ink-accent-rgb), 0.45);
+		background: transparent;
+		box-shadow: none;
+	}
+
+	.nav-social {
+		border-top-color: var(--ink-border);
+	}
+}
+
+/* ---------- บาร์ล่างมือถือ ----------
+   บาร์นี้ลอยอยู่เหนือเนื้อหาสว่าง การทำให้เข้มจึงเป็นการเลือกดีไซน์
+   เพื่อจับคู่เป็นกรอบบน-ล่างชุดเดียวกับแถบหัวเว็บ และให้ปุ่ม LINE เป็นจุดเน้นเดียว */
+@media (max-width: 760px) {
+	/* พื้นทึบ จึงต้องตัด backdrop-filter ของกฎโทนสว่างทิ้ง (เดิมพื้นเป็น rgba จึงเบลอได้จริง)
+	   เบลอหลังพื้นทึบไม่เห็นผลสักพิกเซล แต่ยังบังคับสร้าง compositing layer ทุกเฟรม
+	   บนองค์ประกอบ fixed ที่อยู่บนจอตลอดเวลา และทำให้บาร์เป็น containing block ของลูกที่ fixed */
+	/* บาร์นี้ลอยทับได้ทั้งเนื้อหาสว่างและแถบท้ายเว็บ · --ink-border ผสมแล้วได้ #212C26 = 1.35:1
+	   บนพื้นบาร์ ทำให้ตอนอยู่ท้ายหน้าบาร์กลืนไปกับแถบท้ายเว็บจนไม่เห็นว่าเป็นแผ่นลอย
+	   --ink-border-strong ผสมแล้วได้ #58625C = 3.07:1 บนพื้นบาร์ · เงาต้องพุ่งขึ้น เพราะเงาที่พุ่งลง
+	   ตกออกนอกตัวบาร์ลงไปด้านล่าง ไม่ช่วยแยกชั้นสักพิกเซล */
+	.mobile-app-nav {
+		border-color: var(--ink-border-strong);
+		background: var(--ink-deep);
+		box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.45);
+		-webkit-backdrop-filter: none;
+		backdrop-filter: none;
+	}
+
+	/* วงแหวนโฟกัสรวมระยะห่างแล้วยื่นออก 5px ขณะที่บาร์มี padding แค่ 6px และมุมโค้ง 20px
+	   มุมเหลี่ยมของวงแหวนที่ปุ่มแรกกับปุ่มสุดท้ายจึงเลยส่วนโค้งไปตกบนพื้นขาว = 1.48:1 หายไปเลย
+	   วาดเข้าด้านในแทน จะอยู่บน --ink-deep ทั้งวง = 13.11:1 · ห้ามเปลี่ยนสีวงแหวน */
+	.mobile-app-nav :focus-visible {
+		outline-offset: -3px;
+	}
+
+	.mobile-app-nav-item {
+		color: var(--ink-muted);
+	}
+
+	/* ชิปไอคอนกดได้ จึงต้องมีขอบให้เห็นว่าเป็นปุ่ม · --ink-chip บน --ink-deep ได้แค่ 1.36:1 */
+	.mobile-app-nav-icon {
+		border: 1px solid var(--ink-border-strong);
+		background: var(--ink-chip);
+		/* กฎโทนสว่างไล่เฉพาะ background กับ color · ที่นี่ border-color เปลี่ยนตอน hover/active ด้วย
+		   ถ้าไม่ใส่ไว้ ขอบจะกระตุกเปลี่ยนทันทีขณะที่พื้นค่อย ๆ ไล่ */
+		transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+	}
+
+	.mobile-app-nav-item:hover,
+	.mobile-app-nav-item:focus-visible,
+	.mobile-app-nav-item.is-active {
+		color: var(--ink-accent);
+	}
+
+	.mobile-app-nav-item:hover .mobile-app-nav-icon,
+	.mobile-app-nav-item:focus-visible .mobile-app-nav-icon {
+		border-color: rgba(var(--ink-accent-rgb), 0.45);
+		background: rgba(var(--ink-accent-rgb), 0.20);
+		color: var(--ink-accent);
+	}
+
+	/* หน้าปัจจุบันต้องแยกออกจากปุ่มอื่นได้ด้วยตัวมันเอง ไม่ใช่แค่เปลี่ยนเฉดตัวอักษร
+	   ชิปทึบสีเน้น: #8CEC4E เทียบชิปปกติ #16301F = 9.63:1 · เทียบพื้นบาร์ = 13.11:1
+	   ไอคอนในชิป #05100A บน #8CEC4E = 13.11:1 · พื้นโปร่งไม่ว่าจะเร่ง alpha เท่าไรก็ไม่ถึง */
+	.mobile-app-nav-item.is-active .mobile-app-nav-icon {
+		border-color: var(--ink-accent);
+		background: var(--ink-accent);
+		color: var(--ink-deep);
+	}
+
+	.mobile-app-nav-item.is-action {
+		color: var(--ink-accent);
+	}
+
+	/* ปุ่ม LINE ในบาร์ (.is-action .mobile-app-nav-icon) คงสีเขียว LINE เดิม
+	   เขียว LINE บนพื้นบาร์เด่นอยู่แล้ว จึงไม่ต้องมีขอบขาวมาแทรก */
+	.mobile-app-nav-item.is-action .mobile-app-nav-icon {
+		border-color: transparent;
+	}
+
+	/* กฎ hover/focus ทั่วไปข้างบนเป็น (0,3,0) เท่ากับกฎโทนสว่างที่ให้ไอคอน LINE เป็นสีเข้ม
+	   แต่อยู่หลังกว่าในไฟล์จึงชนะ ทำให้ไอคอนกลายเป็น --ink-accent บนเขียว LINE เข้ม = 2.17:1
+	   ทั้งที่ตอนพักได้ 7.37:1 · กฎนี้เป็น (0,4,0) จึงคุมได้ทั้ง hover และ focus-visible
+	   #03240F บน --line-green-dark = 5.19:1 และเป็นค่าเดียวกับที่ .btn-line กับ .footer-primary ใช้ */
+	.mobile-app-nav-item.is-action:hover .mobile-app-nav-icon,
+	.mobile-app-nav-item.is-action:focus-visible .mobile-app-nav-icon {
+		color: #03240F;
+	}
 }

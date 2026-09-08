@@ -384,7 +384,7 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 						<div class="shot-empty">
 							<img src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="" loading="lazy" width="120" height="120">
 							<span class="chip">ภาพประกอบ</span>
-							<p>อัปโหลดภาพ Dashboard ได้ที่หน้า ปรับแต่ง → ภาพ Dashboard / ระบบจริง</p>
+							<?php if ( current_user_can( 'customize' ) ) : ?><p>อัปโหลดภาพ Dashboard ได้ที่ ปรับแต่ง : ภาพ Dashboard / ระบบจริง (ข้อความนี้เห็นเฉพาะแอดมิน)</p><?php endif; ?>
 						</div>
 						<figcaption><?php echo esc_html( ea2000_mod( 'gallery_cap' . $i ) ); ?></figcaption>
 					</figure>

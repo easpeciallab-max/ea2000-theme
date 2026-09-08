@@ -5,10 +5,11 @@
  * @package ea2000
  */
 ?><!doctype html>
-<html <?php language_attributes(); ?>>
+<html class="no-js" <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>document.documentElement.className = document.documentElement.className.replace( /\bno-js\b/, 'js' );</script>
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
