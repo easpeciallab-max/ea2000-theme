@@ -28,7 +28,7 @@
 | คลาส | ความหมาย |
 |---|---|
 | `.mono` | ฟอนต์ monospace (`--font-mono`) tabular-nums letter-spacing .04em · ใช้กับดัชนี ป้ายกำกับ prompt |
-| `.keep-case` | ยกเว้นกฎ uppercase ของ body (มีอยู่แล้ว section 27) · ต้องใส่ทุกที่ที่มี Latin ที่ต้องคงตัวพิมพ์: `ea2000@mt5:~$`, `EA2000`, `MetaTrader 5`, ราคา `Free` |
+| `.keep-case` | ยกเว้นกฎ uppercase ของ body (มีอยู่แล้ว section 27) · ต้องใส่ทุกที่ที่มี Latin ที่ต้องคงตัวพิมพ์: `ea2000@mt5:~$`, `EA2000`, `MetaTrader 5`, ราคา `Free` · รวม footer `dl.sheet--ink` (spec sheet) และ `p.status-text` (ข้อ 4) · ปุ่มยังใช้ uppercase ตามปกติของเว็บ |
 | `.watch` | hook ให้ IntersectionObserver ตัวเดิมใน main.js เติม `.in` · **ไม่มีผลทางสายตาในตัวเอง** (ต่างจาก `.reveal` ที่ fade-up) · ใช้เป็นสถานะสำหรับ strike-through, wipe, HUD bracket, signal line, watermark |
 | `.wipe` | ใช้คู่กับ `.watch` บนช่องรูป: clip-path inset ปาดจากซ้าย (moment 6) |
 | `.hud-frame` | กรอบ HUD: ลูก 4 ตัว `<span class="hud-c tl\|tr\|bl\|br" aria-hidden="true"></span>` วางมุม · ใช้กับกล่องสินค้า hero, ทุกช่องรูป, โมดูล features |
@@ -156,20 +156,20 @@ JSON ใน data attribute พิมพ์ด้วย `esc_attr( wp_json_encode
       <dl class="hud mono keep-case" data-hud>
         <div class="hud-item"><dt>{label}</dt><dd class="hud-val" data-text="{value}">{value}</dd></div>
         <!-- ...1 รายการต่อบรรทัดของ hero_hud_items (รูปแบบ ป้าย|ค่า · บรรทัดที่ไม่มี | ข้าม) ... -->
-        <i class="hud-sweep" aria-hidden="true"></i>
+        <!-- ไม่มี element สำหรับ sweep · แถบกวาดวาดด้วย .hud::after (ข้อ 3.1) เพราะ <dl> รับลูกได้เฉพาะ dt/dd/div -->
       </dl>
       <p class="sr-only">{hero_hud_note}</p>
     </div>
     <figure class="boot-visual hud-frame" data-hud-frame>
       <span class="hud-c tl" aria-hidden="true"></span><span class="hud-c tr" aria-hidden="true"></span><span class="hud-c bl" aria-hidden="true"></span><span class="hud-c br" aria-hidden="true"></span>
-      <img src="{hero_image}" alt="{hero_img_alt}" width="1000" height="1000" loading="eager" fetchpriority="high" decoding="async">
+      <img src="{hero_image}" alt="{hero_img_alt}" width="1000" height="1000" loading="eager" decoding="async">   <!-- ไม่มี fetchpriority บน img · ให้ preload (เดสก์ท็อปเท่านั้น) เป็นตัวตั้ง priority -->
     </figure>
   </div>
 </section>
 ```
 - `hero_image` ว่าง: แทน `<img>` ด้วย `<span class="img-slot-icon">{icon image}</span><span class="img-slot-note">{hero_img_note}</span>` และเพิ่มคลาส `img-slot` บน figure · **ห้ามใช้โลโก้กลม/orb แทน**
 - ถ้า `show_hero` ปิด: คง `<h1 class="sr-only">` เดิม
-- **Preload (A ใน functions.php)**: `add_action( 'wp_head', 'ea2000_preload_hero', 1 )` พิมพ์ `<link rel="preload" as="image" href="{hero_image}" fetchpriority="high">` เฉพาะ `is_front_page() && show_hero && hero_image !== ''`
+- **Preload (A ใน functions.php)**: `add_action( 'wp_head', 'ea2000_preload_hero', 1 )` พิมพ์ `<link rel="preload" as="image" href="{hero_image}" media="(min-width: 961px)" fetchpriority="high">` เฉพาะ `is_front_page() && show_hero && hero_image !== ''` · **เดสก์ท็อปเท่านั้น**: ต่ำกว่า 960 กล่องสินค้าอยู่ใต้ fold ทั้งกล่อง (LCP บนมือถือคือข้อความ) จึงไม่ preload และ `<img>` ไม่ใส่ `fetchpriority` เพื่อไม่ให้แย่งคิวกับฟอนต์
 - **Keys เดิม**: `hero_badge` (เปลี่ยน default เป็น `Expert Advisor สำหรับ MetaTrader 5`), `hero_title`, `hero_subtitle`, `hero_desc`, `hero_btn1_text`, `hero_btn2_text`, `hero_note`, `hero_image`, `hero_img_alt`
 - **Keys ใหม่**: `hero_hud_items` (textarea) default
   ```
@@ -328,7 +328,7 @@ JSON ใน data attribute พิมพ์ด้วย `esc_attr( wp_json_encode
 <section class="ch ch-install" id="install" data-chapter="06" data-chapter-label="{install_kicker}">
   <div class="container">
     {ch-head: install_kicker / install_title / install_intro}
-    <div class="film" tabindex="0" aria-label="ภาพขั้นตอนการติดตั้ง 3 ภาพ เลื่อนดูได้">
+    <div class="film" role="group" tabindex="0" aria-label="ภาพขั้นตอนการติดตั้ง 3 ภาพ เลื่อนดูได้">   <!-- role="group" จำเป็น: div เปล่าห้ามมี aria-label (ARIA 1.2) -->
       {ea2000_front_media( 'install_step1', 1280, 720, fig_label . ' 01/03' )}
       {ea2000_front_media( 'install_step2', 1280, 720, fig_label . ' 02/03' )}
       {ea2000_front_media( 'install_step3', 1280, 720, fig_label . ' 03/03' )}
@@ -446,19 +446,19 @@ JSON ใน data attribute พิมพ์ด้วย `esc_attr( wp_json_encode
 ทุก moment: (ก) เนื้อหาอยู่ใน HTML ตั้งแต่แรก (ข) สถานะเริ่มต้นที่ "ซ่อน/ยังไม่วาด" ต้อง prefix `.js` (ค) `.no-js` = สถานะจบ (ง) reduced motion = สถานะจบทันที (บล็อก clamp 0.01ms ใน section 25 ช่วยอยู่แล้ว แต่ต้องมีกฎ explicit ด้วย)
 
 ### 3.1 Boot sequence · วงเล็บ HUD วาดกรอบ + HUD strip decode (hero)
-- **DOM**: `figure[data-hud-frame]` (4 `.hud-c`), `dl[data-hud]` + `dd.hud-val[data-text]` + `i.hud-sweep`
+- **DOM**: `figure[data-hud-frame]` (4 `.hud-c`), `dl[data-hud]` + `dd.hud-val[data-text]` · แถบกวาดเป็น `.hud::after` (ไม่มี element ใน dl)
 - **CSS (B)**:
   ```css
   .hud-c { position:absolute; width:var(--hud-size); height:var(--hud-size); border:2px solid var(--hud); pointer-events:none; }
   .hud-c.tl { top:-2px; left:-2px; border-right:0; border-bottom:0 } /* tr bl br ตามมุม */
   .js .home-v3 [data-hud-frame]:not(.on) .hud-c { width:0; height:0; }
   .home-v3 .hud-c { transition: width .35s steps(6), height .35s steps(6) .1s; }
-  .hud-sweep { position:absolute; inset:0; pointer-events:none; opacity:0;
+  .hud::after { content:""; position:absolute; inset:0; pointer-events:none; opacity:0;
     background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), .55), transparent) -80px 0 / 80px 100% no-repeat; }
-  .js .hud.on .hud-sweep { opacity:1; animation: hud-sweep .9s linear .15s 1 both; }
+  .js .hud.on::after { opacity:1; animation: hud-sweep .9s linear .15s 1 both; }
   @keyframes hud-sweep { from { background-position:-80px 0 } to { background-position: calc(100% + 80px) 0 } }
   .no-js .hud-c { width:var(--hud-size); height:var(--hud-size); }
-  @media (prefers-reduced-motion: reduce) { .hud-c { width:var(--hud-size) !important; height:var(--hud-size) !important } .hud-sweep { display:none } }
+  @media (prefers-reduced-motion: reduce) { .hud-c { width:var(--hud-size) !important; height:var(--hud-size) !important } .hud::after { display:none } }
   ```
 - **JS (C, home.js ~1.0 KB)**:
   ```
@@ -482,7 +482,8 @@ JSON ใน data attribute พิมพ์ด้วย `esc_attr( wp_json_encode
   ```
   term = $('[data-term]'); lines = JSON.parse(term.dataset.lines); out = term.querySelector('[data-term-out]')
   plays = 0; max = +term.dataset.plays || 2
-  play(): out.textContent = ''; ea2000.typewriter(out, lines, { cps: 36, linePause: 320, wrap: 'span.term-line' })
+  play(): out.style.minHeight = ''; out.textContent = lines.map(l => l.t).join('\n'); out.style.minHeight = out.offsetHeight + 'px'   // จองความสูงสุดท้ายก่อนพิมพ์ กัน CLS ใต้เทอร์มินัล วัดใหม่ทุกครั้งที่เล่น
+         ea2000.typewriter(out, lines, { cps: 36, linePause: 320, wrap: 'span.term-line' })   // typewriter ล้าง out เองตอนเริ่ม
   ea2000.observe(term, play, { threshold: .4, repeat: true })   // repeat: observe ต่อ ไม่ unobserve จนกว่า plays >= max
   visibilitychange → typewriter.stop() เมื่อ hidden
   reduced → out.textContent = lines.map(l => l.t).join('\n') ครั้งเดียว ไม่มีอนิเมชัน
@@ -563,8 +564,9 @@ grid: `.modules { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); 
 #dossier-bt:checked ~ .tab-panels .panel-1, #dossier-fw:checked ~ .tab-panels .panel-2,
 #tier-1:checked ~ .tab-panels .panel-1, #tier-2:checked ~ .tab-panels .panel-2, #tier-3:checked ~ .tab-panels .panel-3 { display:grid; }
 .tab-radio:focus-visible ~ .tabs label { /* วง focus บน label ที่ตรงกัน ใช้ selector รายตัวเหมือนด้านบน */ outline:2px solid var(--primary); outline-offset:2px; }
-@media (min-width:1100px) { .tier-tabs { display:none } .tier-panels { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:1px; background:var(--border) } .tier-panel { display:block !important; background:var(--bg) } }
+@media (min-width:1100px) { .tier-tabs { display:none } .tiers .tab-radio { display:none } .tier-panels { display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0,1fr); gap:1px; background:var(--border) } .tier-panel { display:block !important; background:var(--bg) } }
 ```
+ที่ ≥ 1100: radio ของ tiers ต้อง `display:none` ด้วย ไม่ให้เป็น Tab stop ที่ไม่มี focus ให้เห็น (label ซ่อนแล้ว) · จำนวนคอลัมน์ใช้ `grid-auto-flow:column` + `grid-auto-columns` ให้ตามจำนวนแพ็กเกจที่พิมพ์จริง (2 หรือ 3) ห้าม `repeat(3, ...)` และห้าม `repeat(auto-fit, minmax(0,1fr))`
 `.tab-line` (เส้นไถล) เป็น enhancement ใน `@supports selector(:has(*))` เท่านั้น ถ้าไม่ทำก็ไม่ผิดสัญญา
 
 ### 3.8 Footer moments (ดูรายละเอียดข้อ 4.3): signal line วาดตัวเอง · keycap LINE + QR · typing prompt · spotlight · watermark power-on · นาฬิกาไทย
@@ -652,7 +654,7 @@ grid: `.modules { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); 
       </div>
       <div class="index-col">
         <h3 class="index-title mono">{footer_spec_title}</h3>
-        <dl class="sheet sheet--ink"><div class="sheet-row"><dt class="mono">{ป้าย}</dt><dd>{ค่า}</dd></div></dl>   <!-- footer_spec_items ป้าย|ค่า -->
+        <dl class="sheet sheet--ink keep-case"><div class="sheet-row"><dt class="mono">{ป้าย}</dt><dd>{ค่า}</dd></div></dl>   <!-- footer_spec_items ป้าย|ค่า · keep-case เพราะค่ามี MetaTrader 5 / Windows (ข้อ 0.2) -->
       </div>
     </nav>
 
@@ -665,7 +667,7 @@ grid: `.modules { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); 
   <div class="statusbar">
     <div class="container statusbar-inner">
       <p class="status-copy mono keep-case">&copy; {gmdate Y} {bloginfo name} · {footer_copyright_text}</p>
-      <p class="status-text">{footer_status_text}</p>
+      <p class="status-text keep-case">{footer_status_text}</p>   <!-- keep-case: ค่าเริ่มต้นมี Expert Advisor / MetaTrader 5 (ข้อ 0.2) -->
       <?php if show_footer_clock ?>
       <p class="status-clock mono keep-case"><span class="clock-label">{footer_clock_label}</span> <time data-clock-out data-tz="Asia/Bangkok" datetime="{wp_date('c', null, new DateTimeZone('Asia/Bangkok'))}">{wp_date('H:i', null, new DateTimeZone('Asia/Bangkok'))}</time></p>
       <?php endif ?>
@@ -706,8 +708,9 @@ grid: `.modules { display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); 
 **Typing prompt (JS main.js ~0.5 KB + typewriter)**
 ```
 p = $('[data-prompt]'); lines = JSON.parse(p.dataset.lines); out = p.querySelector('[data-prompt-out]'); loops = +p.dataset.loops || 3
-CSS: .js .prompt-static { display:none } · .cursor { animation: term-blink 1s steps(2) infinite }
+CSS: .js .prompt-static ใช้แบบ sr-only (position:absolute; width/height 1px; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0 · ห้าม display:none เพราะ .prompt-line เป็น aria-hidden ต้องมี twin ที่อยู่ใน accessibility tree ตามข้อ 7.2) · .cursor { animation: term-blink 1s steps(2) infinite }
 reduced → out.textContent = lines.join(' · '); return
+reserve(): วัดทุกบรรทัดจริง (ใส่ทีละบรรทัดใน out แล้วอ่าน p.prompt-line offsetHeight สูงสุด) → p.prompt-line.style.minHeight · เรียกตอน init, document.fonts.ready และ resize (rAF throttle) · กัน .index/.statusbar ขยับตอนบรรทัดพันบน 375px (CLS)
 ea2000.observe(p, () => cycle())
 cycle(): typewriter(out, [lines[i]], { cps: 30, onDone: () => setTimeout(() => { i = (i+1) % lines.length; if (++count < loops * lines.length) { out.textContent=''; cycle() } }, 4000) })
 no-JS: .prompt-static แสดง, .prompt-line ซ่อน (.no-js .prompt-line { display:none })
@@ -803,12 +806,12 @@ CSS: .site-footer.console { position:relative; background-color:var(--ink); back
 2. `40.2` ปุ่ม `.key*`, `.textlink`, `.key-arrow` (เลื่อน 4px ตอน hover)
 3. `40.3` HUD: `.hud-frame`, `.hud-c`, `.fig`, `.img-slot`/`.media-frame` v3 (ย้ายกฎ `.img-slot*`, `.media-frame` จาก 38b มาไว้ที่นี่แล้วลบของเดิม · radius เปลี่ยนเป็น 0 ในกรอบ HUD), `.wipe`
 4. `40.4` Rail: `.rail` (`position:sticky; top:calc(var(--header-h) + 24px); height:0; overflow:visible; z-index:60; width:var(--rail-w); margin-left:calc((100vw - 1120px) / 2 - 52px)` · แสดงเฉพาะ `@media (min-width:1240px)`), `.rail-counter`, `.rail-track` (2px สูง 160px), `.rail-fill`, `.rail-list`, `.rail-bar` (`position:sticky; top:var(--header-h); height:2px; z-index:60; background:var(--border)` + `.rail-bar-fill` scaleX) แสดงเฉพาะ `< 1240px`
-5. `40.5` Boot: `.boot` (`padding: var(--band-pad) 0 0`, `::before` dot grid + mask), `.boot-grid` (12 col), `.boot-copy`, `.boot-prefix`, `.boot-title` (clamp(2.4rem, 5.6vw, 4.4rem)), `.boot-desc`, `.boot-actions`, `.boot-note`, `.hud` (grid auto-fit minmax(150px, 1fr), `dt` `--muted` .7rem, `dd` `--text` .85rem, hairline บน), `.hud-sweep`, `.boot-visual` (`margin-bottom:-48px` ที่ ≥ 960 · `.ch-what` มี `padding-top: calc(var(--band-pad) + 48px)` ที่ ≥ 960)
+5. `40.5` Boot: `.boot` (`padding: var(--band-pad) 0 0`, `::before` dot grid + mask), `.boot-grid` (12 col), `.boot-copy`, `.boot-prefix`, `.boot-title` (clamp(2.4rem, 5.6vw, 4.4rem)), `.boot-desc`, `.boot-actions`, `.boot-note`, `.hud` (grid auto-fit minmax(150px, 1fr), `dt` `--muted` .7rem, `dd` `--text` .85rem, hairline บน, `position:relative`), `.hud::after` (แถบกวาด · ไม่มี `.hud-sweep` element), `.boot-visual` (`margin-bottom:-48px` ที่ ≥ 960 · `.ch-what` มี `padding-top: calc(var(--band-pad) + 48px)` ที่ ≥ 960)
 6. `40.6` Brief: `.brief-grid`, `.sheet`, `.sheet-row` (grid 140px 1fr · hairline), `.principle` (border-left 2px `--primary`, padding-left 16px)
 7. `40.7` Diag: `.diag-grid`, `.diag`, `.diag-row` (grid 40px 14px 1fr · hairline), `.led`, `.strike`, `.diag-resolved`
 8. `40.8` How: `.how-grid`, `.term*`, `.ledger*`, `.req*`, `.mono-marks .mark` (สี `--primary`)
 9. `40.9` Modules: `.modules`, `.module*`, `.scan`
-10. `40.10` Tabs: `.tab-radio`, `.tabs`, `.tab`, `.tab-idx`, `.tab-rec`, `.tab-panels`, `.tab-panel`, dossier (`.dossier-media`, `.dossier-body`), tiers (`.tiers`, `.tier-*` · ราคา Chakra Petch 3.2rem)
+10. `40.10` Tabs: `.tab-radio`, `.tabs`, `.tab`, `.tab-idx`, `.tab-rec`, `.tab-panels`, `.tab-panel`, dossier (`.dossier-media`, `.dossier-body`), tiers (`.tiers`, `.tier-*` · ราคา Chakra Petch 3.2rem · ที่ ≥ 1100 `.tier-panels` ใช้ `grid-auto-flow:column; grid-auto-columns:minmax(0,1fr)` ตามจำนวนแพ็กเกจ และ `.tiers .tab-radio { display:none }`)
 11. `40.11` Film: `.film` (`display:flex; gap:16px; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; padding-bottom:4px` + `::-webkit-scrollbar{display:none}` + `:focus-visible` outline), `.frame` (`flex:0 0 min(420px, 84%); scroll-snap-align:start` · รูพรุนฟิล์ม: `border-top:10px solid transparent; background-image: radial-gradient(...)` บน `::before`)
 12. `40.12` FAQ: `.qlog` (grid 2 col ≥ 960), `.q`, `.q-sum` (grid 40px 1fr 22px), `.q-idx`, `.q-mark` (สี่เหลี่ยม 22px ขอบ 1px วาด `+` ด้วย ::before/::after · `details[open]` หมุน 45deg), `.q-ans` (padding-left 40px, `p` .95rem)
 13. `40.13` Hazard: `.hazard` (`background:var(--warn-bg); color:var(--warn-text); border-top/bottom:12px solid; border-image: repeating-linear-gradient(45deg, var(--warn-border) 0 10px, transparent 10px 20px) 12`), `.hazard-inner` (max-width 860), `.hazard-stamp` (กล่อง hairline `--warn-border` padding 2px 8px), `.hazard-title`, `.hazard-text` (1.125rem), `.key-warn`
@@ -816,7 +819,7 @@ CSS: .site-footer.console { position:relative; background-color:var(--ink); back
 15. `40.15` `.no-js` และ `prefers-reduced-motion` ของ section 40 รวมไว้ท้าย section
 
 ### 5.4 Section 41 · `แถบท้ายเว็บ v2 · Console + dock + fab` (ต่อจาก 40)
-`.site-footer.console` และลูกทั้งหมดในข้อ 4, `.mobile-app-nav.dock`, `.line-fab`, `.float-line` v2, responsive (960: launch 1 col · index 2 col · 640: index 1 col, statusbar wrap, watermark clamp) · `.no-js`/reduced ของ footer ไว้ท้าย section
+`.site-footer.console` และลูกทั้งหมดในข้อ 4, `.mobile-app-nav.dock` (คอลัมน์ใช้ `grid-auto-flow:column; grid-auto-columns:minmax(0,1fr)` ให้ตามจำนวนปุ่มจริง 4 หรือ 5 · ห้าม `repeat(5, ...)`), `.line-fab`, `.float-line` v2, responsive (960: launch 1 col · index 2 col · 640: index 1 col, statusbar wrap, watermark clamp) · `.no-js`/reduced ของ footer ไว้ท้าย section
 
 ### 5.5 การถอนกฎเก่า (ทำใน commit เดียวกัน)
 ก่อนลบทุก selector ให้ `grep -l` ใน `ea2000/*.php ea2000/inc/*.php` **ยกเว้น** `front-page.php` และ `footer.php` (สองไฟล์นี้ถือว่าใช้เฉพาะคลาสในข้อ 0.2 และข้อ 2/4 เท่านั้น) · พบที่อื่น = เก็บ · ไม่พบ = ลบ
@@ -829,26 +832,26 @@ CSS: .site-footer.console { position:relative; background-color:var(--ink); back
 
 ## 6) JavaScript (C)
 
-### 6.1 main.js · เพิ่ม (global ทุกหน้า · ประมาณ +3.0 KB raw)
+### 6.1 main.js · เพิ่ม (global ทุกหน้า · วัดจริง 9 ก.ย. 2026: +6.7 KB raw · 12,503 → 19,231 B)
 | โมดูล | hook | หมายเหตุ |
 |---|---|---|
 | `ea2000` namespace | `window.ea2000 = { reduced, fine, observe, typewriter }` ประกาศต้น IIFE | ต้องมีก่อนโค้ด reveal เดิม |
 | observer | เปลี่ยน selector reveal เดิมเป็น `'.reveal, .watch'` · `observe(el, cb, { threshold, repeat })` ใช้ IO อีกตัวเมื่อ threshold ต่างจากค่าเริ่มต้น | reduced/no IO → cb ทันที |
-| `typewriter(out, lines, opts)` | `lines` = array ของ string หรือ `{t, c}` · `opts.cps` (ตัวอักษร/วินาที default 32), `opts.linePause` ms, `opts.wrap` (`'span.term-line'` → สร้าง span ต่อบรรทัด ใส่ class `c`), `opts.onDone` · ใช้ rAF + timestamp ไม่ใช่ setInterval · `Intl.Segmenter('th', {granularity:'grapheme'})` ถ้ามี ไม่มีก็ per code unit · คืน `{ stop }` · reduced → เขียนทั้งหมดทันทีแล้ว onDone | ~1.2 KB |
-| footer prompt | `[data-prompt]` (4.3) | ~0.5 KB |
-| footer spotlight | `.site-footer[data-spotlight]` (4.3) | ~0.5 KB |
-| clock | `[data-clock-out]` (4.3) | ~0.4 KB |
+| `typewriter(out, lines, opts)` | `lines` = array ของ string หรือ `{t, c}` · `opts.cps` (ตัวอักษร/วินาที default 32), `opts.linePause` ms, `opts.wrap` (`'span.term-line'` → สร้าง span ต่อบรรทัด ใส่ class `c`), `opts.onDone` · ใช้ rAF + timestamp ไม่ใช่ setInterval · `Intl.Segmenter('th', {granularity:'grapheme'})` ถ้ามี ไม่มีก็ per code unit · คืน `{ stop }` · reduced → เขียนทั้งหมดทันทีแล้ว onDone | ~2.4 KB (รวม observe ~1.4 KB) |
+| footer prompt | `[data-prompt]` (4.3) · รวม reserve() จองความสูงบรรทัดที่สูงที่สุด | ~2.0 KB |
+| footer spotlight | `.site-footer[data-spotlight]` (4.3) | ~0.7 KB |
+| clock | `[data-clock-out]` (4.3) | ~0.6 KB |
 | LINE event | เพิ่ม `link_pos: link.dataset.linePos || ''` ใน payload `line_click` เดิม | +0.1 KB |
 | dock | ไม่แก้ (ยังหา `.mobile-app-nav`) | |
 
-### 6.2 home.js · ไฟล์ใหม่ (หน้าแรกเท่านั้น · ประมาณ 3.4 KB raw)
+### 6.2 home.js · ไฟล์ใหม่ (หน้าแรกเท่านั้น · วัดจริง 9 ก.ย. 2026: 4,717 B raw ≈ 4.6 KB)
 IIFE เดียว guard `if (!document.querySelector('.home-v3')) return;`
 | โมดูล | hook | ขนาด |
 |---|---|---|
-| boot | `[data-hud-frame]`, `[data-hud]`, `.hud-val[data-text]` (3.1) | 1.0 KB |
-| terminal | `[data-term]` (3.2) | 1.2 KB |
-| rail | `.rail`, `[data-rail-n]`, `[data-rail-link]`, `section[data-chapter]`, `--p` fallback (3.4) | 1.0 KB |
-| glue | | 0.2 KB |
+| boot | `[data-hud-frame]`, `[data-hud]`, `.hud-val[data-text]` (3.1) | 1.1 KB |
+| terminal | `[data-term]` (3.2) · รวมการจอง min-height ก่อนเล่น | 1.5 KB |
+| rail | `.rail`, `[data-rail-n]`, `[data-rail-link]`, `section[data-chapter]`, `--p` fallback (3.4) | 1.7 KB |
+| glue | | 0.3 KB |
 
 **A ต้อง enqueue** ใน `ea2000_assets()`:
 ```php
@@ -857,7 +860,7 @@ if ( is_front_page() ) {
 	wp_enqueue_script( 'ea2000-home', get_template_directory_uri() . '/assets/js/home.js', array( 'ea2000-main' ), file_exists( $home_path ) ? filemtime( $home_path ) : EA2000_VERSION, true );
 }
 ```
-งบรวม: main.js 12.5 → ~15.5 KB · home.js ~3.4 KB · รวมเพิ่ม ~6.4 KB raw (เพดาน +15 KB) · ไม่มี canvas ไม่มี scroll-jacking ไม่มี listener บน `pointermove` นอก footer
+งบรวม (วัดจริง 9 ก.ย. 2026 หลังแก้ CLS ข้อ 3.2 และ 4.3): main.js 12,503 → 19,231 B (12.2 → 18.8 KB) · home.js 4,717 B (4.6 KB) · รวมเพิ่ม 11,445 B ≈ 11.2 KB raw (เพดาน +15 KB = 15,360 B เหนือ 12,503 B เดิม) · ตัวเลขประมาณการเดิม (+3.0 / 3.4 / 6.4 KB) ถือเป็นประวัติ · ไม่มี canvas ไม่มี scroll-jacking ไม่มี listener บน `pointermove` นอก footer
 
 ---
 
@@ -876,7 +879,7 @@ if ( is_front_page() ) {
 ### 7.2 A11y
 - [ ] `.term`, `.prompt-line`, `.watermark`, `.signal`, `.rail-counter`, `.hud-c`, `.led`, `.scan`, `.switch` เป็น `aria-hidden` และมี twin ที่อ่านได้ (ledger, prompt-static, sr-only)
 - [ ] radio ทุกชุดใช้ label จริง กด Tab แล้วเห็น focus บนแท็บ ลูกศรสลับได้ · details/summary เปิดปิดด้วยคีย์บอร์ด
-- [ ] `.film` โฟกัสได้ (`tabindex=0` + aria-label) และเลื่อนด้วยลูกศร
+- [ ] `.film` โฟกัสได้ (`role="group"` + `tabindex=0` + aria-label · ไม่มี role = aria-label ถูกทิ้ง) และเลื่อนด้วยลูกศร · radio ของ tiers ไม่เป็น Tab stop ที่ ≥ 1100 (`display:none`)
 - [ ] focus ring บนพื้นมืดเป็น `--ink-accent` · บนพื้นสว่างเป็น `--primary` · ไม่มี `outline:none` ที่ไม่มีของแทน
 - [ ] คอนทราสต์ทุกคู่ตามข้อ 5.1 · ข้อความบน `--warn-bg` ใช้ `--warn-text`
 - [ ] `prefers-reduced-motion`: ไม่มี decode, ไม่มี typewriter (ข้อความครบทันที), ไม่มี spotlight, ไม่มี sweep/scan, wipe/strike/watermark/signal อยู่สถานะจบ
@@ -889,8 +892,9 @@ if ( is_front_page() ) {
 - [ ] `/go/` และ inner pages ทั้ง 7 render เหมือนก่อนแก้ (เทียบ screenshot)
 
 ### 7.4 ประสิทธิภาพ
-- [ ] LCP element = `img` ในกล่องสินค้า · มี `<link rel="preload">` 1 แท็ก ตรงกับ `src` · ไม่มี opacity/clip บน hero ตอนแรก
-- [ ] JS: `main.js ≤ 16 KB raw`, `home.js ≤ 4 KB raw` · home.js โหลดเฉพาะหน้าแรก (ตรวจ view-source หน้า /pricing/)
+- [ ] LCP element (≥ 961px) = `img` ในกล่องสินค้า · มี `<link rel="preload">` 1 แท็ก ตรงกับ `src` และมี `media="(min-width: 961px)"` (เดสก์ท็อปเท่านั้น · บนมือถือกล่องอยู่ใต้ fold LCP คือข้อความ) · `img` ไม่มี `fetchpriority` · ไม่มี opacity/clip บน hero ตอนแรก
+- [ ] JS: `main.js ≤ 19.5 KB raw` (วัด 19,231 B), `home.js ≤ 5 KB raw` (วัด 4,717 B) · รวมเพิ่มจาก 12,503 B เดิมไม่เกิน +15 KB (วัด +11,445 B) · home.js โหลดเฉพาะหน้าแรก (ตรวจ view-source หน้า /pricing/)
+- [ ] ไม่มี layout shift จาก typewriter: `.term-out` ได้ `min-height` เท่าความสูงข้อความเต็มก่อนเล่นทุกครั้ง (3.2) · `p.prompt-line` ได้ `min-height` เท่าบรรทัดที่สูงที่สุดหลังวัดจริง (4.3) · ตรวจด้วย PerformanceObserver layout-shift ที่ 375px และ 360px: ไม่มี entry ที่ source เป็น `.how-ledger` หรือ `.index`
 - [ ] CSS: style.css เล็กกว่าเดิมสุทธิ · ไม่มี `backdrop-filter`, `filter: blur` ในหน้าแรก/footer
 - [ ] ไม่มี layout shift จาก: QR flyout (absolute), rail (height 0), watermark (overflow hidden), นาฬิกา (tabular-nums)
 - [ ] pointermove listener มีที่ footer เดียว และไม่ bind บน touch/reduced
@@ -899,6 +903,7 @@ if ( is_front_page() ) {
 - [ ] `grep -E "class=\"[^\"]*\b(card|sec-head|kicker|badge|price-flag|ember|reveal|cta|risk-box|footer-cta|footer-main|footer-prep|grid-3|grid-4|btn)\b" ea2000/front-page.php ea2000/footer.php` = 0
 - [ ] ไม่มี blur blob, candlestick SVG, float loop, pill button, icon tile, centered kicker/H2/underline, CTA band แยก, card-stack footer
 - [ ] main.js ไม่ byte-identical กับ FENIX (มี namespace + โมดูลใหม่) · home.js เป็นไฟล์ใหม่
+- [ ] ข้อความไม่ซ้ำคำต่อคำ: intersect ค่า string ใน `ea2000_defaults()` กับ `fenix_defaults()` ของ FENIX (อ่านอย่างเดียวจาก `D:\EA VIDEO\fenix-pro-repo`) เฉพาะ key ที่ผู้เข้าชมเห็น (title/desc/note/tag/items/btn ทุกบล็อกและ footer) ความยาว 14 ตัวอักษรขึ้นไป · ต้อง = 0 (ยกเว้น URL, ชื่อไฟล์, และ key ที่ไม่ได้พิมพ์ในเทมเพลตอีกแล้ว) · ตรวจซ้ำบนเว็บสดด้วย curl ทั้งสองโดเมนว่าไม่มี string เดียวกันโผล่ทั้งคู่
 - [ ] เปิดหน้าแรก FENIX กับ EA2000 คู่กันที่ 1280px และ 375px: ไม่มีบล็อกใดที่วางเหมือนกันทั้ง layout และ motion
 
 ### 7.6 ก่อน push (ทุกคน)

@@ -226,7 +226,6 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 				<?php foreach ( $ea2000_hud_items as $ea2000_hud ) : ?>
 				<div class="hud-item"><dt><?php echo esc_html( $ea2000_hud['label'] ); ?></dt><dd class="hud-val" data-text="<?php echo esc_attr( $ea2000_hud['value'] ); ?>"><?php echo esc_html( $ea2000_hud['value'] ); ?></dd></div>
 				<?php endforeach; ?>
-				<i class="hud-sweep" aria-hidden="true"></i>
 			</dl>
 			<?php if ( '' !== $ea2000_hud_note ) : ?>
 			<p class="sr-only"><?php echo esc_html( $ea2000_hud_note ); ?></p>
@@ -236,7 +235,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 		<?php if ( '' !== $ea2000_hero_img ) : ?>
 		<figure class="boot-visual hud-frame" data-hud-frame>
 			<?php ea2000_hud_corners(); ?>
-			<img src="<?php echo esc_url( $ea2000_hero_img ); ?>" alt="<?php echo esc_attr( $ea2000_hero_alt ); ?>" width="1000" height="1000" loading="eager" fetchpriority="high" decoding="async">
+			<img src="<?php echo esc_url( $ea2000_hero_img ); ?>" alt="<?php echo esc_attr( $ea2000_hero_alt ); ?>" width="1000" height="1000" loading="eager" decoding="async">
 		</figure>
 		<?php else : /* ยังไม่มีภาพกล่องสินค้า: ช่องว่างพร้อมคำสั่ง (ห้ามใช้โลโก้กลมแทน) */ ?>
 		<figure class="boot-visual hud-frame img-slot" data-hud-frame aria-label="<?php echo esc_attr( $ea2000_hero_alt ); ?>">
@@ -288,7 +287,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 				$ea2000_principle_label = trim( (string) ea2000_mod( 'what_principle_label' ) );
 				?>
 				<?php if ( ! empty( $ea2000_sheet_rows ) ) : ?>
-				<dl class="sheet">
+				<dl class="sheet keep-case">
 					<?php foreach ( $ea2000_sheet_rows as $ea2000_row ) : ?>
 					<div class="sheet-row"><dt class="mono"><?php echo esc_html( $ea2000_row[0] ); ?></dt><dd><?php echo esc_html( $ea2000_row[1] ); ?></dd></div>
 					<?php endforeach; ?>
@@ -587,7 +586,7 @@ $ea2000_install_href  = '' !== $ea2000_install_url ? ea2000_link_url( $ea2000_in
 	<div class="container">
 		<?php ea2000_front_ch_head( $ea2000_chapters['install'], $ea2000_ch_total, ea2000_mod( 'install_title' ), ea2000_mod( 'install_intro' ) ); ?>
 		<?php if ( $ea2000_install_count > 0 ) : ?>
-		<div class="film" tabindex="0" aria-label="<?php echo esc_attr( sprintf( 'ภาพขั้นตอนการติดตั้ง %d ภาพ เลื่อนดูได้', $ea2000_install_count ) ); ?>">
+		<div class="film" role="group" tabindex="0" aria-label="<?php echo esc_attr( sprintf( 'ภาพขั้นตอนการติดตั้ง %d ภาพ เลื่อนดูได้', $ea2000_install_count ) ); ?>">
 			<?php foreach ( $ea2000_install_steps as $ea2000_step ) : ?>
 			<?php ea2000_front_media( $ea2000_step['key'], 1280, 720, trim( $ea2000_fig_label . ' ' . $ea2000_step['n'] . '/' . $ea2000_install_total ), 'frame' ); ?>
 			<?php endforeach; ?>
@@ -731,7 +730,7 @@ $ea2000_risk_more  = trim( (string) ea2000_mod( 'risk_more_text' ) );
 ?>
 <section class="ch ch-risk hazard" id="risk"<?php ea2000_front_ch_attrs( $ea2000_chapters['risk'] ); ?>>
 	<div class="container hazard-inner">
-		<p class="hazard-label mono keep-case"><?php if ( '' !== $ea2000_risk_label ) : ?><span class="hazard-stamp"><?php echo esc_html( $ea2000_risk_label ); ?></span><?php endif; ?><span class="hazard-kicker"><?php echo esc_html( $ea2000_chapters['risk']['label'] ); ?></span></p>
+		<p class="hazard-label mono keep-case"><?php if ( '' !== $ea2000_risk_label ) : ?><span class="hazard-stamp"><?php echo esc_html( $ea2000_risk_label ); ?></span><?php endif; ?><span class="hazard-topic"><?php echo esc_html( $ea2000_chapters['risk']['label'] ); ?></span></p>
 		<h2 class="hazard-title"><?php echo esc_html( ea2000_mod( 'risk_title' ) ); ?></h2>
 		<p class="hazard-text"><?php echo nl2br( esc_html( ea2000_mod( 'risk_text' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
 		<?php if ( '' !== $ea2000_risk_more ) : ?>

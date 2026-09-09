@@ -275,7 +275,7 @@ $ea2000_mobile_nav[] = array(
 			<?php if ( $ea2000_spec_rows ) : ?>
 			<div class="index-col">
 				<h3 class="index-title mono"><?php echo esc_html( ea2000_mod( 'footer_spec_title' ) ); ?></h3>
-				<dl class="sheet sheet--ink">
+				<dl class="sheet sheet--ink keep-case">
 					<?php foreach ( $ea2000_spec_rows as $ea2000_spec_row ) : ?>
 					<div class="sheet-row"><dt class="mono"><?php echo esc_html( $ea2000_spec_row[0] ); ?></dt><dd><?php echo esc_html( $ea2000_spec_row[1] ); ?></dd></div>
 					<?php endforeach; ?>
@@ -294,7 +294,7 @@ $ea2000_mobile_nav[] = array(
 		<div class="container statusbar-inner">
 			<p class="status-copy mono keep-case">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php echo esc_html( get_bloginfo( 'name' ) ); ?> · <?php echo esc_html( ea2000_mod( 'footer_copyright_text' ) ); ?></p>
 			<?php if ( '' !== trim( (string) ea2000_mod( 'footer_status_text' ) ) ) : ?>
-			<p class="status-text"><?php echo esc_html( ea2000_mod( 'footer_status_text' ) ); ?></p>
+			<p class="status-text keep-case"><?php echo esc_html( ea2000_mod( 'footer_status_text' ) ); ?></p>
 			<?php endif; ?>
 			<?php if ( ea2000_mod( 'show_footer_clock' ) ) : ?>
 			<p class="status-clock mono keep-case"><span class="clock-label"><?php echo esc_html( ea2000_mod( 'footer_clock_label' ) ); ?></span> <time data-clock-out data-tz="Asia/Bangkok" datetime="<?php echo esc_attr( wp_date( 'c', null, $ea2000_bkk ) ); ?>"><?php echo esc_html( wp_date( 'H:i', null, $ea2000_bkk ) ); ?></time></p>

@@ -23,7 +23,7 @@
 		<?php $ea2000_wordmark = trim( (string) ea2000_mod( 'brand_wordmark' ) ); ?>
 		<?php if ( $ea2000_wordmark ) : /* โลโก้แนวนอน */ ?>
 		<a class="brand brand--wordmark" href="<?php echo esc_url( home_url( '/' ) ); ?>">
-			<img class="brand-wordmark" src="<?php echo esc_url( $ea2000_wordmark ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" width="1400" height="255">
+			<img class="brand-wordmark" src="<?php echo esc_url( $ea2000_wordmark ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" width="660" height="120" fetchpriority="low">
 		</a>
 		<?php else : /* โลโก้กลม + ชื่อแบรนด์ */ ?>
 		<a class="brand" href="<?php echo esc_url( home_url( '/' ) ); ?>">

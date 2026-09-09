@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 1.1.1
+Version: 1.1.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -2602,7 +2602,9 @@ h3 {
 	*::after {
 		animation-duration: 0.01ms !important;
 		animation-iteration-count: 1 !important;
+		animation-delay: 0s !important;
 		transition-duration: 0.01ms !important;
+		transition-delay: 0s !important;
 	}
 
 	.reveal {
@@ -4832,7 +4834,8 @@ a.lh-feature-frame:hover {
 	overflow-wrap: anywhere;
 }
 
-.hud-sweep {
+.hud::after {
+	content: "";
 	position: absolute;
 	inset: 0;
 	opacity: 0;
@@ -4840,7 +4843,7 @@ a.lh-feature-frame:hover {
 	background: linear-gradient(90deg, transparent, rgba(var(--accent-rgb), 0.55), transparent) -80px 0 / 80px 100% no-repeat;
 }
 
-.js .hud.on .hud-sweep {
+.js .hud.on::after {
 	opacity: 1;
 	animation: hud-sweep 0.9s linear 0.15s 1 both;
 }
@@ -5559,8 +5562,9 @@ a.lh-feature-frame:hover {
 .film {
 	display: flex;
 	gap: 16px;
-	margin: 0 0 32px;
-	padding-bottom: 4px;
+	margin: -4px -4px 32px;
+	padding: 4px;
+	scroll-padding-inline-start: 4px;
 	overflow-x: auto;
 	scroll-snap-type: x mandatory;
 	scrollbar-width: none;
@@ -5772,9 +5776,14 @@ a.lh-feature-frame:hover {
 		display: none;
 	}
 
+	.tiers .tab-radio {
+		display: none;
+	}
+
 	.tier-panels {
 		display: grid;
-		grid-template-columns: repeat(3, minmax(0, 1fr));
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
 		gap: 1px;
 		padding-top: 0;
 		border: 1px solid var(--border);
@@ -5959,7 +5968,7 @@ a.lh-feature-frame:hover {
 		transition: none;
 	}
 
-	.hud-sweep,
+	.hud::after,
 	.scan {
 		display: none;
 	}
@@ -5969,6 +5978,7 @@ a.lh-feature-frame:hover {
 		transition: none;
 	}
 
+	.js .diag-resolved,
 	.diag-resolved {
 		opacity: 1;
 		transition: none;
@@ -6372,7 +6382,15 @@ a.lh-feature-frame:hover {
 }
 
 .js .prompt-static {
-	display: none;
+	position: absolute !important;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
 }
 
 /* ---------- Index grid · ดัชนีหน้า ช่องทาง เอกสาร ข้อมูลระบบ ---------- */
@@ -6674,7 +6692,8 @@ a.lh-feature-frame:hover {
 		left: 0;
 		z-index: 120;
 		display: grid;
-		grid-template-columns: repeat(5, minmax(0, 1fr));
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
 		gap: 0;
 		padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
 		border-top: 1px solid var(--ink-border-strong);
@@ -6840,7 +6859,7 @@ a.lh-feature-frame:hover {
 		padding: 14px 0;
 	}
 
-	.status-top {
+	.site-footer.console .status-top {
 		margin-left: 0;
 	}
 

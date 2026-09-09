@@ -80,6 +80,10 @@
 				if (++plays >= max) {
 					watch.stop();
 				}
+				/* จองความสูงสุดท้ายก่อนพิมพ์ กันเนื้อหาใต้เทอร์มินัลขยับ (CLS) · วัดใหม่ทุกครั้งที่เล่นเพื่อรองรับหน้าจอที่เปลี่ยนขนาด */
+				termOut.style.minHeight = '';
+				termOut.textContent = lines.map(function (l) { return l.t; }).join('\n');
+				termOut.style.minHeight = termOut.offsetHeight + 'px';
 				typing = E.typewriter(termOut, lines, { cps: 36, linePause: 320, wrap: 'span.term-line' });
 			}, { threshold: 0.4, repeat: true });
 			document.addEventListener('visibilitychange', function () {

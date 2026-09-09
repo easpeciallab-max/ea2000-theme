@@ -314,6 +314,32 @@
 			var loops = parseInt(promptEl.getAttribute('data-loops'), 10) || 3;
 			var pi = 0;
 			var pCount = 0;
+			/* จองความสูงของบรรทัดที่สูงที่สุดไว้ก่อน (วัดจริงทุกบรรทัด ไม่ใช่นับตัวอักษร) กัน index/statusbar ขยับตอนพิมพ์ · วัดใหม่เมื่อฟอนต์มาและเมื่อ resize */
+			var promptLine = promptOut.parentNode;
+			var promptRaf = 0;
+			var reservePrompt = function () {
+				var keep = promptOut.textContent;
+				var max = 0;
+				promptLine.style.minHeight = '';
+				promptLines.forEach(function (l) {
+					promptOut.textContent = l;
+					max = Math.max(max, promptLine.offsetHeight);
+				});
+				promptOut.textContent = keep;
+				promptLine.style.minHeight = max + 'px';
+			};
+			reservePrompt();
+			if (document.fonts && document.fonts.ready) {
+				document.fonts.ready.then(reservePrompt);
+			}
+			window.addEventListener('resize', function () {
+				if (!promptRaf) {
+					promptRaf = raf(function () {
+						promptRaf = 0;
+						reservePrompt();
+					});
+				}
+			});
 			var cycle = function () {
 				typewriter(promptOut, [promptLines[pi]], {
 					cps: 30,
