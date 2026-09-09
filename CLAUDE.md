@@ -153,3 +153,11 @@
 - **น้ำหนักหน้าแรกหลังปรับ**: HTML 72 KB · CSS+JS 12.5 KB (เดิมเกือบ 500 KB) · รูป 151 KB
 - **เจ้าของยืนยัน 8 ก.ย. 2026**: FENIX กับ EA2000 เป็นเครือเดียวกัน แยกแบรนด์เพื่อสร้างฐานลูกค้าคนละกลุ่ม → ราคา แพ็กเกจ คำสัญญาบริการ และเงื่อนไข **ใช้ตาม FENIX ได้เลย ไม่ต้องถามอีก** · เนื้อหาให้เรียบเรียงใหม่ ไม่ก๊อปคำต่อคำ เพื่อเลี่ยง duplicate content
 - **คำสั่งเจ้าของ: ห้ามปลด noindex จนกว่าจะสั่ง** และห้ามทำงานนอกเหนือคำสั่ง
+
+## 13) Deploy อัตโนมัติใช้งานได้แล้ว (9 ก.ย. 2026) และลบธีม EA Special แล้ว
+- **วิธี deploy ต่อจากนี้: `git push origin main` อย่างเดียว** · GitHub ยิง webhook (id 676503056, push event, JSON) ไปที่ Push-to-Deploy URL ของ WP Pusher → WP Pusher ดึงโค้ดจาก repo public โดยไม่ต้องใช้ token · วัดจริง: push 11:44:04 → log "Push-to-Deploy was initiated" 11:44:05 → "Theme 'EA2000' was successfully updated" 11:44:06
+- **ตรวจว่า deploy ถึงดิสก์จริง**: `GET /wp-json/wp/v2/themes?status=active&_fields=version` (auth) อ่าน `Version:` จาก style.css บนดิสก์ ข้ามแคชทุกชั้น → ให้ bump `Version` ใน style.css header ทุกครั้งที่ต้องการยืนยัน deploy (ตอนนี้ 1.0.1) · ถ้า push แรกไม่ขึ้นภายใน 1 นาที (เคยเกิด 1 ครั้ง น่าจะเพราะ GitHub ยังไม่สร้าง archive ของ commit ใหม่ทัน) ให้ push commit ถัดไปหรือกด WP Pusher > Themes > Update theme ผ่าน JS click
+- WP Pusher **เปิด logging ไว้** (WP Pusher > Log) เพื่อดูผล deploy ทุกครั้ง · ถ้าไฟล์ log โตค่อยกด Disable logging
+- **Push-to-Deploy URL เป็นความลับ** ไม่เก็บใน repo/แชท · เจ้าของเป็นคนคัดลอกจาก WP Pusher ไปวางใน GitHub เอง (Chrome ไม่ยอมให้สคริปต์คัดลอกจากแท็บที่ไม่ได้โฟกัส ต้องเป็นการคลิกของคนจริง)
+- **ธีม EA Special ลบออกจากเซิร์ฟเวอร์แล้ว** (เจ้าของสั่ง 9 ก.ย. 2026) · รายการใน WP Pusher หายไปด้วย · repo `easpecial-th/easpecial-theme` ยังอยู่บน GitHub ถ้าต้องกู้คืน
+- ข้อ 5 และข้อ 11 ที่เขียนว่า "ปิด Push-to-Deploy" และ "อัปโหลด zip" ถือเป็นประวัติ ไม่ใช้แล้ว
