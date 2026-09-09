@@ -161,3 +161,9 @@
 - **Push-to-Deploy URL เป็นความลับ** ไม่เก็บใน repo/แชท · เจ้าของเป็นคนคัดลอกจาก WP Pusher ไปวางใน GitHub เอง (Chrome ไม่ยอมให้สคริปต์คัดลอกจากแท็บที่ไม่ได้โฟกัส ต้องเป็นการคลิกของคนจริง)
 - **ธีม EA Special ลบออกจากเซิร์ฟเวอร์แล้ว** (เจ้าของสั่ง 9 ก.ย. 2026) · รายการใน WP Pusher หายไปด้วย · repo `easpecial-th/easpecial-theme` ยังอยู่บน GitHub ถ้าต้องกู้คืน
 - ข้อ 5 และข้อ 11 ที่เขียนว่า "ปิด Push-to-Deploy" และ "อัปโหลด zip" ถือเป็นประวัติ ไม่ใช้แล้ว
+
+## 14) เก็บกวาดรายการเพจ (9 ก.ย. 2026) · หน้าจริงของ EA2000 มี 12 หน้าเท่านั้น
+- **ย้ายลงถังขยะแล้ว** (กู้คืนได้ 30 วัน): home 20 (หน้าแรกเก่า Elementor), results 23, guides 25, risk-warning 29, contact 31 · redirect 301 ของ /results/ /guides/ /risk-warning/ ยังทำงานเพราะ inc/seo.php จับที่ path ไม่ได้พึ่งเพจ
+- **หน้าจริง (publish ทั้งหมด ไม่มี draft ค้าง)**: 65 home-ea2000 (หน้าแรก) · 49 backtest · 50 forward-test · 51 pricing · 52 how-to-install · 53 risk-disclosure · 54 go · 35 articles (posts page) · 27 about (เขียนใหม่เป็นของ EA2000 จากข้อเท็จจริง FENIX) · 33 terms-of-use (เขียนใหม่ 11 ข้อตามเงื่อนไข FENIX: ไม่คืนเงินหลังส่งมอบ ยกเว้นความผิดพลาดของผู้ให้บริการ) · 3 privacy-policy · 11 data-deletion
+- footer legal nav auto-link: about, privacy-policy, terms-of-use เฉพาะที่ publish (footer.php ตรวจ post_status แล้ว) · deploy f83ae42 ผ่าน webhook อัตโนมัติ ยืนยันจากลิงก์ที่โผล่บนหน้าเว็บ
+- บทเรียน: ตอนสร้างเพจใหม่ต้องเก็บเพจเก่าทันที ไม่ปล่อยให้ชื่อซ้ำในรายการ
