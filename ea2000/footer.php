@@ -38,11 +38,15 @@ foreach ( ea2000_lines( ea2000_mod( 'footer_spec_items' ) ) as $ea2000_spec_line
 	$ea2000_spec_rows[] = array( $ea2000_spec_label, $ea2000_spec_value );
 }
 
-/* Index · เมนู footer เฉพาะระดับบน · ไม่มีเมนู = รายการหน้าตามแผนเพจ EA2000 */
+/* Index · เมนูหลัก (primary) เฉพาะระดับบน · ถ้าไม่มีใช้เมนู footer · ไม่มีทั้งคู่ = รายการหน้าตามแผนเพจ EA2000
+   (เมนู footer บนเว็บจริงมีแต่ลิงก์เอกสาร ซึ่งคอลัมน์ "เอกสาร" แสดงอยู่แล้ว) */
 $ea2000_index = array();
 $ea2000_menu_locations = get_nav_menu_locations();
-if ( ! empty( $ea2000_menu_locations['footer'] ) ) {
-	$ea2000_menu_items = wp_get_nav_menu_items( (int) $ea2000_menu_locations['footer'] );
+foreach ( array( 'primary', 'footer' ) as $ea2000_index_location ) {
+	if ( ! empty( $ea2000_index ) || empty( $ea2000_menu_locations[ $ea2000_index_location ] ) ) {
+		continue;
+	}
+	$ea2000_menu_items = wp_get_nav_menu_items( (int) $ea2000_menu_locations[ $ea2000_index_location ] );
 	if ( is_array( $ea2000_menu_items ) ) {
 		foreach ( $ea2000_menu_items as $ea2000_menu_item ) {
 			if ( (int) $ea2000_menu_item->menu_item_parent > 0 || '' === trim( (string) $ea2000_menu_item->url ) || '#' === $ea2000_menu_item->url ) {
