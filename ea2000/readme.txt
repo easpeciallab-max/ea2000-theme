@@ -348,7 +348,7 @@ tests/link-hub-downloads.php:
 11) เวอร์ชันและ cache
 ----------------------------------------------------------------
 
-Theme header เป็น Version 1.0.0
+Theme header เป็น Version 1.0.1
 ธีมใช้ filemtime() เป็น version ของ style.css และ main.js
 ดังนั้นแก้ CSS/JS แล้ว browser จะได้ query string ใหม่อัตโนมัติ
 
@@ -369,6 +369,11 @@ Theme header เป็น Version 1.0.0
 ----------------------------------------------------------------
 13) Changelog
 ----------------------------------------------------------------
+
+1.0.1
+- header และ footer โทนเขียวเข้ม · แก้เมนูย่อยมือถือ · ซ่อนข้อความสำหรับแอดมิน · no-js fallback
+- เพิ่ม inc/seo.php: redirect หน้าเก่า, robots sitemap, noindex อัตโนมัติสำหรับหน้าที่ยังไม่มีข้อมูล, Yoast meta ผ่าน REST
+- SoftwareApplication schema ทำงานร่วมกับ Yoast · ตัด block library และ emoji · บีบรูปทั้งชุดเป็น WebP/JPEG
 
 1.0.0
 - เวอร์ชันแรกของธีม EA2000
