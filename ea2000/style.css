@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 1.0.1
+Version: 1.0.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -259,7 +259,7 @@ h3 {
    4) Layout helpers
    ========================================================== */
 .container {
-	width: min(1140px, calc(100% - 48px));
+	width: min(1120px, calc(100% - 48px));
 	margin-inline: auto;
 }
 
@@ -269,7 +269,7 @@ h3 {
 }
 
 .section {
-	padding: 104px 0;
+	padding: 96px 0;
 	position: relative;
 }
 
@@ -280,8 +280,8 @@ h3 {
 }
 
 .sec-head {
-	max-width: 640px;
-	margin: 0 auto 56px;
+	max-width: 720px;
+	margin: 0 auto 40px;
 	text-align: center;
 }
 
@@ -356,6 +356,7 @@ h3 {
 	align-items: center;
 	justify-content: center;
 	gap: 0.55rem;
+	min-height: 44px;
 	padding: 0.9rem 1.7rem;
 	border-radius: 999px;
 	border: 1px solid transparent;
@@ -870,7 +871,7 @@ h3 {
 	overflow: hidden;
 	padding: 92px 0 110px;
 	background:
-		radial-gradient(1100px 520px at 14% -10%, rgba(var(--accent-rgb), 0.18), transparent 62%),
+		radial-gradient(1100px 520px at 14% -10%, rgba(var(--accent-rgb), 0.12), transparent 62%),
 		var(--bg);
 }
 
@@ -885,7 +886,7 @@ h3 {
 	position: absolute;
 	border-radius: 50%;
 	filter: blur(70px);
-	opacity: 0.25;
+	opacity: 0.18;
 }
 
 .ember-a {
@@ -910,7 +911,7 @@ h3 {
 	bottom: 0;
 	width: min(56vw, 640px);
 	color: var(--primary);
-	opacity: 0.12;
+	opacity: 0.08;
 }
 
 /* เมื่อมีรูปสินค้า (hero_image) ซ่อนแท่งเทียนตกแต่ง · ให้แสงมะนาวอ่อน + ember-a พาบรรยากาศ hero แทน */
@@ -919,7 +920,7 @@ h3 {
 }
 
 .hero:has(.hero-visual--photo) .ember-b {
-	opacity: 0.14;
+	opacity: 0.10;
 }
 
 .hero-inner {
@@ -1095,14 +1096,14 @@ h3 {
 	border: 1px solid var(--border);
 	border-radius: var(--radius);
 	padding: 26px 24px;
-	box-shadow: var(--shadow);
+	box-shadow: none;
 	transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .card:hover {
-	transform: translateY(-4px);
+	transform: translateY(-2px);
 	border-color: var(--border-primary);
-	box-shadow: var(--shadow-lg);
+	box-shadow: var(--shadow);
 }
 
 .card h3 {
@@ -1541,25 +1542,30 @@ h3 {
 }
 
 /* ==========================================================
-   17) FAQ
+   17) FAQ · รายการเรียบ ไม่ใช่การ์ด · คั่นด้วยเส้นล่างบาง 1px
+   ตัวบอกสถานะคือเครื่องหมาย + ใน ::after ของ summary (หมุน 45 องศาเป็น x เมื่อเปิด)
+   ใช้ <details> ล้วน ไม่พึ่ง JavaScript และไม่ต้องมี <i class="faq-plus"> ในมาร์กอัป
+   ถ้ามาร์กอัปเก่ายังมี .faq-plus อยู่ จะซ่อน ::after ให้อัตโนมัติ ไม่แสดงซ้ำสองอัน
    ========================================================== */
 .faq-list {
 	display: grid;
-	gap: 12px;
+	gap: 0;
+	max-width: 800px;
+	margin-inline: auto;
+	border-top: 1px solid var(--border);
 }
 
 .faq-item {
-	border: 1px solid var(--border);
-	border-radius: var(--radius);
-	background: var(--card-bg);
-	overflow: hidden;
-	transition: border-color 0.2s ease;
+	padding: 12px 0;
+	border: 0;
+	border-bottom: 1px solid var(--border);
+	border-radius: 0;
+	background: transparent;
+	box-shadow: none;
+	overflow: visible;
 }
 
-.faq-item[open] {
-	border-color: var(--border-primary);
-}
-
+/* summary คือพื้นที่กดจริง · สูงอย่างน้อย 44px ตามเกณฑ์ touch target */
 .faq-item summary {
 	list-style: none;
 	cursor: pointer;
@@ -1567,13 +1573,51 @@ h3 {
 	align-items: center;
 	justify-content: space-between;
 	gap: 16px;
-	padding: 18px 22px;
+	min-height: 44px;
+	padding: 6px 0;
 	font-family: var(--font-display);
-	font-weight: 500;
-	font-size: 1.02rem;
+	font-weight: 600;
+	font-size: 1.0625rem;
+	line-height: 1.5;
+	color: var(--text);
+	transition: color 0.18s ease;
 }
 
 .faq-item summary::-webkit-details-marker {
+	display: none;
+}
+
+.faq-item summary::marker {
+	content: "";
+}
+
+.faq-item summary:hover {
+	color: var(--primary-deep);
+}
+
+/* เครื่องหมาย + ใช้ currentColor · หมุน 45 องศาเมื่อเปิด */
+.faq-item summary::after {
+	content: "+";
+	flex: 0 0 auto;
+	display: inline-grid;
+	place-items: center;
+	width: 28px;
+	height: 28px;
+	font-family: var(--font-display);
+	font-weight: 400;
+	font-size: 1.45rem;
+	line-height: 1;
+	color: currentColor;
+	transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.faq-item[open] summary::after {
+	transform: rotate(45deg);
+	color: var(--primary);
+}
+
+/* มาร์กอัปเก่าที่ยังมีวงกลม .faq-plus · ซ่อน + ของ ::after ไม่ให้ซ้อนกัน */
+.faq-item summary:has(.faq-plus)::after {
 	display: none;
 }
 
@@ -1608,20 +1652,26 @@ h3 {
 }
 
 .faq-answer {
-	padding: 0 22px 20px;
+	padding: 0 44px 8px 0;
 }
 
 .faq-answer p {
+	max-width: 70ch;
+	margin: 10px 0 0;
+	font-size: 0.9375rem;
+	line-height: 1.75;
 	color: var(--muted);
-	font-size: 0.97rem;
-	margin: 0;
+}
+
+.faq-answer p + p {
+	margin-top: 0.75em;
 }
 
 /* ==========================================================
    18) Risk warning
    ========================================================== */
 .section-risk {
-	padding: 60px 0;
+	padding: 64px 0;
 }
 
 .risk-box {
@@ -1658,7 +1708,7 @@ h3 {
 	position: relative;
 	overflow: hidden;
 	text-align: center;
-	padding: 120px 0;
+	padding: 96px 0;
 }
 
 .cta-bg {
@@ -3355,11 +3405,11 @@ h3 {
 
 @media (max-width: 640px) {
 	.section {
-		padding: 72px 0;
+		padding: 64px 0;
 	}
 
 	.sec-head {
-		margin-bottom: 38px;
+		margin-bottom: 32px;
 	}
 
 	.grid-4,
@@ -3986,12 +4036,10 @@ h1, h2, h3, h4,
    เพื่อไม่ให้กล่องกลืนกับพื้นหลัง section */
 /* ค่า --border, --border-soft และ --card-bg ของ v1.1 ย้ายไปนิยามรวมใน :root ข้อ 1) แล้ว */
 
-.card,
 .about-panel,
 .price-card,
 .step,
 .guide-step,
-.faq-item,
 .review-card,
 .riskdoc-block,
 .req-box,
@@ -4005,7 +4053,6 @@ h1, h2, h3, h4,
 }
 
 /* การ์ดที่ lift ได้ ให้เงาชัดขึ้นเล็กน้อยเวลา hover */
-.card:hover,
 .price-card:hover,
 .guide-step:hover {
 	box-shadow: var(--shadow-lg);
@@ -4086,7 +4133,7 @@ h1, h2, h3, h4,
 }
 
 .sec-head {
-	margin-bottom: 60px;
+	margin-bottom: 40px;
 }
 
 .sec-head h2 {
@@ -4150,7 +4197,7 @@ h1, h2, h3, h4,
 	}
 
 	.sec-head {
-		margin-bottom: 42px;
+		margin-bottom: 32px;
 	}
 
 	.about-panel {
@@ -4263,14 +4310,7 @@ h1, h2, h3, h4,
 	background: var(--card-bg);
 }
 
-.pain-card::before {
-	content: "";
-	position: absolute;
-	inset: 0 auto 0 0;
-	width: 3px;
-	background: linear-gradient(180deg, var(--primary), transparent);
-	opacity: 0.9;
-}
+/* แถบไล่สีด้านซ้ายของการ์ดปัญหาถูกถอดออก (9 ก.ย. 2026) · การ์ดแบนขาว ขอบ 1px ตามบรีฟมินิมอล */
 
 .pain-card .card-icon {
 	border-radius: 999px;
@@ -5745,6 +5785,612 @@ a.lh-feature-frame:hover {
 /* หน้านี้เป็น LP ยิงแอด · ซ่อนตัวสลับภาษาที่ลอยมาทับ ให้สะอาดตรงดีไซน์ */
 .link-hub-page .language-switcher {
 	display: none !important;
+}
+
+/* ==========================================================
+   38b) หน้าแรก v2 · 10 บล็อกตาม docs/landing-page-plan.md
+   โทนสะอาด มินิมอล · ช่องว่างกว้าง · สีเน้นเดียว (--primary) ใช้เท่าที่จำเป็น
+   เส้นขอบบาง 1px ไม่มี glow · มุมโค้ง 12px (--radius) / 18px (--radius-lg)
+   บล็อกนี้มีเฉพาะคลาสใหม่ของ front-page.php v2 (hero-title-brand, what-*, img-slot,
+   media-frame, how-*, tests-*, test-*, install-*, check-list, sec-actions)
+   กฎโทนมืดของแถบหัว/ท้ายเว็บอยู่ข้อ 39 ถัดไป แยกกันคนละบล็อก
+   ========================================================== */
+
+/* ---------- ตัวช่วยใช้ร่วมกัน ---------- */
+
+/* รายการติ๊กถูก · ใช้ได้ทั้งแบบมี <svg class="icon"> ใน <li> และแบบไม่มี
+   ถ้าไม่มีไอคอนจะวาดเครื่องหมายถูกด้วย mask ให้เอง (สีตาม --primary) */
+.check-list,
+.what-points,
+.how-req ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 12px;
+}
+
+.check-list li,
+.what-points li,
+.how-req li {
+	display: flex;
+	align-items: flex-start;
+	gap: 12px;
+	color: var(--text);
+	font-size: 1rem;
+	line-height: 1.65;
+}
+
+.check-list li .icon,
+.what-points li .icon,
+.how-req li .icon {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	margin-top: 3px;
+	color: var(--primary);
+}
+
+.check-list li::before,
+.what-points li::before,
+.how-req li::before {
+	content: "";
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	margin-top: 3px;
+	background-color: var(--primary);
+	-webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+	mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+
+.check-list li:has(.icon)::before,
+.what-points li:has(.icon)::before,
+.how-req li:has(.icon)::before {
+	display: none;
+}
+
+/* ช่องรูปที่ยังไม่มีรูป · กรอบประบาง พื้น surface · เจ้าของอัปโหลดรูปแล้วเทมเพลตจะสลับเป็น .media-frame */
+.img-slot {
+	display: grid;
+	place-items: center;
+	align-content: center;
+	gap: 10px;
+	width: 100%;
+	max-width: 100%;
+	aspect-ratio: 16 / 10;
+	padding: 24px;
+	border: 1.5px dashed rgba(var(--primary-rgb), 0.45);
+	border-radius: var(--radius-lg);
+	background: var(--surface);
+	color: var(--muted);
+	text-align: center;
+}
+
+.section-alt .img-slot {
+	background: var(--card-bg);
+}
+
+.img-slot-icon {
+	display: inline-grid;
+	place-items: center;
+	width: 40px;
+	height: 40px;
+	color: var(--primary);
+}
+
+.img-slot-icon svg,
+.img-slot-icon .icon {
+	width: 100%;
+	height: 100%;
+}
+
+.img-slot-note {
+	max-width: 32ch;
+	margin: 0;
+	font-size: 0.8125rem;
+	line-height: 1.55;
+	color: var(--muted);
+}
+
+/* กรอบรูปจริง · ขอบบาง เงานุ่ม ไม่มี glow */
+.media-frame {
+	margin: 0;
+	width: 100%;
+	max-width: 100%;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: var(--card-bg);
+	box-shadow: var(--shadow);
+}
+
+.media-frame img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.media-frame figcaption {
+	padding: 12px 16px;
+	border-top: 1px solid var(--border);
+	font-size: 0.85rem;
+	color: var(--muted);
+}
+
+/* แถวปุ่มกลางใต้บล็อก · ใช้ร่วมกันได้ทุกบล็อก */
+.sec-actions,
+.install-actions,
+.tests-actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 12px;
+	margin-top: 32px;
+}
+
+/* ---------- บล็อก 1: Hero · H1 สองบรรทัด (ชื่อแบรนด์ใหญ่ + คำขยายเล็ก) ---------- */
+.hero-title:has(.hero-title-sub) {
+	margin-bottom: 20px;
+}
+
+.hero-title-brand {
+	display: block;
+	font-size: clamp(3.5rem, 7.5vw, 4.5rem);
+	font-weight: 700;
+	line-height: 1.02;
+	letter-spacing: -0.02em;
+	color: var(--text);
+}
+
+.hero-title-sub {
+	display: block;
+	margin-top: 14px;
+	font-size: clamp(1.375rem, 2.4vw, 1.75rem);
+	font-weight: 500;
+	line-height: 1.4;
+	letter-spacing: 0.01em;
+	color: var(--muted);
+}
+
+/* ---------- บล็อก 2: EA2000 คืออะไร ---------- */
+.what-grid {
+	display: grid;
+	grid-template-columns: 1.1fr 0.9fr;
+	gap: 48px;
+	align-items: center;
+}
+
+.what-copy {
+	min-width: 0;
+}
+
+.what-copy .sec-head {
+	max-width: none;
+	margin: 0 0 22px;
+	text-align: left;
+}
+
+.what-copy .sec-head h2::after {
+	margin-left: 0;
+}
+
+.what-copy p {
+	max-width: 60ch;
+	font-size: 1.0625rem;
+	line-height: 1.8;
+	color: var(--muted);
+}
+
+.what-points {
+	margin-top: 22px;
+}
+
+.what-media {
+	min-width: 0;
+}
+
+.what-media > * {
+	width: 100%;
+}
+
+/* ---------- บล็อก 4: ทำงานอย่างไร ---------- */
+.how-grid {
+	display: grid;
+	grid-template-columns: 1.4fr 0.8fr;
+	gap: 40px;
+	align-items: start;
+}
+
+/* คอลัมน์ซ้ายกว้างราว 690px ที่ container 1120 · 4 ใบเรียงแถวเดียวจะแคบเกิน (ราว 115px ต่อใบ)
+   จึงเรียง 2 x 2 บนเดสก์ท็อป · เมื่อ how-grid ยุบเป็นคอลัมน์เดียว (960px) ยังเป็น 2 คอลัมน์ · มือถือ 1 */
+.how-steps {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 20px;
+}
+
+.how-step {
+	min-width: 0;
+	padding: 22px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--card-bg);
+}
+
+.how-num {
+	display: block;
+	margin-bottom: 12px;
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 1.75rem;
+	line-height: 1;
+	letter-spacing: 0.06em;
+	color: var(--primary);
+}
+
+.how-step h3 {
+	margin-bottom: 6px;
+	font-size: 1.125rem;
+	font-weight: 600;
+}
+
+.how-step p {
+	margin: 0;
+	font-size: 0.9375rem;
+	line-height: 1.7;
+	color: var(--muted);
+}
+
+/* กล่องข้าง "ต้องมีอะไรบ้าง" · ลอยตามเมื่อเลื่อน (72px header + 24px) */
+.how-req {
+	position: sticky;
+	top: calc(var(--header-h) + 24px);
+	padding: 24px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--surface);
+}
+
+.section-alt .how-req {
+	background: var(--card-bg);
+}
+
+.how-req h3 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 14px;
+	font-size: 1.05rem;
+	font-weight: 600;
+}
+
+.how-req h3 .icon {
+	width: 20px;
+	height: 20px;
+	color: var(--primary);
+}
+
+.how-req ul {
+	gap: 10px;
+}
+
+.how-req li {
+	font-size: 0.95rem;
+	color: var(--muted);
+}
+
+/* ช่องรูป Dashboard เต็มความกว้างใต้ตาราง */
+.how-media,
+.how-main > .img-slot,
+.how-main > .media-frame {
+	margin-top: 32px;
+}
+
+.how-media .img-slot,
+.how-main > .img-slot {
+	aspect-ratio: 21 / 9;
+}
+
+/* ---------- บล็อก 6: ผลทดสอบ Backtest / Forward Test ---------- */
+.tests-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 28px;
+}
+
+.test-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: var(--card-bg);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.test-card:hover {
+	border-color: var(--border-primary);
+	box-shadow: var(--shadow);
+}
+
+/* รูปหรือช่องรูปชิดขอบบนของการ์ด · ตัดมุมโค้งและเงาซ้อน · ช่องรูปใช้เส้นประด้านในแทนขอบ */
+.test-card > .img-slot,
+.test-card > .media-frame,
+.test-card > figure {
+	margin: 0;
+	border: 0;
+	border-bottom: 1px solid var(--border);
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.test-card > .img-slot {
+	outline: 1.5px dashed rgba(var(--primary-rgb), 0.45);
+	outline-offset: -10px;
+}
+
+.test-card h3 {
+	font-size: 1.25rem;
+	font-weight: 600;
+}
+
+.test-card p {
+	font-size: 0.9375rem;
+	line-height: 1.7;
+	color: var(--muted);
+}
+
+/* แบบไม่มีตัวห่อเนื้อหา (h3 / p / .btn เป็นลูกตรงของการ์ด) */
+.test-card > h3 {
+	margin: 24px 24px 8px;
+}
+
+.test-card > p {
+	margin: 0 24px 20px;
+}
+
+.test-card > .btn {
+	margin: auto 24px 24px;
+	align-self: flex-start;
+}
+
+/* แบบมีตัวห่อ .test-body */
+.test-body,
+.test-card-body {
+	display: flex;
+	flex: 1 1 auto;
+	flex-direction: column;
+	padding: 24px;
+}
+
+.test-body h3,
+.test-card-body h3 {
+	margin: 0 0 8px;
+}
+
+.test-body p,
+.test-card-body p {
+	margin: 0 0 20px;
+}
+
+.test-body .btn,
+.test-card-body .btn {
+	margin-top: auto;
+	align-self: flex-start;
+}
+
+.tests-note {
+	max-width: 70ch;
+	margin: 20px auto 0;
+	text-align: center;
+	font-size: 0.8125rem;
+	line-height: 1.6;
+	color: var(--muted);
+}
+
+/* ---------- บล็อก 7: ติดตั้งใน 3 ขั้น ---------- */
+.install-grid {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 24px;
+}
+
+.install-card {
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	overflow: hidden;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--card-bg);
+	transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.install-card:hover {
+	border-color: var(--border-primary);
+	box-shadow: var(--shadow);
+}
+
+/* กรอบรูป 16:9 ชิดขอบบน · รับได้ทั้ง .media-frame, .img-slot, <figure> หรือ <img> ตรง ๆ */
+.install-card > .media-frame,
+.install-card > .img-slot,
+.install-card > figure,
+.install-figure {
+	margin: 0;
+	aspect-ratio: 16 / 9;
+	overflow: hidden;
+	border: 0;
+	border-bottom: 1px solid var(--border);
+	border-radius: 0;
+	background: var(--surface);
+	box-shadow: none;
+}
+
+.install-card > .img-slot {
+	padding: 16px;
+	outline: 1.5px dashed rgba(var(--primary-rgb), 0.45);
+	outline-offset: -10px;
+}
+
+.install-card > .media-frame img,
+.install-card > figure img,
+.install-figure img,
+.install-card > img {
+	width: 100%;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+}
+
+.install-card > img {
+	border-bottom: 1px solid var(--border);
+}
+
+.install-card h3 {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin: 20px 22px 6px;
+	font-size: 1.05rem;
+	font-weight: 600;
+}
+
+.install-num {
+	display: inline-grid;
+	place-items: center;
+	flex: 0 0 auto;
+	width: 28px;
+	height: 28px;
+	border-radius: 8px;
+	background: var(--accent-2);
+	color: var(--primary-deep);
+	font-family: var(--font-display);
+	font-size: 0.85rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+.install-card p {
+	margin: 0 22px 22px;
+	font-size: 0.9375rem;
+	line-height: 1.7;
+	color: var(--muted);
+}
+
+/* หมายเหตุมือถือ · แถวข้อมูลเบา ๆ ไอคอนสีเตือนแบบเดียวกับ .hero-note */
+.install-mobile-note {
+	display: flex;
+	align-items: flex-start;
+	gap: 10px;
+	max-width: 760px;
+	margin: 28px auto 0;
+	padding: 14px 18px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--surface);
+	font-size: 0.875rem;
+	line-height: 1.65;
+	color: var(--muted);
+}
+
+.section-alt .install-mobile-note {
+	background: var(--card-bg);
+}
+
+.install-mobile-note .icon {
+	flex: 0 0 auto;
+	width: 20px;
+	height: 20px;
+	margin-top: 2px;
+	color: var(--warn);
+}
+
+.install-mobile-note p {
+	margin: 0;
+}
+
+/* ---------- บล็อก 3 และ 5: การ์ดปัญหา / จุดเด่น · แบนขาว ขอบ 1px เงาเฉพาะตอน hover ---------- */
+.pain-card,
+.feat-card {
+	box-shadow: none;
+}
+
+.pain-card:hover,
+.feat-card:hover {
+	transform: translateY(-2px);
+	box-shadow: var(--shadow);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 960px) {
+	.what-grid,
+	.how-grid {
+		grid-template-columns: 1fr;
+		gap: 32px;
+	}
+
+	.how-req {
+		position: static;
+	}
+
+	.hero-title-brand {
+		font-size: clamp(3rem, 8vw, 4rem);
+	}
+}
+
+@media (max-width: 760px) {
+	.tests-grid,
+	.install-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.test-card > .btn,
+	.test-body .btn,
+	.test-card-body .btn {
+		align-self: stretch;
+	}
+}
+
+@media (max-width: 640px) {
+	.how-steps {
+		grid-template-columns: 1fr;
+	}
+
+	.hero-title-brand {
+		font-size: clamp(2.75rem, 12vw, 3.5rem);
+	}
+
+	.hero-title-sub {
+		font-size: 1.25rem;
+	}
+
+	.what-copy p {
+		font-size: 1rem;
+	}
+
+	.how-step,
+	.how-req {
+		padding: 20px;
+	}
+
+	.img-slot {
+		padding: 18px;
+	}
+
+	.how-media .img-slot,
+	.how-main > .img-slot {
+		aspect-ratio: 16 / 10;
+	}
+
+	.sec-actions .btn,
+	.install-actions .btn,
+	.tests-actions .btn {
+		width: 100%;
+	}
 }
 
 /* ==========================================================

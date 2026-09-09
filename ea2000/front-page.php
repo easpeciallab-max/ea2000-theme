@@ -1,6 +1,9 @@
 <?php
 /**
- * Front page · EA2000 (รวมเนื้อหา "รู้จัก EA2000" + hub นำทาง)
+ * Front page · EA2000 (โครง 10 บล็อกตาม docs/landing-page-plan.md)
+ *
+ * ลำดับบล็อก: hero · what · pain · how · features · tests · install · pricing · faq · risk + cta
+ * บล็อกอื่นยังอยู่ในไฟล์แต่ปิดด้วย setting show_* (highlight, live, team, control, gallery, mid-cta, perf, reviews, assurance, explore, blog)
  *
  * @package ea2000
  */
@@ -26,11 +29,37 @@ endif;
 
 $ea2000_line = trim( (string) ea2000_mod( 'line_url' ) );
 $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_line; // ยังไม่กรอก LINE OA: ซ่อนทุกปุ่ม LINE
+
+/*
+ * ช่องรูป (image slot) ของหน้าแรก
+ * กรอก URL แล้ว = แสดงรูปจริงใน .media-frame · ยังว่าง = แสดงกรอบ .img-slot ให้ทุกคนเห็น (เจ้าของขอเห็นตำแหน่งรูปแต่ละจุดเพื่อเตรียมไฟล์)
+ * อ่าน setting 3 ตัวจาก prefix: {key}_img, {key}_img_alt, {key}_img_note (ถ้าไม่มี note ใช้ alt แทน)
+ * ไอคอนใช้ 'chart' เพราะ ea2000_icon() ยังไม่มีคีย์ 'image'
+ */
+if ( ! function_exists( 'ea2000_front_media' ) ) {
+	function ea2000_front_media( $key, $width = 1280, $height = 800 ) {
+		$src  = trim( (string) ea2000_mod( $key . '_img' ) );
+		$alt  = (string) ea2000_mod( $key . '_img_alt' );
+		$note = trim( (string) ea2000_mod( $key . '_img_note' ) );
+		if ( '' === $note ) {
+			$note = $alt;
+		}
+		if ( '' !== $src ) :
+			?>
+			<figure class="media-frame reveal"><img src="<?php echo esc_url( $src ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async" width="<?php echo esc_attr( (string) $width ); ?>" height="<?php echo esc_attr( (string) $height ); ?>"></figure>
+			<?php
+		else :
+			?>
+			<figure class="img-slot reveal" aria-label="<?php echo esc_attr( $alt ); ?>"><span class="img-slot-icon"><?php echo ea2000_icon( 'image', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span><span class="img-slot-note"><?php echo esc_html( $note ); ?></span></figure>
+			<?php
+		endif;
+	}
+}
 ?>
 
 <main id="main">
 
-<?php /* ============ HERO ============ */ ?>
+<?php /* ============ 1) HERO ============ */ ?>
 <?php if ( ea2000_mod( 'show_hero' ) ) : ?>
 <section class="hero" id="hero">
 	<div class="hero-bg" aria-hidden="true">
@@ -52,12 +81,13 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 
 	<div class="container hero-inner">
 		<div class="hero-copy reveal">
+			<?php if ( ea2000_mod( 'hero_badge' ) ) : ?>
 			<span class="badge">
 				<?php echo ea2000_icon( 'chart', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				<?php echo esc_html( ea2000_mod( 'hero_badge' ) ); ?>
 			</span>
-			<h1 class="hero-title"><?php echo esc_html( ea2000_mod( 'hero_title' ) ); ?></h1>
-			<p class="hero-sub"><?php echo esc_html( ea2000_mod( 'hero_subtitle' ) ); ?></p>
+			<?php endif; ?>
+			<h1 class="hero-title"><span class="hero-title-brand"><?php echo esc_html( ea2000_mod( 'hero_title' ) ); ?></span> <span class="hero-title-sub"><?php echo esc_html( ea2000_mod( 'hero_subtitle' ) ); ?></span></h1>
 			<p class="hero-desc"><?php echo esc_html( ea2000_mod( 'hero_desc' ) ); ?></p>
 
 			<div class="hero-actions">
@@ -67,33 +97,36 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 					<?php echo esc_html( ea2000_mod( 'hero_btn1_text' ) ); ?>
 				</a>
 				<?php endif; ?>
-				<a class="btn btn-ghost" href="#about">
+				<a class="btn btn-ghost" href="#how">
 					<?php echo esc_html( ea2000_mod( 'hero_btn2_text' ) ); ?>
 					<?php echo ea2000_icon( 'arrow', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				</a>
 			</div>
 
+			<?php if ( ea2000_mod( 'hero_note' ) ) : ?>
 			<p class="hero-note">
 				<?php echo ea2000_icon( 'warn', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 				<?php echo esc_html( ea2000_mod( 'hero_note' ) ); ?>
 			</p>
+			<?php endif; ?>
 		</div>
 
 		<?php
-		$ea2000_hero_img = ea2000_mod( 'hero_image' );
-		$ea2000_is_photo = ! empty( $ea2000_hero_img );
+		$ea2000_hero_img = trim( (string) ea2000_mod( 'hero_image' ) );
+		$ea2000_is_photo = '' !== $ea2000_hero_img;
 		$ea2000_hero_src = $ea2000_is_photo ? $ea2000_hero_img : ea2000_logo_url();
+		$ea2000_hero_alt = ea2000_mod( 'hero_img_alt' );
 		?>
 		<div class="hero-visual <?php echo $ea2000_is_photo ? 'hero-visual--photo' : 'hero-visual--orb'; ?> reveal">
 			<?php if ( $ea2000_is_photo ) : ?>
 				<figure class="hero-frame">
-					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'brand_name' ) ); ?>" loading="eager" fetchpriority="high" decoding="async" width="1000" height="1000">
+					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( $ea2000_hero_alt ); ?>" loading="eager" fetchpriority="high" decoding="async" width="1000" height="1000">
 				</figure>
 			<?php else : ?>
 				<div class="hero-orb">
 					<span class="orb-ring orb-ring-a"></span>
 					<span class="orb-ring orb-ring-b"></span>
-					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'hero_title' ) ); ?>" loading="eager" fetchpriority="high" decoding="async" width="420" height="420">
+					<img src="<?php echo esc_url( $ea2000_hero_src ); ?>" alt="<?php echo esc_attr( $ea2000_hero_alt ); ?>" loading="eager" fetchpriority="high" decoding="async" width="420" height="420">
 				</div>
 			<?php endif; ?>
 		</div>
@@ -103,10 +136,11 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 
 <?php /* รับประกันว่ามี h1 เสมอ แม้ปิด hero (สำคัญต่อ SEO/screen reader) */ ?>
 <?php if ( ! ea2000_mod( 'show_hero' ) ) : ?>
-<h1 class="sr-only"><?php echo esc_html( ea2000_mod( 'hero_title' ) ? ea2000_mod( 'hero_title' ) : get_bloginfo( 'name' ) ); ?></h1>
+<?php $ea2000_h1_text = trim( ea2000_mod( 'hero_title' ) . ' ' . ea2000_mod( 'hero_subtitle' ) ); ?>
+<h1 class="sr-only"><?php echo esc_html( '' !== $ea2000_h1_text ? $ea2000_h1_text : get_bloginfo( 'name' ) ); ?></h1>
 <?php endif; ?>
 
-<?php /* ============ แถบไฮไลต์ ============ */ ?>
+<?php /* ============ แถบไฮไลต์ (ปิดด้วย show_highlight) ============ */ ?>
 <?php if ( ea2000_mod( 'show_highlight' ) ) : ?>
 <section class="highlight-bar" aria-label="จุดเด่นโดยสรุป">
 	<div class="container">
@@ -129,7 +163,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 </section>
 <?php endif; ?>
 
-<?php /* ============ แถบสถานะเคลื่อนไหว ============ */ ?>
+<?php /* ============ แถบสถานะเคลื่อนไหว (ปิดด้วย show_live_status) ============ */ ?>
 <?php
 $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 ?>
@@ -160,60 +194,44 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ ปัญหา ============ */ ?>
-<?php if ( ea2000_mod( 'show_pain' ) ) : ?>
-<section class="section" id="pain">
+<?php /* ============ 2) EA2000 คืออะไร (#what · คง #about ไว้เป็น anchor สำรองสำหรับลิงก์เก่า) ============ */ ?>
+<?php if ( ea2000_mod( 'show_what' ) ) : ?>
+<section class="section section-alt" id="what">
+	<span id="about" class="sec-anchor" aria-hidden="true"></span>
 	<div class="container">
-		<div class="sec-head reveal">
-			<span class="kicker">The Problem</span>
-			<h2><?php echo esc_html( ea2000_mod( 'pain_title' ) ); ?></h2>
-			<p><?php echo esc_html( ea2000_mod( 'pain_subtitle' ) ); ?></p>
-		</div>
-		<div class="grid grid-4">
-			<?php
-			$ea2000_pain_icons = array( 'pulse', 'clock', 'gauge', 'flag' );
-			for ( $i = 1; $i <= 4; $i++ ) :
-				$p_title = ea2000_mod( 'pain' . $i . '_title' );
-				$p_desc  = ea2000_mod( 'pain' . $i . '_desc' );
-				if ( ! $p_title && ! $p_desc ) {
-					continue;
+		<div class="what-grid">
+			<div class="what-copy reveal">
+				<?php if ( ea2000_mod( 'what_kicker' ) ) : ?>
+					<span class="kicker"><?php echo esc_html( ea2000_mod( 'what_kicker' ) ); ?></span>
+				<?php endif; ?>
+				<h2><?php echo esc_html( ea2000_mod( 'what_title' ) ); ?></h2>
+				<?php
+				foreach ( preg_split( '/\n\s*\n/', (string) ea2000_mod( 'what_text' ) ) as $ea2000_para ) {
+					$ea2000_para = trim( $ea2000_para );
+					if ( '' === $ea2000_para ) {
+						continue;
+					}
+					echo '<p>' . nl2br( esc_html( $ea2000_para ) ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput
 				}
+				$ea2000_what_points = ea2000_lines( ea2000_mod( 'what_points' ) );
 				?>
-				<article class="card pain-card pain-card-<?php echo esc_attr( $i ); ?> reveal">
-					<span class="card-icon"><?php echo ea2000_icon( $ea2000_pain_icons[ $i - 1 ] ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-					<h3><?php echo esc_html( $p_title ); ?></h3>
-					<p><?php echo esc_html( $p_desc ); ?></p>
-				</article>
-			<?php endfor; ?>
+				<?php if ( ! empty( $ea2000_what_points ) ) : ?>
+					<ul class="what-points check-list">
+						<?php foreach ( $ea2000_what_points as $ea2000_point ) : ?>
+							<li><?php echo ea2000_icon( 'check', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $ea2000_point ); ?></span></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</div>
+			<div class="what-media">
+				<?php ea2000_front_media( 'what', 1280, 800 ); ?>
+			</div>
 		</div>
 	</div>
 </section>
 <?php endif; ?>
 
-<?php /* ============ EA2000 คืออะไร ============ */ ?>
-<?php if ( ea2000_mod( 'show_about' ) ) : ?>
-<section class="section section-alt" id="about">
-	<div class="container container-narrow">
-		<div class="sec-head reveal">
-			<span class="kicker">About</span>
-			<h2><?php echo esc_html( ea2000_mod( 'about_title' ) ); ?></h2>
-		</div>
-		<div class="about-panel reveal">
-			<?php
-			foreach ( preg_split( '/\n\s*\n/', (string) ea2000_mod( 'about_text' ) ) as $ea2000_para ) {
-				$ea2000_para = trim( $ea2000_para );
-				if ( '' === $ea2000_para ) {
-					continue;
-				}
-				echo '<p>' . nl2br( esc_html( $ea2000_para ) ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput
-			}
-			?>
-		</div>
-	</div>
-</section>
-<?php endif; ?>
-
-<?php /* ============ ทีมงาน / ใครอยู่เบื้องหลัง ============ */ ?>
+<?php /* ============ ทีมงาน (ปิดด้วย show_team) ============ */ ?>
 <?php if ( ea2000_mod( 'show_team' ) ) : ?>
 <section class="section team-section" id="team">
 	<div class="container container-narrow">
@@ -252,7 +270,7 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ Control Center ============ */ ?>
+<?php /* ============ Control Center (ปิดด้วย show_control_center) ============ */ ?>
 <?php if ( ea2000_mod( 'show_control_center' ) ) : ?>
 <section class="section control-section" id="system">
 	<div class="container">
@@ -315,7 +333,92 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ จุดเด่น ============ */ ?>
+<?php /* ============ 3) ปัญหาที่แก้ ============ */ ?>
+<?php if ( ea2000_mod( 'show_pain' ) ) : ?>
+<section class="section" id="pain">
+	<div class="container">
+		<div class="sec-head reveal">
+			<span class="kicker">The Problem</span>
+			<h2><?php echo esc_html( ea2000_mod( 'pain_title' ) ); ?></h2>
+			<p><?php echo esc_html( ea2000_mod( 'pain_subtitle' ) ); ?></p>
+		</div>
+		<div class="grid grid-4">
+			<?php
+			$ea2000_pain_icons = array( 'pulse', 'clock', 'gauge', 'flag' );
+			for ( $i = 1; $i <= 4; $i++ ) :
+				$p_title = ea2000_mod( 'pain' . $i . '_title' );
+				$p_desc  = ea2000_mod( 'pain' . $i . '_desc' );
+				if ( ! $p_title && ! $p_desc ) {
+					continue;
+				}
+				?>
+				<article class="card pain-card pain-card-<?php echo esc_attr( $i ); ?> reveal">
+					<span class="card-icon"><?php echo ea2000_icon( $ea2000_pain_icons[ $i - 1 ] ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+					<h3><?php echo esc_html( $p_title ); ?></h3>
+					<p><?php echo esc_html( $p_desc ); ?></p>
+				</article>
+			<?php endfor; ?>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php /* ============ 4) ทำงานอย่างไร (#how · เป้าหมายของปุ่ม hero ปุ่มที่ 2) ============ */ ?>
+<?php if ( ea2000_mod( 'show_how' ) ) : ?>
+<section class="section section-alt how-section" id="how">
+	<div class="container">
+		<div class="sec-head reveal">
+			<?php if ( ea2000_mod( 'how_kicker' ) ) : ?>
+				<span class="kicker"><?php echo esc_html( ea2000_mod( 'how_kicker' ) ); ?></span>
+			<?php endif; ?>
+			<h2><?php echo esc_html( ea2000_mod( 'how_title' ) ); ?></h2>
+			<?php if ( ea2000_mod( 'how_intro' ) ) : ?>
+				<p><?php echo esc_html( ea2000_mod( 'how_intro' ) ); ?></p>
+			<?php endif; ?>
+		</div>
+		<div class="how-grid">
+			<div class="how-main">
+				<ol class="how-steps">
+					<?php for ( $i = 1; $i <= 4; $i++ ) : ?>
+						<?php
+						$ea2000_how_title = ea2000_mod( 'how_step' . $i . '_title' );
+						$ea2000_how_desc  = ea2000_mod( 'how_step' . $i . '_desc' );
+						if ( ! $ea2000_how_title && ! $ea2000_how_desc ) {
+							continue;
+						}
+						?>
+						<li class="how-step reveal">
+							<span class="how-num">0<?php echo esc_html( (string) $i ); ?></span>
+							<div class="how-step-body">
+								<h3><?php echo esc_html( $ea2000_how_title ); ?></h3>
+								<p><?php echo esc_html( $ea2000_how_desc ); ?></p>
+							</div>
+						</li>
+					<?php endfor; ?>
+				</ol>
+				<?php ea2000_front_media( 'how', 1280, 800 ); ?>
+			</div>
+			<?php $ea2000_req_items = ea2000_lines( ea2000_mod( 'how_req_items' ) ); ?>
+			<?php if ( ea2000_mod( 'how_req_title' ) || ! empty( $ea2000_req_items ) ) : ?>
+			<aside class="how-req reveal">
+				<?php if ( ea2000_mod( 'how_req_title' ) ) : ?>
+					<h3><?php echo esc_html( ea2000_mod( 'how_req_title' ) ); ?></h3>
+				<?php endif; ?>
+				<?php if ( ! empty( $ea2000_req_items ) ) : ?>
+					<ul class="check-list">
+						<?php foreach ( $ea2000_req_items as $ea2000_item ) : ?>
+							<li><?php echo ea2000_icon( 'check', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $ea2000_item ); ?></span></li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
+			</aside>
+			<?php endif; ?>
+		</div>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php /* ============ 5) จุดเด่น ============ */ ?>
 <?php if ( ea2000_mod( 'show_features' ) ) : ?>
 <section class="section" id="features">
 	<div class="container">
@@ -345,7 +448,7 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ ภาพ Dashboard ============ */ ?>
+<?php /* ============ ภาพ Dashboard (ปิดด้วย show_gallery) ============ */ ?>
 <?php if ( ea2000_mod( 'show_gallery' ) ) : ?>
 <section class="section section-alt" id="screenshots">
 	<div class="container">
@@ -398,36 +501,103 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ ขั้นตอนใช้งาน ============ */ ?>
-<?php if ( ea2000_mod( 'show_steps' ) ) : ?>
-<section class="section steps-section" id="how-it-works">
+<?php /* ============ 6) ผลทดสอบ Backtest / Forward Test (#tests · แสดงเสมอเมื่อ show_tests ไม่ขึ้นกับตัวเลขสถิติ) ============ */ ?>
+<?php if ( ea2000_mod( 'show_tests' ) ) : ?>
+<section class="section section-alt tests-section" id="tests">
 	<div class="container">
 		<div class="sec-head reveal">
-			<span class="kicker"><?php echo esc_html( ea2000_mod( 'steps_kicker' ) ); ?></span>
-			<h2><?php echo esc_html( ea2000_mod( 'steps_title' ) ); ?></h2>
-			<p><?php echo esc_html( ea2000_mod( 'steps_subtitle' ) ); ?></p>
+			<?php if ( ea2000_mod( 'tests_kicker' ) ) : ?>
+				<span class="kicker"><?php echo esc_html( ea2000_mod( 'tests_kicker' ) ); ?></span>
+			<?php endif; ?>
+			<h2><?php echo esc_html( ea2000_mod( 'tests_title' ) ); ?></h2>
+			<?php if ( ea2000_mod( 'tests_intro' ) ) : ?>
+				<p><?php echo esc_html( ea2000_mod( 'tests_intro' ) ); ?></p>
+			<?php endif; ?>
 		</div>
-		<ol class="steps steps-timeline">
-			<?php for ( $i = 1; $i <= 4; $i++ ) : ?>
-				<?php
-				$step_title = ea2000_mod( 'step' . $i . '_title' );
-				$step_desc  = ea2000_mod( 'step' . $i . '_desc' );
-				if ( ! $step_title && ! $step_desc ) {
-					continue;
-				}
+		<div class="tests-grid">
+			<?php
+			$ea2000_tests = array(
+				'bt' => home_url( '/backtest/' ),
+				'fw' => home_url( '/forward-test/' ),
+			);
+			foreach ( $ea2000_tests as $ea2000_tk => $ea2000_turl ) :
 				?>
-				<li class="step reveal">
-					<span class="step-num">0<?php echo esc_html( (string) $i ); ?></span>
-					<h3><?php echo esc_html( $step_title ); ?></h3>
-					<p><?php echo esc_html( $step_desc ); ?></p>
-				</li>
-			<?php endfor; ?>
-		</ol>
+				<article class="card test-card test-card-<?php echo esc_attr( $ea2000_tk ); ?> reveal">
+					<?php ea2000_front_media( 'tests_' . $ea2000_tk, 1280, 720 ); ?>
+					<div class="test-card-body">
+						<h3><?php echo esc_html( ea2000_mod( 'tests_' . $ea2000_tk . '_title' ) ); ?></h3>
+						<p><?php echo nl2br( esc_html( ea2000_mod( 'tests_' . $ea2000_tk . '_text' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+						<?php if ( ea2000_mod( 'tests_' . $ea2000_tk . '_btn' ) ) : ?>
+							<a class="btn btn-ghost" href="<?php echo esc_url( $ea2000_turl ); ?>">
+								<?php echo esc_html( ea2000_mod( 'tests_' . $ea2000_tk . '_btn' ) ); ?>
+								<?php echo ea2000_icon( 'arrow', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+							</a>
+						<?php endif; ?>
+					</div>
+				</article>
+			<?php endforeach; ?>
+		</div>
+		<?php if ( ea2000_mod( 'tests_note' ) ) : ?>
+			<p class="tests-note reveal"><?php echo esc_html( ea2000_mod( 'tests_note' ) ); ?></p>
+		<?php endif; ?>
 	</div>
 </section>
 <?php endif; ?>
 
-<?php /* ============ Mid CTA (ทัก LINE คั่นกลางหน้า · ซ่อนทั้งบล็อกเมื่อยังไม่กรอก LINE OA) ============ */ ?>
+<?php /* ============ 7) เริ่มใช้งาน / ติดตั้ง 3 ขั้น (#install) ============ */ ?>
+<?php if ( ea2000_mod( 'show_install' ) ) : ?>
+<section class="section install-section" id="install">
+	<div class="container">
+		<div class="sec-head reveal">
+			<?php if ( ea2000_mod( 'install_kicker' ) ) : ?>
+				<span class="kicker"><?php echo esc_html( ea2000_mod( 'install_kicker' ) ); ?></span>
+			<?php endif; ?>
+			<h2><?php echo esc_html( ea2000_mod( 'install_title' ) ); ?></h2>
+			<?php if ( ea2000_mod( 'install_intro' ) ) : ?>
+				<p><?php echo esc_html( ea2000_mod( 'install_intro' ) ); ?></p>
+			<?php endif; ?>
+		</div>
+		<div class="install-grid">
+			<?php for ( $i = 1; $i <= 3; $i++ ) : ?>
+				<?php
+				$ea2000_in_title = ea2000_mod( 'install_step' . $i . '_title' );
+				$ea2000_in_desc  = ea2000_mod( 'install_step' . $i . '_desc' );
+				if ( ! $ea2000_in_title && ! $ea2000_in_desc ) {
+					continue;
+				}
+				?>
+				<article class="card install-card install-card-<?php echo esc_attr( $i ); ?> reveal">
+					<?php ea2000_front_media( 'install_step' . $i, 1280, 720 ); ?>
+					<div class="install-card-body">
+						<h3><span class="install-num" aria-hidden="true"><?php echo esc_html( (string) $i ); ?></span><?php echo esc_html( $ea2000_in_title ); ?></h3>
+						<p><?php echo esc_html( $ea2000_in_desc ); ?></p>
+					</div>
+				</article>
+			<?php endfor; ?>
+		</div>
+		<?php if ( ea2000_mod( 'install_mobile_note' ) ) : ?>
+			<p class="install-mobile-note reveal">
+				<?php echo ea2000_icon( 'warn', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<?php echo esc_html( ea2000_mod( 'install_mobile_note' ) ); ?>
+			</p>
+		<?php endif; ?>
+		<?php
+		$ea2000_install_url  = trim( (string) ea2000_mod( 'install_btn_url' ) );
+		$ea2000_install_href = '' !== $ea2000_install_url ? ea2000_link_url( $ea2000_install_url ) : home_url( '/how-to-install/' );
+		?>
+		<?php if ( ea2000_mod( 'install_btn' ) ) : ?>
+			<div class="install-actions reveal">
+				<a class="btn btn-fire" href="<?php echo esc_url( $ea2000_install_href ); ?>">
+					<?php echo esc_html( ea2000_mod( 'install_btn' ) ); ?>
+					<?php echo ea2000_icon( 'arrow', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				</a>
+			</div>
+		<?php endif; ?>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php /* ============ Mid CTA (ปิดด้วย show_mid_cta · ซ่อนทั้งบล็อกเมื่อยังไม่กรอก LINE OA) ============ */ ?>
 <?php if ( ea2000_mod( 'show_mid_cta' ) && $ea2000_line ) : ?>
 <section class="mid-cta" aria-label="ทัก LINE ปรึกษา">
 	<div class="container container-narrow">
@@ -445,7 +615,7 @@ $ea2000_live_items = ea2000_lines( ea2000_mod( 'live_status_items' ) );
 </section>
 <?php endif; ?>
 
-<?php /* ============ ผลการทดสอบ ============ */ ?>
+<?php /* ============ ตัวเลขผลทดสอบ (ปิดด้วย show_perf · แสดงเฉพาะเมื่อมีค่าจริง) ============ */ ?>
 <?php
 $ea2000_perf_stats = array();
 for ( $i = 1; $i <= 6; $i++ ) {
@@ -518,7 +688,7 @@ $ea2000_has_perf     = ! empty( $ea2000_perf_stats ) || $ea2000_perf_img || $ea2
 </section>
 <?php endif; ?>
 
-<?php /* ============ เหมาะกับใคร ============ */ ?>
+<?php /* ============ เหมาะกับใคร (show_fit) ============ */ ?>
 <?php if ( ea2000_mod( 'show_fit' ) ) : ?>
 <section class="section" id="fit">
 	<div class="container">
@@ -549,7 +719,7 @@ $ea2000_has_perf     = ! empty( $ea2000_perf_stats ) || $ea2000_perf_img || $ea2
 </section>
 <?php endif; ?>
 
-<?php /* ============ รีวิวลูกค้า (แสดงเฉพาะเมื่อเปิด show_reviews และมีรีวิวจริงอย่างน้อย 1 รายการ) ============ */ ?>
+<?php /* ============ รีวิวลูกค้า (ปิดด้วย show_reviews · แสดงเฉพาะเมื่อมีรีวิวจริงอย่างน้อย 1 รายการ) ============ */ ?>
 <?php
 $ea2000_reviews = array();
 for ( $i = 1; $i <= 3; $i++ ) {
@@ -586,7 +756,7 @@ for ( $i = 1; $i <= 3; $i++ ) {
 </section>
 <?php endif; ?>
 
-<?php /* ============ ความมั่นใจก่อนเริ่ม ============ */ ?>
+<?php /* ============ ความมั่นใจก่อนเริ่ม (ปิดด้วย show_assurance) ============ */ ?>
 <?php $ea2000_assurance_items = ea2000_lines( ea2000_mod( 'assurance_items' ) ); ?>
 <?php if ( ea2000_mod( 'show_assurance' ) && ! empty( $ea2000_assurance_items ) ) : ?>
 <section class="section section-alt assurance-section" id="assurance">
@@ -608,7 +778,7 @@ for ( $i = 1; $i <= 3; $i++ ) {
 </section>
 <?php endif; ?>
 
-<?php /* ============ Pricing teaser หน้าแรก ============ */ ?>
+<?php /* ============ 8) แพ็กเกจ (pricing teaser) ============ */ ?>
 <?php if ( ea2000_mod( 'show_pricing_home' ) ) : ?>
 <section class="section pricing-teaser" id="pricing">
 	<div class="container">
@@ -653,7 +823,8 @@ for ( $i = 1; $i <= 3; $i++ ) {
 </section>
 <?php endif; ?>
 
-<?php /* ============ การ์ดนำทาง (HUB) ============ */ ?>
+<?php /* ============ การ์ดนำทาง HUB (ปิดด้วย show_explore) ============ */ ?>
+<?php if ( ea2000_mod( 'show_explore' ) ) : ?>
 <section class="section section-alt" id="explore">
 	<div class="container">
 		<div class="sec-head reveal">
@@ -682,27 +853,30 @@ for ( $i = 1; $i <= 3; $i++ ) {
 		</div>
 	</div>
 </section>
+<?php endif; ?>
 
-<?php /* ============ FAQ (ย่อ) ============ */ ?>
+<?php /* ============ 9) FAQ (accordion ด้วย details/summary ไม่ใช้ JS · ข้ามคู่ที่ว่าง) ============ */ ?>
 <?php if ( ea2000_mod( 'show_faq' ) ) : ?>
 <section class="section" id="faq">
 	<div class="container container-narrow">
 		<div class="sec-head reveal">
 			<span class="kicker">FAQ</span>
 			<h2><?php echo esc_html( ea2000_mod( 'faq_title' ) ); ?></h2>
-			<p><?php echo esc_html( ea2000_mod( 'faq_subtitle' ) ); ?></p>
+			<?php if ( ea2000_mod( 'faq_subtitle' ) ) : ?>
+				<p><?php echo esc_html( ea2000_mod( 'faq_subtitle' ) ); ?></p>
+			<?php endif; ?>
 		</div>
 		<div class="faq-list reveal">
 			<?php
 			$ea2000_first = true;
 			for ( $i = 1; $i <= 10; $i++ ) :
-				$q = ea2000_mod( 'faq' . $i . '_q' );
-				$a = ea2000_mod( 'faq' . $i . '_a' );
-				if ( ! $q || ! $a ) {
+				$q = trim( (string) ea2000_mod( 'faq' . $i . '_q' ) );
+				$a = trim( (string) ea2000_mod( 'faq' . $i . '_a' ) );
+				if ( '' === $q || '' === $a ) {
 					continue;
 				}
 				?>
-				<details class="faq-item" <?php echo $ea2000_first ? 'open' : ''; ?>>
+				<details class="faq-item" name="ea2000-faq"<?php echo $ea2000_first ? ' open' : ''; ?>>
 					<summary>
 						<span><?php echo esc_html( $q ); ?></span>
 						<i class="faq-plus" aria-hidden="true"></i>
@@ -718,7 +892,7 @@ for ( $i = 1; $i <= 3; $i++ ) {
 </section>
 <?php endif; ?>
 
-<?php /* ============ บทความล่าสุด (ซ่อนอัตโนมัติเมื่อไม่มีบทความ) ============ */ ?>
+<?php /* ============ บทความล่าสุด (show_blog · ซ่อนอัตโนมัติเมื่อไม่มีบทความ) ============ */ ?>
 <?php
 $ea2000_blog_q = new WP_Query(
 	array(
@@ -757,7 +931,7 @@ $ea2000_blog_q = new WP_Query(
 <?php endif; ?>
 <?php wp_reset_postdata(); ?>
 
-<?php /* ============ คำเตือนความเสี่ยง (ย่อ) ============ */ ?>
+<?php /* ============ 10) คำเตือนความเสี่ยง (ย่อ) ============ */ ?>
 <?php if ( ea2000_mod( 'show_risk' ) ) : ?>
 <section class="section section-risk" id="risk">
 	<div class="container container-narrow">
@@ -773,7 +947,7 @@ $ea2000_blog_q = new WP_Query(
 </section>
 <?php endif; ?>
 
-<?php /* ============ CTA ============ */ ?>
+<?php /* ============ 10) CTA ท้ายหน้า ============ */ ?>
 <?php if ( ea2000_mod( 'show_cta' ) ) : ?>
 <section class="section cta" id="cta">
 	<div class="cta-bg" aria-hidden="true"><span class="ember ember-c"></span></div>
