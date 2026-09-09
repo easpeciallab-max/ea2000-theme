@@ -113,12 +113,14 @@ if ( $ea2000_line ) {
 			<p class="footer-copy">&copy; <?php echo esc_html( gmdate( 'Y' ) ); ?> <?php bloginfo( 'name' ); ?> สงวนลิขสิทธิ์</p>
 			<nav class="footer-legal" aria-label="ลิงก์ทางกฎหมาย">
 				<?php
-				/* ลิงก์อัตโนมัติเฉพาะ privacy-policy · ไม่ auto-link slug about/terms เพราะอาจเป็นเพจของแบรนด์เก่า ให้เพิ่มในเมนู footer แทน */
+				/* ลิงก์อัตโนมัติเฉพาะเพจของ EA2000 ที่เผยแพร่แล้ว (about และ terms-of-use เขียนใหม่เป็นของ EA2000 เมื่อ 9 ก.ย. 2026) */
 				foreach ( array(
+					'about'          => 'เกี่ยวกับเรา',
 					'privacy-policy' => 'นโยบายความเป็นส่วนตัว',
+					'terms-of-use'   => 'เงื่อนไขการใช้บริการ',
 				) as $ea2000_slug => $ea2000_label ) :
 					$ea2000_legal_page = get_page_by_path( $ea2000_slug );
-					if ( $ea2000_legal_page ) :
+					if ( $ea2000_legal_page && 'publish' === $ea2000_legal_page->post_status ) :
 						?>
 						<a href="<?php echo esc_url( get_permalink( $ea2000_legal_page ) ); ?>"><?php echo esc_html( $ea2000_label ); ?></a>
 						<?php
