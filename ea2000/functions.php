@@ -62,6 +62,13 @@ function ea2000_assets() {
 	);
 	wp_enqueue_style( 'ea2000-style', get_stylesheet_uri(), array( 'ea2000-fonts' ), $style_version );
 	wp_enqueue_script( 'ea2000-main', get_template_directory_uri() . '/assets/js/main.js', array(), $script_version, true );
+
+	/* หน้าแรก v3 (Control Room) เท่านั้น · home.js ใช้ window.ea2000 จาก main.js จึงต้องพึ่ง ea2000-main */
+	if ( is_front_page() ) {
+		$home_path = get_template_directory() . '/assets/js/home.js';
+		wp_enqueue_script( 'ea2000-home', get_template_directory_uri() . '/assets/js/home.js', array( 'ea2000-main' ), file_exists( $home_path ) ? filemtime( $home_path ) : EA2000_VERSION, true );
+	}
+
 	wp_localize_script(
 		'ea2000-main',
 		'ea2000LoadMore',
@@ -82,6 +89,62 @@ function ea2000_assets() {
 	}
 }
 add_action( 'wp_enqueue_scripts', 'ea2000_assets' );
+
+/**
+ * Preload รูปกล่องสินค้าใน hero (LCP element ของหน้าแรก)
+ * พิมพ์เฉพาะหน้าแรกที่เปิด hero และมี hero_image · ต้องตรงกับ src ของ <img> ใน front-page.php
+ */
+function ea2000_preload_hero() {
+	if ( ! is_front_page() || ! ea2000_mod( 'show_hero' ) ) {
+		return;
+	}
+
+	/* หน้าแรกที่ใช้ Elementor เต็มหน้าจะไม่พิมพ์ hero ของธีม */
+	if ( ea2000_has_elementor_content() && ea2000_uses_elementor_page_template() ) {
+		return;
+	}
+
+	$src = trim( (string) ea2000_mod( 'hero_image' ) );
+	if ( '' === $src ) {
+		return;
+	}
+
+	printf( '<link rel="preload" as="image" href="%s" fetchpriority="high">' . "\n", esc_url( $src ) );
+}
+add_action( 'wp_head', 'ea2000_preload_hero', 1 );
+
+/**
+ * รายการ HUD ใต้ hero (hero_hud_items) · บรรทัดละ "ป้าย|ค่า"
+ * ข้ามบรรทัดที่ไม่มี | และบรรทัดที่อ่านเป็นผลเทรดได้ (ค่าขึ้นต้นด้วยตัวเลขแล้วตามด้วย % หรือป้าย/ค่ามีคำว่า กำไร)
+ * เพื่อให้ HUD แสดงได้เฉพาะข้อเท็จจริงของระบบ ไม่ใช่ตัวเลขผลการเทรด
+ *
+ * @return array รายการ array( 'label' => ..., 'value' => ... )
+ */
+function ea2000_hero_hud_items() {
+	$items = array();
+
+	foreach ( ea2000_lines( ea2000_mod( 'hero_hud_items' ) ) as $ea2000_hud_line ) {
+		if ( false === strpos( $ea2000_hud_line, '|' ) ) {
+			continue;
+		}
+
+		list( $ea2000_hud_label, $ea2000_hud_value ) = array_map( 'trim', explode( '|', $ea2000_hud_line, 2 ) );
+		if ( '' === $ea2000_hud_label || '' === $ea2000_hud_value ) {
+			continue;
+		}
+
+		if ( preg_match( '/^[+-]?\d[\d.,]*\s*%/u', $ea2000_hud_value ) || false !== strpos( $ea2000_hud_line, 'กำไร' ) ) {
+			continue;
+		}
+
+		$items[] = array(
+			'label' => $ea2000_hud_label,
+			'value' => $ea2000_hud_value,
+		);
+	}
+
+	return $items;
+}
 
 /* --------------------------------------------------------------
  * Builder compatibility
@@ -203,6 +266,7 @@ function ea2000_defaults() {
 		'contact_email'   => '',
 		'show_float_line' => false,
 		'float_line_text' => 'สอบถามทาง LINE',
+		'contact_fallback_text' => 'ติดต่อทีมงาน', // ข้อความปุ่มติดต่อเมื่อยังไม่กรอก LINE OA (ชี้ไปหน้า /go/) · ใช้ทั้งหน้าแรกและแถบท้ายเว็บ
 		'show_language_switcher' => true,
 		'language_fallback_items' => "th|🇹🇭|TH|ไทย\nen|🇬🇧|EN|English\nzh|🇨🇳|ZH|中文\nfr|🇫🇷|FR|Français\nde|🇩🇪|DE|Deutsch\nru|🇷🇺|RU|Русский\nja|🇯🇵|JA|日本語\nko|🇰🇷|KO|한국어",
 
@@ -279,9 +343,11 @@ function ea2000_defaults() {
 		'ga_measurement_id'   => '',
 		'fb_pixel_id'         => '',
 
-		/* Hero · บล็อก 1 (H1 = hero_title + hero_subtitle) */
+		/* Hero · บล็อก 0 "Boot" (H1 = hero_title + hero_subtitle) · หน้าแรก v3 Control Room */
 		'show_hero'      => true,
-		'hero_badge'     => 'Expert Advisor for MetaTrader 5',
+		'show_rail'      => true, // รางเลขบทด้านซ้าย (เดสก์ท็อป) และเส้น progress ใต้ header (จอเล็ก)
+		'fig_label'      => 'ภาพ', // คำนำหน้าคำบรรยายภาพ เช่น ภาพ 01
+		'hero_badge'     => 'Expert Advisor สำหรับ MetaTrader 5',
 		'hero_title'     => 'EA2000',
 		'hero_subtitle'  => 'EA MT5 ระบบเทรดอัตโนมัติ เพื่อการเทรดที่มีวินัย',
 		'hero_desc'      => 'Expert Advisor สำหรับ MetaTrader 5 ใช้ได้กับหลายคู่เงิน ทำงานตามกฎที่ตั้งไว้ล่วงหน้า ไม่ตัดสินใจตามอารมณ์ ทุนและความเสี่ยงคุณกำหนดเอง',
@@ -290,9 +356,14 @@ function ea2000_defaults() {
 		'hero_note'      => 'การเทรดมีความเสี่ยง โปรดศึกษาข้อมูลก่อนตัดสินใจใช้งาน',
 		'hero_image'     => $img_assets . 'hero-box.webp', // ภาพกล่องสินค้าพื้นโปร่ง 1000×1000
 		'hero_img_alt'   => 'กล่องผลิตภัณฑ์ EA2000 Expert Advisor สำหรับ MT5',
+		'hero_img_note'  => 'รูปที่ต้องใส่: ภาพกล่องสินค้าพื้นโปร่ง 1000x1000 px',
+		/* แถบ HUD ใต้ปุ่ม · บรรทัดละ "ป้าย|ค่า" · แสดงเฉพาะข้อเท็จจริงของระบบ (ea2000_hero_hud_items() ตัดค่าที่เป็น % หรือคำว่า กำไร ทิ้ง) */
+		'hero_hud_items' => "แพลตฟอร์ม|MetaTrader 5\nสินทรัพย์|หลายคู่เงิน\nรูปแบบ|เทรดอัตโนมัติตามกฎที่ตั้งไว้\nการส่งมอบ|ไฟล์ EA และคู่มือ",
+		'hero_hud_note'  => 'ป้ายข้อมูลระบบ ไม่ใช่ผลการเทรด', // ข้อความสำหรับ screen reader อธิบายแถบ HUD
 
-		/* ปัญหานักเทรด · บล็อก 3 */
+		/* ปัญหานักเทรด · บล็อก 2 Diagnostic ledger (แถวขีดฆ่า + แถวสรุปว่าระบบเข้ามาแทนอะไร) */
 		'show_pain'     => true,
+		'pain_kicker'   => 'ปัญหาของการเทรดมือ',
 		'pain_title'    => 'ใช้ EA เทรด forex ดีไหม · ปัญหาที่เทรดเดอร์มือเองเจอ',
 		'pain_subtitle' => 'ก่อนตอบว่า EA เทรด forex เหมาะกับคุณไหม ลองดูว่าคุณเจอปัญหาเหล่านี้บ่อยแค่ไหน นี่คือสิ่งที่ระบบเทรดอัตโนมัติออกแบบมาเพื่อแก้',
 		'pain1_title'   => 'เข้าออเดอร์ตามอารมณ์',
@@ -303,6 +374,8 @@ function ea2000_defaults() {
 		'pain3_desc'    => 'บางไม้ใหญ่เกินทุน พอร์ตแกว่งแรงจน Drawdown สูงกว่าที่รับไหว ทั้งที่รู้อยู่แล้วว่าไม่ควร',
 		'pain4_title'   => 'ขาดวินัยตามแผน',
 		'pain4_desc'    => 'วางแผนไว้ดี แต่พอกราฟวิ่งจริงกลับเปลี่ยนใจกลางทาง ระบบที่ทำตามกฎเดิมทุกครั้งช่วยตรงนี้ได้',
+		'pain_resolved_label' => 'สิ่งที่ระบบอัตโนมัติเข้ามาแทน',
+		'pain_resolved_text'  => 'ระบบทำตามกฎเดิมทุกครั้ง ส่วนทุน ความเสี่ยง และการตัดสินใจเริ่มหรือหยุดยังเป็นของคุณ',
 
 		/* EA2000 คืออะไร (ชุดเดิม · คงไว้เพื่อความเข้ากันได้ · หน้าแรกใหม่ใช้บล็อก what_* ด้านล่างแทน) */
 		'show_about'  => true,
@@ -311,17 +384,20 @@ function ea2000_defaults() {
 
 		/* EA2000 คืออะไร · บล็อก 2 (what_*) · รูปเว้นว่าง = แสดงโครงรอใส่รูปพร้อม what_img_note */
 		'show_what'     => true,
-		'what_kicker'   => 'What is EA2000',
+		'what_kicker'   => 'ระบบคืออะไร',
 		'what_title'    => 'EA2000 คืออะไร · EA เทรดอัตโนมัติบน MT5 ทำงานอย่างไร',
-		'what_text'     => "EA2000 คือ Expert Advisor หรือที่หลายคนเรียกว่าบอทเทรดและโรบอทเทรด สำหรับแพลตฟอร์ม MetaTrader 5 โปรแกรมติดตั้งบนกราฟ MT5 แล้วเฝ้าดูราคาแทนคุณตลอดเวลาที่ตลาดเปิด เมื่อราคาเข้าเงื่อนไขที่ตั้งไว้ล่วงหน้า ระบบจะเปิดออเดอร์ ตั้ง Lot และ Stop Loss ตามค่าที่กำหนด แล้วปิดเมื่อครบเงื่อนไข โดยไม่ต้องเฝ้าจอเอง\n\nEA2000 ใช้ได้กับหลายคู่เงินบนบัญชี MT5 ของโบรกเกอร์ที่คุณเลือก คุณกำหนดทุนและระดับความเสี่ยงเอง หยุดระบบได้ทุกเมื่อ สิ่งที่ระบบทำให้คือความสม่ำเสมอ: ทำตามกฎเดิมทุกครั้ง ไม่รีบเข้า ไม่ลังเลตอนควรออก EA ไม่ใช่เครื่องมือการันตีกำไร ผลลัพธ์ขึ้นกับตลาดและการตั้งค่าของคุณ",
-		'what_points'   => "ทำงานบน MetaTrader 5 โดยตรง ติดตั้งครั้งเดียวแล้วรันต่อเนื่องบนคอมพิวเตอร์หรือ VPS\nทำตามกฎเดิมทุกครั้ง ไม่ให้ความกลัวหรือความโลภมาแทรกการตัดสินใจ\nผู้ใช้กำหนดทุน Lot และระดับความเสี่ยงเอง พร้อม Dashboard บนกราฟให้ตรวจสถานะได้ตลอด",
+		'what_text'     => "EA2000 คือ Expert Advisor หรือที่หลายคนเรียกว่าบอทเทรดและโรบอทเทรด สำหรับแพลตฟอร์ม MetaTrader 5 โปรแกรมติดตั้งบนกราฟ MT5 แล้วเฝ้าดูราคาแทนคุณตลอดเวลาที่ตลาดเปิด เมื่อราคาเข้าเงื่อนไขที่ตั้งไว้ล่วงหน้า ระบบจะเปิดออเดอร์ จัดการขนาดออเดอร์และเงื่อนไขปิดตามค่าที่ตั้งไว้ แล้วปิดเมื่อครบเงื่อนไข โดยไม่ต้องเฝ้าจอเอง\n\nEA2000 ใช้ได้กับหลายคู่เงินบนบัญชี MT5 ของโบรกเกอร์ที่คุณเลือก คุณกำหนดทุนและระดับความเสี่ยงเอง หยุดระบบได้ทุกเมื่อ สิ่งที่ระบบทำให้คือความสม่ำเสมอ: ทำตามกฎเดิมทุกครั้ง ไม่รีบเข้า ไม่ลังเลตอนควรออก EA ไม่ใช่เครื่องมือการันตีกำไร ผลลัพธ์ขึ้นกับตลาดและการตั้งค่าของคุณ",
+		/* datasheet · บรรทัดละ "ป้าย|ข้อความ" (บรรทัดที่ไม่มี | จะใช้เลขลำดับเป็นป้าย) */
+		'what_points'   => "แพลตฟอร์ม|ทำงานบน MetaTrader 5 โดยตรง ติดตั้งครั้งเดียวแล้วรันต่อเนื่องบนคอมพิวเตอร์หรือ VPS\nวินัย|ทำตามกฎเดิมทุกครั้ง ไม่ให้ความกลัวหรือความโลภมาแทรกการตัดสินใจ\nการควบคุม|ผู้ใช้กำหนดทุน ขนาดออเดอร์ และระดับความเสี่ยงเอง พร้อม Dashboard บนกราฟให้ตรวจสถานะได้ตลอด",
+		'what_principle_label' => 'หลักการของเรา',
+		'what_principle'       => 'เราไม่แสดงตัวเลขที่ยังตรวจสอบไม่ได้ และไม่รับประกันผลกำไร',
 		'what_img'      => '',
 		'what_img_alt'  => 'หน้าจอ MetaTrader 5 ขณะรัน EA2000',
-		'what_img_note' => 'รูปที่ต้องใส่: ภาพหน้าจอ MT5 ขณะ EA2000 ทำงาน เห็นกราฟและแผง Dashboard · แนะนำ 1280x800 px',
+		'what_img_note' => 'รูปที่ต้องใส่: ภาพหน้าจอ MT5 ขณะ EA2000 ทำงาน เห็นกราฟและแผง Dashboard ไม่ต้องเห็นตัวเลขบัญชี · แนะนำ 1280x800 px',
 
 		/* ทำงานอย่างไร · บล็อก 4 (how_*) */
 		'show_how'        => true,
-		'how_kicker'      => 'How it works',
+		'how_kicker'      => 'ลำดับการทำงาน',
 		'how_title'       => 'EA2000 ทำงานอย่างไรบน MetaTrader 5',
 		'how_intro'       => 'บอทเทรด MT5 อย่าง EA2000 ทำงานเป็นวงจร 4 ขั้นซ้ำกันทุกวัน ตั้งแต่ตอนคุณตั้งค่าครั้งแรกไปจนถึงการติดตามผล',
 		'how_step1_title' => 'ตั้งทุนและระดับความเสี่ยง',
@@ -329,17 +405,26 @@ function ea2000_defaults() {
 		'how_step2_title' => 'ระบบตรวจเงื่อนไขตลาดตามกฎ',
 		'how_step2_desc'  => 'EA2000 อ่านราคาจากกราฟตลอดเวลาที่ตลาดเปิด แล้วเทียบกับเงื่อนไขที่ตั้งไว้ล่วงหน้า ถ้ายังไม่เข้าเงื่อนไขก็รอ ไม่เดาและไม่ไล่ราคา ทำงานแบบเดียวกันทุกวัน',
 		'how_step3_title' => 'เปิดและปิดออเดอร์อัตโนมัติ',
-		'how_step3_desc'  => 'เมื่อเข้าเงื่อนไข ระบบส่งคำสั่งซื้อหรือขายไปยังโบรกเกอร์ พร้อมจัดการ Lot และ Stop Loss ตามค่าที่คุณตั้งไว้ แล้วปิดออเดอร์เมื่อครบกฎ โดยคุณไม่ต้องกดเอง',
+		'how_step3_desc'  => 'เมื่อเข้าเงื่อนไข ระบบส่งคำสั่งซื้อหรือขายไปยังโบรกเกอร์ พร้อมจัดการขนาดออเดอร์และเงื่อนไขปิดตามค่าที่คุณตั้งไว้ แล้วปิดออเดอร์เมื่อครบกฎ โดยคุณไม่ต้องกดเอง',
 		'how_step4_title' => 'ติดตามผลผ่าน Dashboard และ LINE',
 		'how_step4_desc'  => 'แผง Dashboard บนกราฟแสดงทุน กำไรขาดทุน Drawdown และสถานะออเดอร์แบบเรียลไทม์ ดูจาก MT5 บนมือถือได้ และสอบถามทีมงานทาง LINE ได้เมื่อมีคำถาม',
 		'how_req_title'   => 'ต้องมีอะไรบ้างก่อนเริ่ม',
 		'how_req_items'   => "บัญชี MT5 กับโบรกเกอร์ที่รองรับ\nทุนที่พร้อมรับความเสี่ยง\nคอมพิวเตอร์ที่เปิดตลอดหรือ VPS\nเวลาศึกษาคู่มือประมาณ 30 นาที",
 		'how_img'         => '',
 		'how_img_alt'     => 'แผง Dashboard ของ EA2000 บนกราฟ MT5',
-		'how_img_note'    => 'รูปที่ต้องใส่: ภาพ Dashboard ของ EA2000 ซูมให้เห็นตัวเลขทุน ความเสี่ยง และสถานะออเดอร์ · แนะนำ 1280x800 px',
+		'how_img_note'    => 'รูปที่ต้องใส่: ภาพกราฟ MT5 ที่แนบ EA2000 แล้ว เห็นแผง Dashboard ปิดตัวเลขบัญชีได้ · แนะนำ 1280x800 px',
+		/* เทอร์มินัลจำลองลำดับการทำงาน (บล็อก 3) · ไม่มีเวลา ราคา หรือผลเทรดในบรรทัดใด */
+		'show_how_log'    => true,
+		'how_log_title'   => 'ภาพจำลองลำดับการทำงาน',
+		'how_log_prompt'  => 'ea2000@mt5:~$',
+		'how_log_start'   => 'เริ่มลำดับการทำงาน',
+		'how_log_lines'   => '', // เว้นว่าง = ใช้ชื่อ 4 ขั้นด้านบนอัตโนมัติ · บรรทัดละ 1 ข้อความ
+		'how_log_ready'   => 'พร้อมทำงาน · รอเงื่อนไขตามกฎที่ตั้งไว้',
 
-		/* จุดเด่น */
+		/* จุดเด่น · บล็อก 4 โมดูลของระบบ (ตารางเซลล์ hairline) */
 		'show_features'     => true,
+		'features_kicker'   => 'โมดูลของระบบ',
+		'feat_module_label' => 'โมดูล', // คำนำหน้าเลขในแต่ละเซลล์ เช่น โมดูล 01
 		'features_title'    => 'จุดเด่นของ EA2000',
 		'features_subtitle' => 'ออกแบบมาเพื่อให้การเทรดของคุณเป็นระบบ ตรวจสอบได้ และอยู่ในกรอบความเสี่ยงที่วางไว้',
 		'feat1_title'       => 'ระบบช่วยเทรดอัตโนมัติ',
@@ -349,7 +434,7 @@ function ea2000_defaults() {
 		'feat3_title'       => 'Dashboard ดูง่าย',
 		'feat3_desc'        => 'ติดตามสถานะระบบ กำไร/ขาดทุน และเงื่อนไขการทำงานได้ชัดเจนในหน้าจอเดียว',
 		'feat4_title'       => 'แนวคิดบริหารความเสี่ยง',
-		'feat4_desc'        => 'วางแผนเรื่อง Lot, Stop Loss และ Drawdown ได้ตามระดับความเสี่ยงที่เหมาะกับทุนของคุณ',
+		'feat4_desc'        => 'วางแผนขนาดออเดอร์และระดับ Drawdown ที่ยอมรับได้ ให้เหมาะกับทุนของคุณ',
 		'feat5_title'       => 'เหมาะกับคนไม่มีเวลาเฝ้าจอ',
 		'feat5_desc'        => 'ให้ระบบช่วยทำงานตามแผนที่วางไว้ แม้ในเวลาที่คุณไม่อยู่หน้าจอ',
 		'feat6_title'       => 'มีทีมช่วยแนะนำการติดตั้ง',
@@ -407,7 +492,9 @@ function ea2000_defaults() {
 
 		/* ผลทดสอบ Backtest / Forward Test · บล็อก 6 (tests_*) · ไม่มีตัวเลข ตัวเลขจริงอยู่ที่หน้า /backtest/ และ /forward-test/ */
 		'show_tests'        => true,
-		'tests_kicker'      => 'Backtest and Forward Test',
+		'tests_kicker'      => 'การทดสอบ',
+		'tests_tab_bt_label' => 'ทดสอบย้อนหลัง',
+		'tests_tab_fw_label' => 'ทดสอบเดินหน้า',
 		'tests_title'       => 'ผลทดสอบ Backtest และ Forward Test ของ EA2000',
 		'tests_intro'       => 'การทดสอบ EA MT5 มี 2 แบบ: Backtest คือรันระบบกับข้อมูลราคาในอดีต ส่วน Forward Test คือรันกับตลาดจริงแบบเรียลไทม์บนบัญชีจริงหรือเดโม ตัวเลขจะแสดงเมื่อทีมงานมีข้อมูลจริงเท่านั้น ไม่มีการใส่ตัวเลขสมมติ',
 		'tests_bt_title'    => 'Backtest',
@@ -415,31 +502,35 @@ function ea2000_defaults() {
 		'tests_bt_btn'      => 'ดูรายละเอียด Backtest',
 		'tests_bt_img'      => '',
 		'tests_bt_img_alt'  => 'กราฟผล Backtest ของ EA2000 จาก MT5 Strategy Tester',
-		'tests_bt_img_note' => 'รูปที่ต้องใส่: กราฟ Balance/Equity จาก Strategy Tester ของ MT5 พร้อมตารางสรุป · แนะนำ 1280x720 px',
+		'tests_bt_img_note' => 'รูปที่ต้องใส่: ภาพรายงาน Backtest จาก MT5 Strategy Tester ใส่เมื่อมีผลจริงเท่านั้น · แนะนำ 1280x720 px',
 		'tests_fw_title'    => 'Forward Test',
 		'tests_fw_text'     => 'Forward Test คือการรัน EA2000 บนบัญชีจริงหรือเดโมกับตลาดปัจจุบัน จึงสะท้อน Spread, Commission และ Slippage ของโบรกเกอร์จริง ควรดูช่วงเวลาที่ทดสอบ ทุนเริ่มต้น และ Max Drawdown ควบคู่กับผลตอบแทน ลิงก์จากบริการติดตามผลภายนอกตรวจสอบได้ดีกว่าภาพหน้าจอ',
 		'tests_fw_btn'      => 'ดูรายละเอียด Forward Test',
 		'tests_fw_img'      => '',
 		'tests_fw_img_alt'  => 'กราฟผล Forward Test ของ EA2000 บนบัญชีจริงหรือเดโม',
-		'tests_fw_img_note' => 'รูปที่ต้องใส่: กราฟผลจากบัญชีจริงหรือเดโม เช่น หน้า Myfxbook หรือ FX Blue · แนะนำ 1280x720 px',
+		'tests_fw_img_note' => 'รูปที่ต้องใส่: ภาพบัญชี Forward Test จริงพร้อมลิงก์ตรวจสอบ ใส่เมื่อมีข้อมูลจริงเท่านั้น · แนะนำ 1280x720 px',
 		'tests_note'        => 'ตัวเลขผลทดสอบจะแสดงเมื่อทีมงานกรอกข้อมูลจริงเท่านั้น ผลในอดีตไม่รับประกันผลในอนาคต',
 
 		/* ติดตั้งใน 3 ขั้น · บล็อก 7 (install_*) · install_intro ใช้ร่วมกับหน้า /how-to-install/ (ประกาศไว้ในชุดหน้าย่อยด้านล่าง) */
 		'show_install'          => true,
-		'install_kicker'        => 'Get started',
+		'install_kicker'        => 'การติดตั้ง',
+		'install_step_label'    => 'ขั้น', // คำนำหน้าเลขขั้นใน ledger เช่น ขั้น 01
 		'install_title'         => 'ติดตั้ง EA2000 บน MT5 ใน 3 ขั้น',
 		'install_step1_title'   => 'เตรียมบัญชี MT5 และดาวน์โหลดไฟล์',
 		'install_step1_desc'    => 'เปิดบัญชีกับโบรกเกอร์ที่รองรับ MetaTrader 5 ติดตั้งโปรแกรม MT5 บนคอมพิวเตอร์หรือ VPS แล้วดาวน์โหลดไฟล์ EA2000 ที่ได้รับหลังสั่งซื้อ',
 		'install_step1_img'     => $install_assets . 'guide-01.webp',
 		'install_step1_img_alt' => 'ขั้นที่ 1 · เตรียมบัญชี MT5 และดาวน์โหลดไฟล์ EA2000',
+		'install_step1_img_note' => 'รูปที่ต้องใส่: ภาพหน้าจอขั้นเตรียมบัญชี MT5 และดาวน์โหลดไฟล์ · แนะนำ 1280x720 px',
 		'install_step2_title'   => 'วางไฟล์ในโฟลเดอร์ Experts และเปิด Algo Trading',
 		'install_step2_desc'    => 'ใน MT5 ไปที่ File แล้ว Open Data Folder เข้า MQL5 และ Experts วางไฟล์ลงไป รีสตาร์ต MT5 แล้วกดปุ่ม Algo Trading ให้เป็นสีเขียว',
 		'install_step2_img'     => $install_assets . 'guide-02.webp',
 		'install_step2_img_alt' => 'ขั้นที่ 2 · วางไฟล์ EA2000 ในโฟลเดอร์ Experts ของ MT5 และเปิด Algo Trading',
+		'install_step2_img_note' => 'รูปที่ต้องใส่: ภาพโฟลเดอร์ Experts ใน MT5 และปุ่ม Algo Trading · แนะนำ 1280x720 px',
 		'install_step3_title'   => 'ตั้งค่าตาม Preset และตรวจสถานะ',
 		'install_step3_desc'    => 'ลาก EA2000 ขึ้นกราฟคู่เงินที่ต้องการ โหลดไฟล์ Preset ตามระดับความเสี่ยง แล้วตรวจแผง Dashboard และแท็บ Experts ว่าระบบทำงานปกติ',
 		'install_step3_img'     => $install_assets . 'guide-03.webp',
 		'install_step3_img_alt' => 'ขั้นที่ 3 · ตั้งค่า EA2000 ตาม Preset และตรวจสถานะบน Dashboard',
+		'install_step3_img_note' => 'รูปที่ต้องใส่: ภาพ EA2000 บนกราฟพร้อมแผง Dashboard · แนะนำ 1280x720 px',
 		'install_mobile_note'   => 'ใช้ MT5 บนมือถือดูผลได้ แต่ตัว EA ต้องรันบนคอมพิวเตอร์หรือ VPS ที่เปิดตลอด',
 		'install_btn'           => 'อ่านคู่มือติดตั้งฉบับเต็ม',
 		'install_btn_url'       => '/how-to-install/',
@@ -461,6 +552,11 @@ function ea2000_defaults() {
 		'pricing_confirmed' => false, // เปิดเมื่อเจ้าของยืนยันราคาแล้วเท่านั้น · ควบคุมว่าจะประกาศราคาให้ Google (Offer/AggregateOffer) หรือไม่
 		'pricing_btn_text'  => 'สอบถามแพ็กเกจนี้',
 		'pricing_note'      => 'ราคาและเงื่อนไขเป็นไปตามแพ็กเกจที่เลือก สอบถามรายละเอียดล่าสุดและความเหมาะสมกับบัญชีของคุณได้ทาง LINE',
+		/* ตัวเลือกแพ็กเกจบนหน้าแรก (บล็อก 7 Tier selector) */
+		'pricing_kicker'            => 'แพ็กเกจ',
+		'pricing_recommended_label' => 'แนะนำ', // คำ monospace หลังชื่อแพ็กเกจที่ติ๊ก featured
+		'pricing_more_text'         => 'ดูรายละเอียดแพ็กเกจทั้งหมด',
+		'pricing_contact_text'      => 'สอบถามราคา', // แสดงแทนตัวเลขเมื่อ pricing_mode = contact หรือราคาว่าง
 		'pkg1_name'        => 'Starter',
 		'pkg1_tag'         => 'สำหรับสอบถามข้อมูลและเริ่มประเมินความเหมาะสม',
 		'pkg1_price'       => 'Free',
@@ -493,6 +589,7 @@ function ea2000_defaults() {
 
 		/* FAQ · บล็อก 9 (8 ข้อตาม docs/landing-page-plan.md ข้อ 5 · ข้อ 9 และ 10 เว้นว่าง) */
 		'show_faq'     => true,
+		'faq_kicker'   => 'คำถามที่พบบ่อย',
 		'faq_title'    => 'คำถามที่พบบ่อยเกี่ยวกับ EA2000 และ EA MT5',
 		'faq_subtitle' => 'คำตอบสั้น ๆ สำหรับคำถามที่ถูกถามบ่อยก่อนตัดสินใจใช้ EA เทรด forex',
 		'faq1_q'       => 'EA เทรด คืออะไร ต่างจากโรบอทเทรดหรือบอทเทรดไหม',
@@ -516,8 +613,12 @@ function ea2000_defaults() {
 		'faq10_q'      => '',
 		'faq10_a'      => '',
 
-		/* คำเตือนความเสี่ยง · บล็อก 10 (ห้ามลดทอน) */
-		'show_risk'  => true,
+		/* คำเตือนความเสี่ยง · บล็อก 9 Hazard band (ห้ามลดทอน) */
+		'show_risk'        => true,
+		'risk_kicker'      => 'ประกาศความเสี่ยง',
+		'risk_label'       => 'NOTICE', // stamp อังกฤษ 1 ใน 2 คำที่อนุญาตบนหน้าแรก (อีกคำคือ prompt ของเทอร์มินัล)
+		'risk_more_text'   => 'อ่านประกาศความเสี่ยงฉบับเต็ม',
+		'risk_margin_note' => 'ผลในอดีตไม่รับประกันผลในอนาคต · การเทรดมีความเสี่ยง โปรดอ่านประกาศฉบับเต็มก่อนตัดสินใจ', // บรรทัดเตือนใต้ตัวเลือกแพ็กเกจ
 		'risk_title' => 'ก่อนตัดสินใจ อ่านความเสี่ยงก่อน',
 		'risk_text'  => 'การเทรด Forex, CFD หรือสินทรัพย์ทางการเงินอื่น ๆ มีความเสี่ยงสูง ผู้ใช้งานอาจขาดทุนได้ทั้งบางส่วนหรือทั้งหมดของเงินทุน ผลการทดสอบหรือผลลัพธ์ในอดีตไม่ได้รับประกันผลลัพธ์ในอนาคต EA2000 เป็นเครื่องมือช่วยเทรดตามเงื่อนไขที่กำหนด ไม่ใช่ระบบรับประกันผลกำไร ผู้ใช้งานควรศึกษาข้อมูล เข้าใจข้อจำกัดของระบบ และบริหารความเสี่ยงให้เหมาะสมกับตนเองก่อนใช้งานจริง',
 
@@ -527,7 +628,35 @@ function ea2000_defaults() {
 		'cta_subtitle' => 'สอบถามแพ็กเกจ การติดตั้ง และความเหมาะสมกับทุนของคุณได้ทาง LINE ไม่มีข้อผูกมัด',
 		'cta_btn_text' => 'สอบถามทาง LINE',
 
-		/* Footer */
+		/* Footer v2 "Console" (footer.php) · key ชุดเก่า footer_kicker / footer_cta_title / footer_cta_text / footer_tagline คงไว้เพื่อ REST แต่เทมเพลตไม่อ่านแล้ว */
+		'footer_console_label'  => 'ติดต่อทีมงาน',
+		'footer_headline'       => '', // ว่าง = ใช้ cta_title
+		'footer_sub'            => '', // ว่าง = ใช้ cta_subtitle
+		'footer_line_qr_img'    => '', // QR ของ LINE OA · ว่าง = แอดมินเห็นข้อความเตือนให้อัปโหลด
+		'footer_line_qr_alt'    => 'QR สำหรับเพิ่มเพื่อน LINE Official Account ของ EA2000',
+		'footer_line_qr_note'   => 'อัปโหลด QR ของ LINE OA ขนาด 600x600 px พื้นขาว ที่ ปรับแต่ง : Footer',
+		'footer_qr_toggle_text' => 'แสดง QR',
+		'footer_hours_title'    => 'เวลาตอบแชท',
+		'footer_hours_text'     => '', // ว่าง = ซ่อนแถว · เจ้าของกรอกเอง ไม่มีสัญญาบริการฝังในโค้ด
+		'show_footer_console'   => true,
+		'footer_console_prompt' => 'ea2000@line:~$',
+		'footer_console_lines'  => "ทีมงานตอบแชทด้วยตัวเอง\nแจ้งเวอร์ชัน MT5 และโบรกเกอร์ที่ใช้ เพื่อให้ช่วยติดตั้งได้เร็วขึ้น\nอ่านประกาศความเสี่ยงก่อนตัดสินใจทุกครั้ง",
+		'footer_index_title'    => 'ดัชนีหน้า',
+		'footer_channels_title' => 'ช่องทาง',
+		'footer_docs_title'     => 'เอกสาร',
+		'footer_spec_title'     => 'ข้อมูลระบบ',
+		'footer_spec_items'     => "แพลตฟอร์ม|MetaTrader 5\nระบบปฏิบัติการ|Windows หรือ VPS\nสินทรัพย์|หลายคู่เงิน\nการส่งมอบ|ไฟล์ EA และคู่มือ",
+		'show_footer_watermark' => true,
+		'footer_watermark_text' => 'EA2000',
+		'footer_status_text'    => 'Expert Advisor สำหรับ MetaTrader 5',
+		'footer_copyright_text' => 'สงวนลิขสิทธิ์',
+		'show_footer_clock'     => true,
+		'footer_clock_label'    => 'เวลาไทย',
+		'footer_backtop_text'   => 'กลับด้านบน',
+		'show_footer_spotlight' => true,
+		'show_footer_signal'    => true,
+
+		/* Footer · key ชุดเดิม */
 		'footer_kicker'       => 'EA2000',
 		'footer_cta_title'    => 'พร้อมเริ่มต้นใช้งาน EA2000?',
 		'footer_cta_text'     => 'สอบถามการติดตั้ง เงื่อนไขการใช้งาน และความเหมาะสมกับทุนของคุณได้ทาง LINE',

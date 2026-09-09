@@ -4,6 +4,144 @@
 (function () {
 	'use strict';
 
+	/* Shared namespace (spec 0.3) · home.js and the footer modules read window.ea2000 */
+	var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+	var noop = { stop: function () {} };
+	function raf(fn) {
+		return window.requestAnimationFrame(fn);
+	}
+	var observers = {};
+
+	/* One IntersectionObserver per threshold · cb(entry) once then unobserve · opts.repeat keeps observing until stop() */
+	function observe(el, cb, opts) {
+		opts = opts || {};
+		if (!el) {
+			return noop;
+		}
+		if (!('IntersectionObserver' in window) || reduced) {
+			cb({ target: el, isIntersecting: true });
+			return noop;
+		}
+		var key = String(typeof opts.threshold === 'number' ? opts.threshold : 0.12);
+		var io = observers[key] || (observers[key] = new IntersectionObserver(function (entries) {
+			entries.forEach(function (entry) {
+				var task = entry.target.ea2000Task;
+				if (!entry.isIntersecting || !task) {
+					return;
+				}
+				if (!task.repeat) {
+					io.unobserve(entry.target);
+					entry.target.ea2000Task = null;
+				}
+				task.cb(entry);
+			});
+		}, { threshold: Number(key), rootMargin: '0px 0px -40px 0px' }));
+		el.ea2000Task = { cb: cb, repeat: !!opts.repeat };
+		io.observe(el);
+		return {
+			stop: function () {
+				el.ea2000Task = null;
+				io.unobserve(el);
+			}
+		};
+	}
+
+	/* Grapheme split so Thai vowels and tone marks never appear half-typed */
+	var segmenter = null;
+	try {
+		segmenter = new Intl.Segmenter('th', { granularity: 'grapheme' });
+	} catch (e) {}
+	function graphemes(str) {
+		return segmenter ? Array.from(segmenter.segment(str), function (s) { return s.segment; }) : str.split('');
+	}
+
+	/* Typewriter (spec 6.1) · lines = string | { t, c } · opts: cps, linePause, wrap ('span.term-line'), onDone · returns { stop } */
+	function typewriter(out, lines, opts) {
+		opts = opts || {};
+		var stopped = false;
+		var done = function () {
+			if (opts.onDone) {
+				opts.onDone();
+			}
+		};
+		if (!out || !lines || !lines.length) {
+			done();
+			return noop;
+		}
+		var cps = opts.cps || 32;
+		var wrap = opts.wrap ? opts.wrap.replace(/^span\./, '') : '';
+		var items = lines.map(function (l) {
+			return typeof l === 'string' ? { t: l, c: '' } : { t: String(l.t || ''), c: l.c || '' };
+		});
+		var el = out;
+		var prefix = '';
+		out.textContent = '';
+
+		/* Wrap mode: one span per line, newline text nodes between · plain mode: prefix keeps finished lines */
+		function open(i) {
+			if (!wrap) {
+				prefix = i ? el.textContent + '\n' : '';
+				return;
+			}
+			if (i) {
+				out.appendChild(document.createTextNode('\n'));
+			}
+			el = document.createElement('span');
+			el.className = wrap + (items[i].c ? ' ' + items[i].c : '');
+			out.appendChild(el);
+		}
+
+		if (reduced) {
+			items.forEach(function (item, i) {
+				open(i);
+				el.textContent = prefix + item.t;
+			});
+			done();
+			return noop;
+		}
+
+		var li = 0;
+		var ci = 0;
+		var chars = graphemes(items[0].t);
+		var budget = 0;
+		var last = 0;
+		var waitUntil = 0;
+		open(0);
+
+		function frame(now) {
+			if (stopped) {
+				return;
+			}
+			budget += last ? Math.min(now - last, 250) * cps / 1000 : 0;
+			last = now;
+			if (now >= waitUntil) {
+				while (budget >= 1 && ci < chars.length) {
+					ci += 1;
+					budget -= 1;
+					el.textContent = prefix + chars.slice(0, ci).join('');
+				}
+				if (ci >= chars.length) {
+					li += 1;
+					if (li >= items.length) {
+						done();
+						return;
+					}
+					chars = graphemes(items[li].t);
+					ci = 0;
+					budget = 0;
+					waitUntil = now + (opts.linePause || 0);
+					open(li);
+				}
+			}
+			raf(frame);
+		}
+		raf(frame);
+		return { stop: function () { stopped = true; } };
+	}
+
+	window.ea2000 = { reduced: reduced, fine: fine, observe: observe, typewriter: typewriter };
+
 	/* Header scrolled state */
 	var header = document.querySelector('.site-header');
 	function onScroll() {
@@ -144,7 +282,8 @@
 			link_url: absoluteUrl.href,
 			link_text: label,
 			page_path: window.location.pathname,
-			page_title: document.title
+			page_title: document.title,
+			link_pos: link.dataset.linePos || ''
 		};
 
 		if (typeof window.gtag === 'function') {
@@ -154,29 +293,80 @@
 		}
 	});
 
-	/* Reveal on scroll */
-	var items = document.querySelectorAll('.reveal');
-	var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	/* Reveal on scroll · .reveal (inner pages, fade-up) and .watch (state only) both get .in once */
+	document.querySelectorAll('.reveal, .watch').forEach(function (el) {
+		observe(el, function (entry) {
+			entry.target.classList.add('in');
+		});
+	});
 
-	if ('IntersectionObserver' in window && !reduced) {
-		var io = new IntersectionObserver(
-			function (entries) {
-				entries.forEach(function (entry) {
-					if (entry.isIntersecting) {
-						entry.target.classList.add('in');
-						io.unobserve(entry.target);
+	/* Footer · typing prompt (spec 4.3) */
+	var promptEl = document.querySelector('[data-prompt]');
+	var promptOut = promptEl && promptEl.querySelector('[data-prompt-out]');
+	var promptLines = [];
+	try {
+		promptLines = JSON.parse(promptEl ? promptEl.getAttribute('data-lines') : '[]').filter(function (l) { return typeof l === 'string' && l; });
+	} catch (e) {}
+	if (promptOut && promptLines.length) {
+		if (reduced) {
+			promptOut.textContent = promptLines.join(' · ');
+		} else {
+			var loops = parseInt(promptEl.getAttribute('data-loops'), 10) || 3;
+			var pi = 0;
+			var pCount = 0;
+			var cycle = function () {
+				typewriter(promptOut, [promptLines[pi]], {
+					cps: 30,
+					onDone: function () {
+						setTimeout(function () {
+							pi = (pi + 1) % promptLines.length;
+							if (++pCount < loops * promptLines.length) {
+								cycle();
+							}
+						}, 4000);
 					}
 				});
-			},
-			{ threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
-		);
-		items.forEach(function (el) {
-			io.observe(el);
+			};
+			observe(promptEl, cycle);
+		}
+	}
+
+	/* Footer · pointer spotlight · bound only for hover-capable fine pointers, never under reduced motion */
+	var spot = document.querySelector('.site-footer[data-spotlight]');
+	if (spot && fine && !reduced) {
+		var spotRaf = 0;
+		var setSpot = function (x, y) {
+			if (!spotRaf) {
+				spotRaf = raf(function () {
+					spotRaf = 0;
+					spot.style.setProperty('--mx', x + 'px');
+					spot.style.setProperty('--my', y + 'px');
+				});
+			}
+		};
+		spot.addEventListener('pointermove', function (e) {
+			var r = spot.getBoundingClientRect();
+			setSpot(e.clientX - r.left, e.clientY - r.top);
+		}, { passive: true });
+		spot.addEventListener('pointerleave', function () {
+			setSpot(-999, -999);
 		});
-	} else {
-		items.forEach(function (el) {
-			el.classList.add('in');
-		});
+	}
+
+	/* Footer · Bangkok clock · minutes only, first tick then on the minute */
+	var clockEl = document.querySelector('[data-clock-out]');
+	if (clockEl) {
+		try {
+			var clockFmt = new Intl.DateTimeFormat('th-TH', { timeZone: clockEl.getAttribute('data-tz') || 'Asia/Bangkok', hour: '2-digit', minute: '2-digit', hour12: false });
+			var tick = function () {
+				clockEl.textContent = clockFmt.format(new Date());
+			};
+			tick();
+			setTimeout(function () {
+				tick();
+				setInterval(tick, 60000);
+			}, 60000 - (Date.now() % 60000));
+		} catch (e) {}
 	}
 
 	/* Related posts rail · arrow scroll + show controls only when overflowing */

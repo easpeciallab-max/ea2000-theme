@@ -3,8 +3,10 @@
  * EA2000 · Customizer (หน้า "ปรับแต่ง")
  * ทุกข้อความ รูปภาพ ลิงก์ และการเปิดและปิด section แก้ได้จากที่นี่
  *
- * ลำดับหมวด: หมวด 1 ถึง 12 เรียงตามบล็อกบนหน้าแรก (10 บล็อก) · หมวด 13 ถึง 16 ส่วนกลางของเว็บ
- * หมวด 17 ถึง 26 ส่วนของหน้าแรกที่ปิดไว้ (เปิดได้เมื่อมีข้อมูลจริง) · หมวด 27 ถึง 32 หน้าย่อยและ Link Hub
+ * ลำดับหมวด: หมวด 1 ถึง 12 เรียงตามบล็อกบนหน้าแรก v3 "Control Room" · หมวด 13 ถึง 16 ส่วนกลางของเว็บ (footer, เมนูมือถือ, SEO, คุกกี้)
+ * หมวด 17 ถึง 22 หน้าย่อยและ Link Hub
+ * บล็อกเก่าของหน้าแรก (ไฮไลต์, Control Center, การ์ดนำทาง, about/steps ชุดเดิม, แกลเลอรี, ตารางผลทดสอบ, เหมาะกับใคร, รีวิว, ทีมงาน,
+ * ความมั่นใจ, บทความล่าสุด, CTA กลางหน้า) ไม่มี control แล้วตั้งแต่ 9 ก.ย. 2026 · key ยังอยู่ใน ea2000_defaults() เพื่อ REST
  *
  * @package ea2000
  */
@@ -28,6 +30,9 @@ function ea2000_sanitize_pricing_mode( $value ) {
 function ea2000_customize_register( $wp_customize ) {
 
 	$d = ea2000_defaults();
+
+	/* กติกาเนื้อหา (spec ข้อ 0.6) ต่อท้าย description ของทุกช่องข้อความใหม่ที่ผู้เข้าชมอ่านได้ */
+	$rule = 'ห้ามระบุกลยุทธ์ ตัวเลขผลเทรด หรือคำรับประกัน';
 
 	$wp_customize->add_panel(
 		'ea2000_panel',
@@ -59,37 +64,45 @@ function ea2000_customize_register( $wp_customize ) {
 				'contact_email'   => array( 'อีเมลติดต่อ (ถ้ามี)', 'text' ),
 				'show_float_line' => array( 'แสดงปุ่ม LINE ลอยมุมขวาล่าง', 'checkbox' ),
 				'float_line_text' => array( 'ข้อความบนปุ่ม LINE ลอย', 'text' ),
+				'contact_fallback_text' => array( 'ข้อความปุ่มติดต่อเมื่อยังไม่กรอก LINE OA', 'text', 'ใช้กับปุ่มหลักบนหน้าแรกและแถบท้ายเว็บ ปุ่มจะชี้ไปหน้า /go/ (ต้องเผยแพร่แล้ว) · ' . $rule ),
 				'show_language_switcher' => array( 'แสดงตัวสลับภาษาในเมนูบน', 'checkbox' ),
 				'language_fallback_items' => array( 'รายการภาษาสำรอง (code|ธง|ป้ายสั้น|ชื่อภาษา)', 'textarea' ),
 			),
 		),
 
 		'ea2000_hero' => array(
-			'title'       => '2) บล็อก 1 · Hero ส่วนแรกของหน้า',
-			'description' => 'หัวข้อหลัก (H1) ของหน้าแรกคือ "ชื่อหลัก" ต่อด้วย "ประโยคหลัก" · ควรมีคำว่า EA MT5 หรือ ระบบเทรดอัตโนมัติ อยู่ในประโยคหลักเสมอ',
+			'title'       => '2) บล็อก 0 · Boot (hero) และรางเลขบท',
+			'description' => 'หัวข้อหลัก (H1) ของหน้าแรกคือ "ชื่อหลัก" ต่อด้วย "ประโยคหลัก" · ควรมีคำว่า EA MT5 หรือ ระบบเทรดอัตโนมัติ อยู่ในประโยคหลักเสมอ · แถบ HUD ใต้ปุ่มแสดงเฉพาะข้อเท็จจริงของระบบ ค่าที่เป็น % หรือมีคำว่า กำไร จะไม่ถูกแสดง',
 			'fields'      => array(
 				'show_hero'      => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'hero_badge'     => array( 'ป้ายเล็กเหนือชื่อ', 'text' ),
+				'show_rail'      => array( 'แสดงรางเลขบทด้านซ้าย (เดสก์ท็อป) และเส้น progress ใต้เมนู (จอเล็ก)', 'checkbox' ),
+				'hero_badge'     => array( 'บรรทัดนำเหนือชื่อ (monospace)', 'text', $rule ),
 				'hero_title'     => array( 'ชื่อหลัก (Headline)', 'text' ),
 				'hero_subtitle'  => array( 'ประโยคหลัก (Sub headline · ต่อท้ายชื่อหลักใน H1)', 'text' ),
 				'hero_desc'      => array( 'คำอธิบายสั้น', 'textarea' ),
 				'hero_btn1_text' => array( 'ข้อความปุ่มหลัก (ลิงก์ไป LINE)', 'text' ),
-				'hero_btn2_text' => array( 'ข้อความปุ่มรอง (เลื่อนไปบล็อก "ทำงานอย่างไร")', 'text' ),
+				'hero_btn2_text' => array( 'ข้อความลิงก์รอง (เลื่อนไปบท "ลำดับการทำงาน")', 'text' ),
 				'hero_note'      => array( 'ข้อความเตือนความเสี่ยงใต้ปุ่ม', 'text' ),
-				'hero_image'     => array( 'ภาพประกอบ Hero (ไม่ใส่ = ใช้โลโก้)', 'image', 'ค่าเริ่มต้นคือภาพกล่องสินค้าพื้นโปร่ง · ใส่ภาพ Dashboard หรือหน้าจอ MT5 ได้ แนะนำกว้างอย่างน้อย 900px' ),
+				'hero_hud_items' => array( 'แถบ HUD ใต้ปุ่ม (บรรทัดละ ป้าย|ค่า)', 'textarea', 'เช่น แพลตฟอร์ม|MetaTrader 5 · บรรทัดที่ไม่มี | จะถูกข้าม · ' . $rule ),
+				'hero_hud_note'  => array( 'คำอธิบายแถบ HUD สำหรับ screen reader', 'text', 'ไม่แสดงบนจอ · ' . $rule ),
+				'hero_image'     => array( 'ภาพกล่องสินค้า (Hero)', 'image', 'ค่าเริ่มต้นคือภาพกล่องสินค้าพื้นโปร่ง 1000x1000 px · เว้นว่างจะแสดงช่องรอใส่รูปพร้อมข้อความด้านล่าง (ไม่ใช้โลโก้แทน)' ),
 				'hero_img_alt'   => array( 'ข้อความอธิบายภาพ Hero (Alt)', 'text', 'ควรมีคำว่า EA2000 และ MT5' ),
+				'hero_img_note'  => array( 'ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text', $rule ),
+				'fig_label'      => array( 'คำนำหน้าคำบรรยายภาพ', 'text', 'เช่น ภาพ จะแสดงเป็น ภาพ 01 ใต้ช่องรูปทุกช่อง · ' . $rule ),
 			),
 		),
 
 		'ea2000_what' => array(
-			'title'       => '3) บล็อก 2 · EA2000 คืออะไร',
-			'description' => 'อธิบายว่า EA2000 คืออะไรและทำงานอย่างไร ใช้คำพ้อง Expert Advisor / บอทเทรด / โรบอทเทรด ให้ครบ · รูปเว้นว่างจะแสดงโครงรอใส่รูปพร้อมข้อความแนะนำ (เห็นเฉพาะแอดมิน)',
+			'title'       => '3) บล็อก 1 · ระบบคืออะไร (datasheet)',
+			'description' => 'อธิบายว่า EA2000 คืออะไรและทำงานอย่างไร ใช้คำพ้อง Expert Advisor / บอทเทรด / โรบอทเทรด ให้ครบ · รูปเว้นว่างจะแสดงช่องรอใส่รูปพร้อมข้อความแนะนำ (ผู้เข้าชมเห็นด้วย)',
 			'fields'      => array(
 				'show_what'     => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'what_kicker'   => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
+				'what_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'what_title'    => array( 'หัวข้อ (H2)', 'text' ),
 				'what_text'     => array( 'เนื้อหา (เว้นบรรทัด = ขึ้นย่อหน้าใหม่)', 'textarea' ),
-				'what_points'   => array( 'จุดสรุป 3 ข้อ (บรรทัดละ 1 ข้อ)', 'textarea' ),
+				'what_points'   => array( 'ตารางสรุป (บรรทัดละ ป้าย|ข้อความ)', 'textarea', 'บรรทัดที่ไม่มี | จะใช้เลขลำดับเป็นป้าย · ' . $rule ),
+				'what_principle_label' => array( 'กล่องหลักการ · ป้าย', 'text', $rule ),
+				'what_principle'       => array( 'กล่องหลักการ · ประโยค', 'text', 'ประโยคหลักการของทีม ห้ามใส่คำพูดลูกค้าหรือผลเทรด · ' . $rule ),
 				'what_img'      => array( 'ภาพประกอบ (หน้าจอ MT5 ขณะรัน EA2000)', 'image', 'แนะนำ 1280x800 px' ),
 				'what_img_alt'  => array( 'ข้อความอธิบายภาพ (Alt)', 'text' ),
 				'what_img_note' => array( 'ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text' ),
@@ -97,30 +110,40 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_pain' => array(
-			'title'  => '4) บล็อก 3 · ปัญหาของนักเทรด',
-			'fields' => array(
+			'title'       => '4) บล็อก 2 · ปัญหาของการเทรดมือ (ledger ขีดฆ่า)',
+			'description' => 'แต่ละข้อจะถูกขีดฆ่าเมื่อผู้เข้าชมเลื่อนถึง แล้วปิดท้ายด้วยแถวสรุปว่าระบบอัตโนมัติเข้ามาแทนอะไร',
+			'fields'      => array(
 				'show_pain'     => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'pain_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'pain_title'    => array( 'หัวข้อ', 'text' ),
 				'pain_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'pain1_title'   => array( 'การ์ด 1 · หัวข้อ', 'text' ),
-				'pain1_desc'    => array( 'การ์ด 1 · รายละเอียด', 'textarea' ),
-				'pain2_title'   => array( 'การ์ด 2 · หัวข้อ', 'text' ),
-				'pain2_desc'    => array( 'การ์ด 2 · รายละเอียด', 'textarea' ),
-				'pain3_title'   => array( 'การ์ด 3 · หัวข้อ', 'text' ),
-				'pain3_desc'    => array( 'การ์ด 3 · รายละเอียด', 'textarea' ),
-				'pain4_title'   => array( 'การ์ด 4 · หัวข้อ', 'text' ),
-				'pain4_desc'    => array( 'การ์ด 4 · รายละเอียด', 'textarea' ),
+				'pain1_title'   => array( 'ข้อ 1 · หัวข้อ', 'text' ),
+				'pain1_desc'    => array( 'ข้อ 1 · รายละเอียด', 'textarea' ),
+				'pain2_title'   => array( 'ข้อ 2 · หัวข้อ', 'text' ),
+				'pain2_desc'    => array( 'ข้อ 2 · รายละเอียด', 'textarea' ),
+				'pain3_title'   => array( 'ข้อ 3 · หัวข้อ', 'text' ),
+				'pain3_desc'    => array( 'ข้อ 3 · รายละเอียด', 'textarea' ),
+				'pain4_title'   => array( 'ข้อ 4 · หัวข้อ', 'text' ),
+				'pain4_desc'    => array( 'ข้อ 4 · รายละเอียด', 'textarea' ),
+				'pain_resolved_label' => array( 'แถวสรุป · ป้าย', 'text', $rule ),
+				'pain_resolved_text'  => array( 'แถวสรุป · ข้อความ', 'textarea', $rule ),
 			),
 		),
 
 		'ea2000_how' => array(
-			'title'       => '5) บล็อก 4 · EA2000 ทำงานอย่างไร (4 ขั้น)',
-			'description' => 'อธิบายวงจรการทำงานของ EA บน MetaTrader 5 แบบทั่วไป ห้ามเขียนอ้างกลยุทธ์ภายในของระบบ · กล่องข้าง "ต้องมีอะไรบ้าง" บรรทัดละ 1 ข้อ',
+			'title'       => '5) บล็อก 3 · ลำดับการทำงาน (เทอร์มินัล + 4 ขั้น)',
+			'description' => 'อธิบายวงจรการทำงานของ EA บน MetaTrader 5 แบบทั่วไป ห้ามเขียนอ้างกลยุทธ์ภายในของระบบ · เทอร์มินัลจำลองพิมพ์ชื่อขั้นทีละตัว ไม่มีเวลา ราคา หรือผลเทรด · กล่องข้าง "ต้องมีอะไรบ้าง" บรรทัดละ 1 ข้อ',
 			'fields'      => array(
 				'show_how'        => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'how_kicker'      => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
+				'how_kicker'      => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'how_title'       => array( 'หัวข้อ (H2)', 'text' ),
 				'how_intro'       => array( 'ประโยคเกริ่นนำ', 'textarea' ),
+				'show_how_log'    => array( 'แสดงเทอร์มินัลจำลองลำดับการทำงาน', 'checkbox' ),
+				'how_log_title'   => array( 'เทอร์มินัล · ชื่อหน้าต่าง', 'text', $rule ),
+				'how_log_prompt'  => array( 'เทอร์มินัล · prompt', 'text', 'เช่น ea2000@mt5:~$ · ' . $rule ),
+				'how_log_start'   => array( 'เทอร์มินัล · คำสั่งเริ่ม (ต่อท้าย prompt)', 'text', $rule ),
+				'how_log_lines'   => array( 'เทอร์มินัล · บรรทัด log กำหนดเอง', 'textarea', 'เว้นว่าง = ใช้ชื่อ 4 ขั้นด้านบนอัตโนมัติ · บรรทัดละ 1 ข้อความ · ห้ามระบุกลยุทธ์ ตัวเลข เวลา หรือผลการเทรด' ),
+				'how_log_ready'   => array( 'เทอร์มินัล · บรรทัดปิดท้าย (สถานะพร้อม)', 'text', $rule ),
 				'how_step1_title' => array( 'ขั้น 1 · หัวข้อ', 'text' ),
 				'how_step1_desc'  => array( 'ขั้น 1 · รายละเอียด', 'textarea' ),
 				'how_step2_title' => array( 'ขั้น 2 · หัวข้อ', 'text' ),
@@ -138,9 +161,12 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_features' => array(
-			'title'  => '6) บล็อก 5 · จุดเด่นของระบบ (6 ข้อ)',
-			'fields' => array(
+			'title'       => '6) บล็อก 4 · โมดูลของระบบ (6 ข้อ)',
+			'description' => 'ตารางเซลล์ hairline 3x2 ไม่มีไอคอน · แต่ละเซลล์มีเลขลำดับนำหน้า',
+			'fields'      => array(
 				'show_features'     => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'features_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'feat_module_label' => array( 'คำนำหน้าเลขในแต่ละเซลล์', 'text', 'เช่น โมดูล จะแสดงเป็น โมดูล 01 · ' . $rule ),
 				'features_title'    => array( 'หัวข้อ', 'text' ),
 				'features_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
 				'feat1_title'       => array( 'จุดเด่น 1 · หัวข้อ', 'text' ),
@@ -159,48 +185,54 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_tests' => array(
-			'title'       => '7) บล็อก 6 · ผลทดสอบ Backtest และ Forward Test',
-			'description' => 'บล็อกนี้อธิบายว่าการทดสอบสองแบบคืออะไรและลิงก์ไปหน้า /backtest/ กับ /forward-test/ · ไม่มีช่องตัวเลข ตัวเลขจริงกรอกที่หมวดหน้า Backtest และหน้า Forward Test เท่านั้น · อย่าลบหมายเหตุท้ายบล็อก',
+			'title'       => '7) บล็อก 5 · การทดสอบ (แท็บ Backtest / Forward Test)',
+			'description' => 'บล็อกนี้อธิบายว่าการทดสอบสองแบบคืออะไรและลิงก์ไปหน้า /backtest/ กับ /forward-test/ · ไม่มีช่องตัวเลข ตัวเลขจริงกรอกที่หมวดหน้า Backtest และหน้า Forward Test เท่านั้น · ภาพใส่เมื่อมีผลจริงเท่านั้น · อย่าลบหมายเหตุท้ายบล็อก',
 			'fields'      => array(
 				'show_tests'        => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'tests_kicker'      => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
+				'tests_kicker'      => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'tests_title'       => array( 'หัวข้อ (H2)', 'text' ),
 				'tests_intro'       => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'tests_bt_title'    => array( 'การ์ด Backtest · หัวข้อ', 'text' ),
-				'tests_bt_text'     => array( 'การ์ด Backtest · รายละเอียด', 'textarea' ),
-				'tests_bt_btn'      => array( 'การ์ด Backtest · ข้อความปุ่ม (ลิงก์ไป /backtest/)', 'text' ),
-				'tests_bt_img'      => array( 'การ์ด Backtest · ภาพ', 'image', 'แนะนำ 1280x720 px' ),
-				'tests_bt_img_alt'  => array( 'การ์ด Backtest · ข้อความอธิบายภาพ (Alt)', 'text' ),
-				'tests_bt_img_note' => array( 'การ์ด Backtest · ข้อความแนะนำรูปที่ต้องใส่', 'text' ),
-				'tests_fw_title'    => array( 'การ์ด Forward Test · หัวข้อ', 'text' ),
-				'tests_fw_text'     => array( 'การ์ด Forward Test · รายละเอียด', 'textarea' ),
-				'tests_fw_btn'      => array( 'การ์ด Forward Test · ข้อความปุ่ม (ลิงก์ไป /forward-test/)', 'text' ),
-				'tests_fw_img'      => array( 'การ์ด Forward Test · ภาพ', 'image', 'แนะนำ 1280x720 px' ),
-				'tests_fw_img_alt'  => array( 'การ์ด Forward Test · ข้อความอธิบายภาพ (Alt)', 'text' ),
-				'tests_fw_img_note' => array( 'การ์ด Forward Test · ข้อความแนะนำรูปที่ต้องใส่', 'text' ),
+				'tests_tab_bt_label' => array( 'แท็บ 1 · ชื่อแท็บ Backtest', 'text', $rule ),
+				'tests_tab_fw_label' => array( 'แท็บ 2 · ชื่อแท็บ Forward Test', 'text', $rule ),
+				'tests_bt_title'    => array( 'แผง Backtest · หัวข้อ', 'text' ),
+				'tests_bt_text'     => array( 'แผง Backtest · รายละเอียด', 'textarea' ),
+				'tests_bt_btn'      => array( 'แผง Backtest · ข้อความปุ่ม (ลิงก์ไป /backtest/)', 'text' ),
+				'tests_bt_img'      => array( 'แผง Backtest · ภาพ', 'image', 'แนะนำ 1280x720 px · ใส่เมื่อมีผลจริงเท่านั้น' ),
+				'tests_bt_img_alt'  => array( 'แผง Backtest · ข้อความอธิบายภาพ (Alt)', 'text' ),
+				'tests_bt_img_note' => array( 'แผง Backtest · ข้อความแนะนำรูปที่ต้องใส่', 'text' ),
+				'tests_fw_title'    => array( 'แผง Forward Test · หัวข้อ', 'text' ),
+				'tests_fw_text'     => array( 'แผง Forward Test · รายละเอียด', 'textarea' ),
+				'tests_fw_btn'      => array( 'แผง Forward Test · ข้อความปุ่ม (ลิงก์ไป /forward-test/)', 'text' ),
+				'tests_fw_img'      => array( 'แผง Forward Test · ภาพ', 'image', 'แนะนำ 1280x720 px · ใส่เมื่อมีข้อมูลจริงเท่านั้น' ),
+				'tests_fw_img_alt'  => array( 'แผง Forward Test · ข้อความอธิบายภาพ (Alt)', 'text' ),
+				'tests_fw_img_note' => array( 'แผง Forward Test · ข้อความแนะนำรูปที่ต้องใส่', 'text' ),
 				'tests_note'        => array( 'หมายเหตุท้ายบล็อก (จำเป็นต้องมี)', 'textarea' ),
 			),
 		),
 
 		'ea2000_install_home' => array(
-			'title'       => '8) บล็อก 7 · ติดตั้งใน 3 ขั้น (หน้าแรก)',
-			'description' => 'สรุปย่อของคู่มือติดตั้ง · ประโยคเกริ่นนำใช้ค่าเดียวกับหน้า How to Install (แก้ได้ที่หมวดหน้า How to Install) · ภาพแต่ละขั้นค่าเริ่มต้นใช้ภาพจากคู่มือ',
+			'title'       => '8) บล็อก 6 · การติดตั้ง 3 ขั้น (ฟิล์มภาพ + รายการ)',
+			'description' => 'สรุปย่อของคู่มือติดตั้ง · ประโยคเกริ่นนำใช้ค่าเดียวกับหน้า How to Install (แก้ได้ที่หมวดหน้า How to Install) · ภาพแต่ละขั้นค่าเริ่มต้นใช้ภาพจากคู่มือ เว้นว่างจะแสดงช่องรอใส่รูปพร้อมข้อความแนะนำ',
 			'fields'      => array(
 				'show_install'          => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'install_kicker'        => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
+				'install_kicker'        => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'install_step_label'    => array( 'คำนำหน้าเลขขั้นในรายการ', 'text', 'เช่น ขั้น จะแสดงเป็น ขั้น 01 · ' . $rule ),
 				'install_title'         => array( 'หัวข้อ (H2)', 'text' ),
 				'install_step1_title'   => array( 'ขั้น 1 · หัวข้อ', 'text' ),
 				'install_step1_desc'    => array( 'ขั้น 1 · รายละเอียด', 'textarea' ),
-				'install_step1_img'     => array( 'ขั้น 1 · ภาพ', 'image' ),
+				'install_step1_img'     => array( 'ขั้น 1 · ภาพ', 'image', 'แนะนำ 1280x720 px' ),
 				'install_step1_img_alt' => array( 'ขั้น 1 · ข้อความอธิบายภาพ (Alt)', 'text' ),
+				'install_step1_img_note' => array( 'ขั้น 1 · ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text', $rule ),
 				'install_step2_title'   => array( 'ขั้น 2 · หัวข้อ', 'text' ),
 				'install_step2_desc'    => array( 'ขั้น 2 · รายละเอียด', 'textarea' ),
-				'install_step2_img'     => array( 'ขั้น 2 · ภาพ', 'image' ),
+				'install_step2_img'     => array( 'ขั้น 2 · ภาพ', 'image', 'แนะนำ 1280x720 px' ),
 				'install_step2_img_alt' => array( 'ขั้น 2 · ข้อความอธิบายภาพ (Alt)', 'text' ),
+				'install_step2_img_note' => array( 'ขั้น 2 · ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text', $rule ),
 				'install_step3_title'   => array( 'ขั้น 3 · หัวข้อ', 'text' ),
 				'install_step3_desc'    => array( 'ขั้น 3 · รายละเอียด', 'textarea' ),
-				'install_step3_img'     => array( 'ขั้น 3 · ภาพ', 'image' ),
+				'install_step3_img'     => array( 'ขั้น 3 · ภาพ', 'image', 'แนะนำ 1280x720 px' ),
 				'install_step3_img_alt' => array( 'ขั้น 3 · ข้อความอธิบายภาพ (Alt)', 'text' ),
+				'install_step3_img_note' => array( 'ขั้น 3 · ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text', $rule ),
 				'install_mobile_note'   => array( 'หมายเหตุเรื่องมือถือ', 'text' ),
 				'install_btn'           => array( 'ข้อความปุ่มไปคู่มือฉบับเต็ม', 'text' ),
 				'install_btn_url'       => array( 'ลิงก์ปุ่ม (slug เช่น /how-to-install/ หรือ URL เต็ม)', 'text' ),
@@ -208,8 +240,8 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_pricing' => array(
-			'title'       => '9) บล็อก 8 · แพ็กเกจราคา',
-			'description' => 'เลือกได้ว่าจะโชว์ราคา หรือให้สอบถามราคาทาง LINE · หน้าแรกแสดงการ์ดแพ็กเกจชุดเดียวกับหน้า Pricing',
+			'title'       => '9) บล็อก 7 · แพ็กเกจ (ตัวเลือกแพ็กเกจ)',
+			'description' => 'เลือกได้ว่าจะโชว์ราคา หรือให้สอบถามราคาทาง LINE · หน้าแรกแสดงแพ็กเกจชุดเดียวกับหน้า Pricing เป็นแท็บบนจอเล็กและตารางเปรียบเทียบบนจอกว้าง · แพ็กเกจที่ติ๊ก "แนะนำ" ตัวแรกจะถูกเลือกไว้ก่อน',
 			'fields'      => array(
 				'show_pricing'     => array( 'แสดงส่วนนี้', 'checkbox' ),
 				'pricing_title'    => array( 'หัวข้อ', 'text' ),
@@ -242,60 +274,87 @@ function ea2000_customize_register( $wp_customize ) {
 				'pkg3_featured'    => array( 'แพ็กเกจ 3 · ติดป้าย "แนะนำ"', 'checkbox' ),
 				'pricing_btn_text' => array( 'ข้อความปุ่มบนการ์ดราคา', 'text' ),
 				'pricing_note'     => array( 'หมายเหตุท้ายส่วนราคา', 'text' ),
-				'show_pricing_home'  => array( 'แสดงตัวอย่างแพ็กเกจบนหน้าแรก', 'checkbox' ),
+				'show_pricing_home'  => array( 'แสดงตัวเลือกแพ็กเกจบนหน้าแรก', 'checkbox' ),
+				'pricing_kicker'     => array( 'หน้าแรก · ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'pricing_home_title' => array( 'หน้าแรก · หัวข้อแพ็กเกจ', 'text' ),
 				'pricing_home_sub'   => array( 'หน้าแรก · คำอธิบายแพ็กเกจ', 'textarea' ),
+				'pricing_recommended_label' => array( 'หน้าแรก · คำหลังชื่อแพ็กเกจที่ติ๊ก "แนะนำ"', 'text', $rule ),
+				'pricing_contact_text'      => array( 'หน้าแรก · ข้อความแทนราคาเมื่อไม่แสดงราคา', 'text', 'ใช้เมื่อเลือก "ไม่แสดงราคา" หรือช่องราคาว่าง · ' . $rule ),
+				'pricing_more_text'         => array( 'หน้าแรก · ข้อความลิงก์ไปหน้าแพ็กเกจฉบับเต็ม', 'text', $rule ),
 			),
 		),
 
 		'ea2000_faq' => array(
-			'title'       => '10) บล็อก 9 · FAQ คำถามที่พบบ่อย',
+			'title'       => '10) บล็อก 8 · คำถามที่พบบ่อย (query log)',
 			'description' => 'มีช่องให้ 10 ข้อ ข้อไหนเว้นว่างไว้จะไม่แสดงผล · ทุกข้อที่กรอกจะถูกส่งให้ Google เป็นข้อมูลโครงสร้าง FAQPage อัตโนมัติ ตอบตามจริง ไม่อ้างผลกำไร',
 			'fields'      => array(
 				'show_faq'     => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'faq_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
 				'faq_title'    => array( 'หัวข้อ', 'text' ),
 				'faq_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
 			),
 		),
 
 		'ea2000_risk' => array(
-			'title'       => '11) บล็อก 10 · คำเตือนความเสี่ยง',
-			'description' => 'ส่วนนี้สำคัญต่อความน่าเชื่อถือของแบรนด์ ไม่แนะนำให้ปิด และห้ามลดทอนข้อความ',
+			'title'       => '11) บล็อก 9 · ประกาศความเสี่ยง (แถบเตือน)',
+			'description' => 'ส่วนนี้สำคัญต่อความน่าเชื่อถือของแบรนด์ ไม่แนะนำให้ปิด และห้ามลดทอนข้อความ · บรรทัดเตือนสั้นจะแสดงใต้ตัวเลือกแพ็กเกจด้วย',
 			'fields'      => array(
-				'show_risk'  => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'risk_title' => array( 'หัวข้อ', 'text' ),
-				'risk_text'  => array( 'ข้อความคำเตือน', 'textarea' ),
+				'show_risk'        => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'risk_kicker'      => array( 'ป้ายบท (แสดงบนรางเลขบทและแถบเตือน)', 'text', $rule ),
+				'risk_label'       => array( 'ตราประทับหน้าป้ายบท', 'text', 'ค่าเริ่มต้น NOTICE (คงตัวพิมพ์ตามที่กรอก) · เว้นว่างเพื่อซ่อน' ),
+				'risk_title'       => array( 'หัวข้อ', 'text' ),
+				'risk_text'        => array( 'ข้อความคำเตือน', 'textarea' ),
+				'risk_more_text'   => array( 'ข้อความปุ่มไปหน้าประกาศฉบับเต็ม (/risk-disclosure/)', 'text', $rule ),
+				'risk_margin_note' => array( 'บรรทัดเตือนสั้นใต้ตัวเลือกแพ็กเกจ', 'text', 'ห้ามลดทอนความหมาย · ' . $rule ),
 			),
 		),
 
 		'ea2000_cta' => array(
-			'title'       => '12) บล็อก 10 · CTA ปิดท้าย',
-			'description' => 'ปุ่ม LINE ปุ่มเดียวใต้คำเตือนความเสี่ยง · แถบทัก LINE คั่นกลางหน้าปิดไว้บนหน้าแรกแบบ 10 บล็อก',
+			'title'       => '12) ข้อความสำรองของ launch console',
+			'description' => 'ข้อความชุดนี้เป็นค่าสำรองของหัวข้อใน launch console ของแถบท้ายเว็บ',
 			'fields'      => array(
-				'show_cta'     => array( 'แสดงส่วนนี้', 'checkbox' ),
 				'cta_title'    => array( 'หัวข้อ', 'text' ),
 				'cta_subtitle' => array( 'คำอธิบาย', 'textarea' ),
-				'cta_btn_text' => array( 'ข้อความปุ่ม', 'text' ),
-				'show_mid_cta'  => array( 'แสดงแถบทัก LINE คั่นกลางหน้าแรก', 'checkbox' ),
-				'mid_cta_title' => array( 'แถบกลางหน้า · หัวข้อ', 'text' ),
-				'mid_cta_text'  => array( 'แถบกลางหน้า · คำอธิบาย', 'textarea' ),
 			),
 		),
 
 		'ea2000_footer' => array(
-			'title'  => '13) Footer ท้ายเว็บ',
-			'fields' => array(
-				'footer_kicker'       => array( 'ข้อความเล็กเหนือ CTA footer', 'text' ),
-				'footer_cta_title'    => array( 'หัวข้อ CTA ใน footer', 'text' ),
-				'footer_cta_text'     => array( 'คำอธิบาย CTA ใน footer', 'textarea' ),
-				'footer_line_text'    => array( 'ข้อความปุ่ม LINE ใน footer', 'text' ),
-				'footer_facebook_text' => array( 'ข้อความลิงก์ Facebook ใน footer', 'text' ),
-				'footer_email_text'    => array( 'ข้อความลิงก์ Email ใน footer', 'text' ),
-				'footer_prep_title'    => array( 'หัวข้อการ์ดเตรียมข้อมูลก่อนทัก LINE', 'text' ),
-				'footer_prep_text'     => array( 'คำอธิบายการ์ดเตรียมข้อมูลก่อนทัก LINE', 'textarea' ),
-				'footer_prep_items'    => array( 'รายการที่ควรเตรียม (บรรทัดละ 1 รายการ)', 'textarea' ),
-				'footer_tagline'      => array( 'คำโปรยใต้โลโก้', 'textarea' ),
-				'footer_risk_link'    => array( 'ข้อความลิงก์คำเตือนความเสี่ยง', 'text' ),
+			'title'       => '13) Footer ท้ายเว็บ (Console)',
+			'description' => 'แถบท้ายเว็บ 5 แถว: เส้นสัญญาณ, launch console (ปุ่ม LINE + QR), ดัชนีหน้า, ลายน้ำ, แถบสถานะ · หัวข้อและคำอธิบายของ launch console เว้นว่างจะใช้ค่าจากหมวด 12 · เวลาตอบแชทเว้นว่างจะซ่อนแถวนั้น',
+			'fields'      => array(
+				'footer_console_label'  => array( 'บรรทัดนำเหนือหัวข้อ launch console', 'text', $rule ),
+				'footer_headline'       => array( 'หัวข้อ launch console (เว้นว่าง = ใช้หัวข้อจากหมวด 12)', 'text', $rule ),
+				'footer_sub'            => array( 'คำอธิบาย launch console (เว้นว่าง = ใช้คำอธิบายจากหมวด 12)', 'textarea', $rule ),
+				'footer_line_text'      => array( 'ข้อความปุ่ม LINE (คีย์กด)', 'text' ),
+				'footer_line_qr_img'    => array( 'QR ของ LINE OA', 'image', 'ขนาด 600x600 px พื้นขาว · โผล่ข้างปุ่มเมื่อชี้เมาส์ และเปิดดูได้บนมือถือ · เว้นว่างแอดมินจะเห็นข้อความเตือนให้อัปโหลด' ),
+				'footer_line_qr_alt'    => array( 'ข้อความอธิบาย QR (Alt)', 'text' ),
+				'footer_line_qr_note'   => array( 'ข้อความเตือนแอดมินเมื่อยังไม่มี QR', 'text' ),
+				'footer_qr_toggle_text' => array( 'ข้อความปุ่มเปิด QR บนมือถือ', 'text', $rule ),
+				'footer_facebook_text'  => array( 'ข้อความลิงก์ Facebook', 'text' ),
+				'footer_email_text'     => array( 'ข้อความลิงก์ Email', 'text' ),
+				'footer_prep_title'     => array( 'หัวข้อรายการเตรียมข้อมูลก่อนทัก LINE', 'text' ),
+				'footer_prep_text'      => array( 'คำอธิบายรายการเตรียมข้อมูลก่อนทัก LINE', 'textarea' ),
+				'footer_prep_items'     => array( 'รายการที่ควรเตรียม (บรรทัดละ 1 รายการ)', 'textarea' ),
+				'footer_hours_title'    => array( 'เวลาตอบแชท · หัวข้อ', 'text', $rule ),
+				'footer_hours_text'     => array( 'เวลาตอบแชท · ข้อความ (บรรทัดละ 1 บรรทัด)', 'textarea', 'เว้นว่าง = ซ่อนแถวนี้ · เจ้าของกรอกเอง ไม่มีสัญญาบริการฝังในธีม · ' . $rule ),
+				'show_footer_console'   => array( 'แสดงบรรทัด prompt พิมพ์ทีละตัว', 'checkbox' ),
+				'footer_console_prompt' => array( 'prompt ของบรรทัดพิมพ์', 'text', 'เช่น ea2000@line:~$ · ' . $rule ),
+				'footer_console_lines'  => array( 'ข้อความที่พิมพ์วนสลับกัน (บรรทัดละ 1 ข้อความ)', 'textarea', $rule ),
+				'footer_index_title'    => array( 'ดัชนี · หัวข้อคอลัมน์หน้า', 'text', $rule ),
+				'footer_channels_title' => array( 'ดัชนี · หัวข้อคอลัมน์ช่องทาง', 'text', $rule ),
+				'footer_docs_title'     => array( 'ดัชนี · หัวข้อคอลัมน์เอกสาร', 'text', $rule ),
+				'footer_risk_link'      => array( 'ดัชนี · ข้อความลิงก์ประกาศความเสี่ยง', 'text' ),
+				'footer_spec_title'     => array( 'ดัชนี · หัวข้อคอลัมน์ข้อมูลระบบ', 'text', $rule ),
+				'footer_spec_items'     => array( 'ดัชนี · ข้อมูลระบบ (บรรทัดละ ป้าย|ค่า)', 'textarea', 'เช่น แพลตฟอร์ม|MetaTrader 5 · ' . $rule ),
+				'show_footer_watermark' => array( 'แสดงลายน้ำชื่อแบรนด์ตัวใหญ่', 'checkbox' ),
+				'footer_watermark_text' => array( 'ข้อความลายน้ำ', 'text', 'ส่วนก่อนตัวเลขตัวแรกเป็นสีเงิน ตั้งแต่ตัวเลขตัวแรกเป็นสีเขียว · ' . $rule ),
+				'footer_status_text'    => array( 'แถบสถานะ · ข้อความกลาง', 'text', $rule ),
+				'footer_copyright_text' => array( 'แถบสถานะ · ข้อความหลังชื่อเว็บและปี', 'text', $rule ),
+				'show_footer_clock'     => array( 'แถบสถานะ · แสดงนาฬิกาเวลาไทย', 'checkbox' ),
+				'footer_clock_label'    => array( 'แถบสถานะ · ป้ายหน้านาฬิกา', 'text', $rule ),
+				'footer_backtop_text'   => array( 'แถบสถานะ · ข้อความลิงก์กลับด้านบน', 'text', $rule ),
+				'show_footer_spotlight' => array( 'เปิดแสงตามเมาส์บนพื้นแถบท้ายเว็บ (เดสก์ท็อป)', 'checkbox' ),
+				'show_footer_signal'    => array( 'แสดงเส้นสัญญาณวาดตัวเองบนขอบบน', 'checkbox' ),
 			),
 		),
 
@@ -339,207 +398,11 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		/* ===================================================
-		 * ส่วนของหน้าแรกที่ปิดไว้ (เปิดได้เมื่อมีข้อมูลจริง)
-		 * =================================================== */
-
-		'ea2000_home' => array(
-			'title'       => '17) หน้าแรก · ไฮไลต์ สถานะ Control Center และการ์ดนำทาง (ปิดไว้)',
-			'description' => 'ส่วนเสริมของหน้าแรกที่ไม่อยู่ในโครง 10 บล็อก เปิดได้ทีละส่วน · การ์ดนำทาง 5 ใบลิงก์ไปหน้าย่อยตาม slug มาตรฐาน แก้ได้หากใช้ slug อื่น',
-			'fields'      => array(
-				'show_highlight'   => array( 'แสดงแถบไฮไลต์ใต้ Hero', 'checkbox' ),
-				'highlight1'       => array( 'ไฮไลต์ 1', 'text' ),
-				'highlight2'       => array( 'ไฮไลต์ 2', 'text' ),
-				'highlight3'       => array( 'ไฮไลต์ 3', 'text' ),
-				'highlight4'       => array( 'ไฮไลต์ 4', 'text' ),
-				'show_live_status'     => array( 'แสดงแถบสถานะเคลื่อนไหวใต้ Hero', 'checkbox' ),
-				'live_status_kicker'   => array( 'ป้ายแถบสถานะ', 'text' ),
-				'live_status_items'    => array( 'ข้อความในแถบสถานะ (บรรทัดละ 1 ข้อ)', 'textarea' ),
-				'show_control_center'  => array( 'แสดงส่วน Control Center หน้าแรก', 'checkbox' ),
-				'control_kicker'       => array( 'Control Center · ป้ายเล็ก', 'text' ),
-				'control_title'        => array( 'Control Center · หัวข้อ', 'text' ),
-				'control_subtitle'     => array( 'Control Center · คำอธิบาย', 'textarea' ),
-				'control_panel_title'  => array( 'แผงสถานะ · หัวข้อ', 'text' ),
-				'control_panel_status' => array( 'แผงสถานะ · สถานะหลัก', 'text' ),
-				'control_badge'        => array( 'แผงสถานะ · ป้ายด้านขวา', 'text' ),
-				'control_panel_text'   => array( 'แผงสถานะ · รายละเอียด', 'textarea' ),
-				'control_metric1_label' => array( 'ข้อมูลย่อย 1 · หัวข้อ', 'text' ),
-				'control_metric1_value' => array( 'ข้อมูลย่อย 1 · ค่า', 'text' ),
-				'control_metric2_label' => array( 'ข้อมูลย่อย 2 · หัวข้อ', 'text' ),
-				'control_metric2_value' => array( 'ข้อมูลย่อย 2 · ค่า', 'text' ),
-				'control_metric3_label' => array( 'ข้อมูลย่อย 3 · หัวข้อ', 'text' ),
-				'control_metric3_value' => array( 'ข้อมูลย่อย 3 · ค่า', 'text' ),
-				'control_list_title'   => array( 'รายการเตรียมตัว · หัวข้อ', 'text' ),
-				'control_list_items'   => array( 'รายการเตรียมตัว (บรรทัดละ 1 ข้อ)', 'textarea' ),
-				'show_explore'     => array( 'แสดงการ์ดนำทางไปหน้าย่อย (explore hub)', 'checkbox' ),
-				'home_cards_title' => array( 'หัวข้อกลุ่มการ์ด', 'text' ),
-				'home_cards_sub'   => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'card1_title'      => array( 'การ์ด 1 · หัวข้อ', 'text' ),
-				'card1_desc'       => array( 'การ์ด 1 · รายละเอียด', 'textarea' ),
-				'card1_url'        => array( 'การ์ด 1 · ลิงก์', 'url' ),
-				'card2_title'      => array( 'การ์ด 2 · หัวข้อ', 'text' ),
-				'card2_desc'       => array( 'การ์ด 2 · รายละเอียด', 'textarea' ),
-				'card2_url'        => array( 'การ์ด 2 · ลิงก์', 'url' ),
-				'card3_title'      => array( 'การ์ด 3 · หัวข้อ', 'text' ),
-				'card3_desc'       => array( 'การ์ด 3 · รายละเอียด', 'textarea' ),
-				'card3_url'        => array( 'การ์ด 3 · ลิงก์', 'url' ),
-				'card4_title'      => array( 'การ์ด 4 · หัวข้อ', 'text' ),
-				'card4_desc'       => array( 'การ์ด 4 · รายละเอียด', 'textarea' ),
-				'card4_url'        => array( 'การ์ด 4 · ลิงก์', 'url' ),
-				'card5_title'      => array( 'การ์ด 5 · หัวข้อ', 'text' ),
-				'card5_desc'       => array( 'การ์ด 5 · รายละเอียด', 'textarea' ),
-				'card5_url'        => array( 'การ์ด 5 · ลิงก์', 'url' ),
-			),
-		),
-
-		'ea2000_about' => array(
-			'title'       => '18) หน้าแรก · EA2000 คืออะไร (ชุดเดิม)',
-			'description' => 'ข้อความชุดเดิมก่อนปรับโครง 10 บล็อก · หน้าแรกใหม่ใช้หมวด "บล็อก 2 · EA2000 คืออะไร" แทน',
-			'fields'      => array(
-				'show_about'  => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'about_title' => array( 'หัวข้อ', 'text' ),
-				'about_text'  => array( 'เนื้อหา (เว้นบรรทัด = ขึ้นย่อหน้าใหม่)', 'textarea' ),
-			),
-		),
-
-		'ea2000_gallery' => array(
-			'title'       => '19) หน้าแรก · ภาพ Dashboard / ระบบจริง (ปิดไว้)',
-			'description' => 'ถ้ายังไม่อัปโหลดภาพ ธีมจะแสดงกรอบตัวอย่าง (ระบุว่าเป็นภาพประกอบ) ให้อัตโนมัติ · เปิดเมื่อมีภาพหน้าจอจริงครบ',
-			'fields'      => array(
-				'show_gallery'     => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'gallery_title'    => array( 'หัวข้อ', 'text' ),
-				'gallery_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'gallery_img1'     => array( 'ภาพที่ 1', 'image' ),
-				'gallery_cap1'     => array( 'คำบรรยายภาพที่ 1', 'text' ),
-				'gallery_img2'     => array( 'ภาพที่ 2', 'image' ),
-				'gallery_cap2'     => array( 'คำบรรยายภาพที่ 2', 'text' ),
-				'gallery_img3'     => array( 'ภาพที่ 3', 'image' ),
-				'gallery_cap3'     => array( 'คำบรรยายภาพที่ 3', 'text' ),
-				'gallery_img4'     => array( 'ภาพที่ 4', 'image' ),
-				'gallery_cap4'     => array( 'คำบรรยายภาพที่ 4', 'text' ),
-				'gallery_note'     => array( 'หมายเหตุท้ายส่วน', 'text' ),
-			),
-		),
-
-		'ea2000_steps' => array(
-			'title'       => '20) หน้าแรก · วิธีเริ่มใช้งาน 4 ขั้นตอน (ชุดเดิม)',
-			'description' => 'ชุดเดิมก่อนปรับโครง 10 บล็อก · หน้าแรกใหม่ใช้หมวด "บล็อก 4 · ทำงานอย่างไร" และ "บล็อก 7 · ติดตั้งใน 3 ขั้น" แทน',
-			'fields'      => array(
-				'show_steps'     => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'steps_kicker'   => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
-				'steps_title'    => array( 'หัวข้อ', 'text' ),
-				'steps_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'step1_title'    => array( 'ขั้นตอน 1 · หัวข้อ', 'text' ),
-				'step1_desc'     => array( 'ขั้นตอน 1 · รายละเอียด', 'textarea' ),
-				'step2_title'    => array( 'ขั้นตอน 2 · หัวข้อ', 'text' ),
-				'step2_desc'     => array( 'ขั้นตอน 2 · รายละเอียด', 'textarea' ),
-				'step3_title'    => array( 'ขั้นตอน 3 · หัวข้อ', 'text' ),
-				'step3_desc'     => array( 'ขั้นตอน 3 · รายละเอียด', 'textarea' ),
-				'step4_title'    => array( 'ขั้นตอน 4 · หัวข้อ', 'text' ),
-				'step4_desc'     => array( 'ขั้นตอน 4 · รายละเอียด', 'textarea' ),
-			),
-		),
-
-		'ea2000_perf' => array(
-			'title'       => '21) หน้าแรก · ตารางผลการทดสอบ (ปิดไว้)',
-			'description' => 'กรอกข้อมูลจริงจากการทดสอบเท่านั้น และอย่าลบข้อความ Disclaimer · หน้าแรกใหม่ใช้หมวด "บล็อก 6 · ผลทดสอบ" ซึ่งไม่มีตัวเลข ตัวเลขจริงอยู่ที่หน้า Backtest และ Forward Test',
-			'fields'      => array(
-				'show_perf'          => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'perf_kicker'        => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
-				'perf_title'         => array( 'หัวข้อ', 'text' ),
-				'perf_subtitle'      => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'stat1_label'        => array( 'ข้อมูล 1 · หัวข้อ', 'text' ),
-				'stat1_value'        => array( 'ข้อมูล 1 · ค่า', 'text' ),
-				'stat2_label'        => array( 'ข้อมูล 2 · หัวข้อ', 'text' ),
-				'stat2_value'        => array( 'ข้อมูล 2 · ค่า', 'text' ),
-				'stat3_label'        => array( 'ข้อมูล 3 · หัวข้อ', 'text' ),
-				'stat3_value'        => array( 'ข้อมูล 3 · ค่า', 'text' ),
-				'stat4_label'        => array( 'ข้อมูล 4 · หัวข้อ', 'text' ),
-				'stat4_value'        => array( 'ข้อมูล 4 · ค่า', 'text' ),
-				'stat5_label'        => array( 'ข้อมูล 5 · หัวข้อ', 'text' ),
-				'stat5_value'        => array( 'ข้อมูล 5 · ค่า', 'text' ),
-				'stat6_label'        => array( 'ข้อมูล 6 · หัวข้อ', 'text' ),
-				'stat6_value'        => array( 'ข้อมูล 6 · ค่า', 'text' ),
-				'perf_image'         => array( 'ภาพกราฟผลทดสอบ (Backtest/Forward)', 'image' ),
-				'perf_image_caption' => array( 'คำบรรยายภาพ', 'text' ),
-				'verified_link_label' => array( 'ข้อความปุ่มผลเรียลไทม์ (ถ้ามี)', 'text' ),
-				'verified_link_url'   => array( 'ลิงก์ผลที่ตรวจสอบได้จากบริการภายนอก (แสดงปุ่มเมื่อกรอกเท่านั้น)', 'url' ),
-				'perf_note'          => array( 'หมายเหตุเงื่อนไขการทดสอบ', 'textarea' ),
-				'perf_disclaimer'    => array( 'ข้อความ Disclaimer (จำเป็นต้องมี)', 'textarea' ),
-			),
-		),
-
-		'ea2000_fit' => array(
-			'title'  => '22) หน้าแรก · เหมาะกับใคร / ไม่เหมาะกับใคร',
-			'fields' => array(
-				'show_fit'       => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'fit_title'      => array( 'หัวข้อ', 'text' ),
-				'fit_subtitle'   => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'fit_good_title' => array( 'หัวข้อฝั่ง "เหมาะกับ"', 'text' ),
-				'fit_good_items' => array( 'รายการฝั่ง "เหมาะกับ" (บรรทัดละ 1 ข้อ)', 'textarea' ),
-				'fit_bad_title'  => array( 'หัวข้อฝั่ง "ไม่เหมาะกับ"', 'text' ),
-				'fit_bad_items'  => array( 'รายการฝั่ง "ไม่เหมาะกับ" (บรรทัดละ 1 ข้อ)', 'textarea' ),
-			),
-		),
-
-		'ea2000_reviews' => array(
-			'title'       => '23) หน้าแรก · รีวิวลูกค้า (ปิดไว้)',
-			'description' => 'สำคัญ: ใช้รีวิวจริงจากลูกค้าเท่านั้น ห้ามแต่งรีวิว และหลีกเลี่ยงรีวิวแนวการันตีกำไร เมื่อมีรีวิวจริงแล้วค่อยติ๊ก "แสดงส่วนนี้"',
-			'fields'      => array(
-				'show_reviews'     => array( 'แสดงส่วนนี้ (เปิดเมื่อมีรีวิวจริง)', 'checkbox' ),
-				'reviews_title'    => array( 'หัวข้อ', 'text' ),
-				'reviews_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'rev1_text'        => array( 'รีวิว 1 · ข้อความ', 'textarea' ),
-				'rev1_name'        => array( 'รีวิว 1 · ชื่อผู้รีวิว', 'text' ),
-				'rev2_text'        => array( 'รีวิว 2 · ข้อความ', 'textarea' ),
-				'rev2_name'        => array( 'รีวิว 2 · ชื่อผู้รีวิว', 'text' ),
-				'rev3_text'        => array( 'รีวิว 3 · ข้อความ', 'textarea' ),
-				'rev3_name'        => array( 'รีวิว 3 · ชื่อผู้รีวิว', 'text' ),
-			),
-		),
-
-		'ea2000_team' => array(
-			'title'       => '24) หน้าแรก · ทีมงาน / ใครอยู่เบื้องหลัง (ปิดไว้)',
-			'description' => 'แสดงตัวตนของทีม/ผู้พัฒนาเพื่อสร้างความน่าเชื่อถือ แนะนำประสบการณ์และเหตุผลที่สร้างระบบ เปิด "แสดงส่วนนี้" เมื่อกรอกข้อมูลจริงแล้ว ห้ามใส่ข้อมูลเท็จ',
-			'fields'      => array(
-				'show_team'   => array( 'แสดงส่วนนี้ (เปิดเมื่อกรอกข้อมูลจริง)', 'checkbox' ),
-				'team_kicker' => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
-				'team_title'  => array( 'หัวข้อ', 'text' ),
-				'team_text'   => array( 'เนื้อหา (เว้นบรรทัด = ย่อหน้าใหม่)', 'textarea' ),
-				'team_points' => array( 'จุดเด่นของทีม (บรรทัดละ 1 ข้อ)', 'textarea' ),
-				'team_img'    => array( 'รูปทีม / ผู้พัฒนา (ถ้ามี)', 'image' ),
-			),
-		),
-
-		'ea2000_assurance' => array(
-			'title'       => '25) หน้าแรก · ความมั่นใจก่อนเริ่ม (ปิดไว้)',
-			'description' => 'จุดสร้างความสบายใจก่อนตัดสินใจ ใช้ข้อความที่เป็นจริง ไม่การันตีกำไร',
-			'fields'      => array(
-				'show_assurance'     => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'assurance_kicker'   => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
-				'assurance_title'    => array( 'หัวข้อ', 'text' ),
-				'assurance_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'assurance_items'    => array( 'รายการความมั่นใจ (บรรทัดละ 1 ข้อ)', 'textarea' ),
-			),
-		),
-
-		'ea2000_blog' => array(
-			'title'       => '26) หน้าแรก · บทความล่าสุด',
-			'description' => 'แสดงบทความล่าสุด 3 รายการบนหน้าแรก ส่วนนี้จะซ่อนอัตโนมัติเมื่อยังไม่มีบทความที่เผยแพร่',
-			'fields'      => array(
-				'show_blog'      => array( 'แสดงส่วนนี้', 'checkbox' ),
-				'blog_kicker'    => array( 'ป้ายเล็กเหนือหัวข้อ', 'text' ),
-				'blog_title'     => array( 'หัวข้อ', 'text' ),
-				'blog_subtitle'  => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
-				'blog_all_label' => array( 'ข้อความลิงก์ดูบทความทั้งหมด', 'text' ),
-			),
-		),
-
-		/* ===================================================
 		 * หน้าย่อย (multipage) และ Link Hub
 		 * =================================================== */
 
 		'ea2000_backtest' => array(
-			'title'       => '27) หน้า Backtest',
+			'title'       => '17) หน้า Backtest',
 			'description' => 'กรอกผลการทดสอบย้อนหลังจริงเท่านั้น และอย่าลบ Disclaimer',
 			'fields'      => array(
 				'backtest_sub'         => array( 'คำโปรยใต้ชื่อหน้า', 'text' ),
@@ -568,7 +431,7 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_forward' => array(
-			'title'       => '28) หน้า Forward Test',
+			'title'       => '18) หน้า Forward Test',
 			'description' => 'กรอกผลการทดสอบจริงจากบัญชีจริงหรือบัญชีเดโมเท่านั้น และอย่าลบ Disclaimer',
 			'fields'      => array(
 				'forward_sub'         => array( 'คำโปรยใต้ชื่อหน้า', 'text' ),
@@ -595,7 +458,7 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_install' => array(
-			'title'       => '29) หน้า How to Install',
+			'title'       => '19) หน้า How to Install',
 			'description' => 'คู่มือติดตั้งทีละขั้นตอน อัปโหลดภาพประกอบแต่ละขั้นได้ (เว้นว่างได้) · "ย่อหน้าเกริ่นนำ" ใช้ร่วมกับบล็อกติดตั้งใน 3 ขั้นบนหน้าแรก',
 			'fields'      => array(
 				'install_sub'      => array( 'คำโปรยใต้ชื่อหน้า', 'text' ),
@@ -624,7 +487,7 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_pricing_extra' => array(
-			'title'       => '30) หน้า Pricing (เพิ่มเติม)',
+			'title'       => '20) หน้า Pricing (เพิ่มเติม)',
 			'description' => 'หน้านี้ใช้แพ็กเกจจากหมวด "แพ็กเกจราคา" ร่วมกัน และเพิ่มตารางเปรียบเทียบได้ที่นี่',
 			'fields'      => array(
 				'pricing_sub'   => array( 'คำโปรยใต้ชื่อหน้า', 'text' ),
@@ -634,7 +497,7 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_riskpage' => array(
-			'title'       => '31) หน้า Risk Disclosure',
+			'title'       => '21) หน้า Risk Disclosure',
 			'description' => 'หน้าประกาศความเสี่ยงฉบับเต็ม มี 6 หัวข้อ เว้นว่างหัวข้อที่ไม่ใช้ได้',
 			'fields'      => array(
 				'riskpage_sub'     => array( 'คำโปรยใต้ชื่อหน้า', 'text' ),
@@ -658,7 +521,7 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_links' => array(
-			'title'       => '32) หน้า Link Hub (สำหรับยิงแอด)',
+			'title'       => '22) หน้า Link Hub (สำหรับยิงแอด)',
 			'description' => 'หน้า "ลิงก์รวม" สไตล์ Linktree สำหรับใช้เป็นปลายทางยิงแอด: สร้างเพจใหม่ เลือกเทมเพลต "EA2000 · หน้า Link Hub" แล้วตั้ง slug เช่น go ปุ่มที่เว้นว่าง (ทั้งข้อความและลิงก์) จะถูกซ่อนอัตโนมัติ',
 			'fields'      => array(
 				'links_logo'       => array( 'โลโก้ (ไม่ใส่ = ใช้โลโก้เว็บ)', 'image' ),
