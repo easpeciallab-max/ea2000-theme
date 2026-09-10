@@ -306,14 +306,86 @@ $ea2000_mobile_nav[] = array(
 <?php endif; ?>
 
 <?php if ( ea2000_mod( 'show_mobile_nav' ) ) : ?>
-<nav class="mobile-app-nav dock" aria-label="เมนูลัดมือถือ">
-	<?php foreach ( $ea2000_mobile_nav as $ea2000_item ) : ?>
-	<a class="mobile-app-nav-item<?php echo ! empty( $ea2000_item['is_action'] ) ? ' is-action' : ''; ?>" href="<?php echo esc_url( $ea2000_item['url'] ); ?>"<?php echo ! empty( $ea2000_item['target_blank'] ) ? ' target="_blank" rel="noopener"' : ''; ?><?php echo ! empty( $ea2000_item['line_pos'] ) ? ' data-line-pos="' . esc_attr( $ea2000_item['line_pos'] ) . '"' : ''; ?>>
-		<span class="mobile-app-nav-icon"><?php echo ea2000_icon( $ea2000_item['icon'], 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-		<span><?php echo esc_html( $ea2000_item['label'] ); ?></span>
-	</a>
-	<?php endforeach; ?>
+<?php
+/* บาร์ล่างมือถือ · แผงคอนโซล (Console Deck)
+   หาแท็บที่ตรงกับหน้าปัจจุบันฝั่ง PHP เพื่อให้ is-active + aria-current + ตำแหน่งไฟชี้
+   มาพร้อม HTML ตั้งแต่ตอนเสิร์ฟ ปิด JS ก็ยังถูกต้องครบ
+   ใช้ $GLOBALS['wp']->request ไม่ใช่ $_SERVER['REQUEST_URI'] เพราะผ่าน routing ของ WordPress มาแล้ว
+   (ไม่มี query string ติดมา ไม่ต้อง sanitize เอง และไม่พังถ้าย้ายไปติดตั้งใน subdirectory)
+   ทุกช่องกว้างเท่ากันด้วย grid 1fr ตำแหน่งไฟจึงคิดเป็นเปอร์เซ็นต์ได้ตรงทั้งกรณี 4 และ 5 ช่อง
+   หน้าเว็บถูกแคชแยกตาม URL อยู่แล้ว ค่าที่คิดตรงนี้จึงไม่ข้ามหน้ากัน */
+$ea2000_dock_req  = isset( $GLOBALS['wp']->request ) ? (string) $GLOBALS['wp']->request : '';
+$ea2000_dock_here = wp_parse_url( home_url( $ea2000_dock_req ), PHP_URL_PATH );
+$ea2000_dock_here = '/' . trim( is_string( $ea2000_dock_here ) ? $ea2000_dock_here : '', '/' );
+$ea2000_dock_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+
+$ea2000_dock_active = -1;
+$ea2000_dock_score  = -1;
+
+foreach ( $ea2000_mobile_nav as $ea2000_slot => $ea2000_item ) {
+	if ( ! empty( $ea2000_item['is_action'] ) ) {
+		continue; // ปุ่ม LINE เป็นการกระทำ ไม่ใช่ตำแหน่งในเว็บ จึงไม่มีวัน active
+	}
+
+	$ea2000_dock_url = (string) $ea2000_item['url'];
+	if ( '' === $ea2000_dock_url || 0 === strpos( $ea2000_dock_url, '#' ) ) {
+		continue;
+	}
+
+	$ea2000_dock_link_host = wp_parse_url( $ea2000_dock_url, PHP_URL_HOST );
+	if ( $ea2000_dock_link_host && $ea2000_dock_link_host !== $ea2000_dock_host ) {
+		continue; // ลิงก์ออกนอกเว็บ ไม่นับเป็นหน้าปัจจุบัน
+	}
+
+	$ea2000_dock_path = wp_parse_url( $ea2000_dock_url, PHP_URL_PATH );
+	$ea2000_dock_path = '/' . trim( is_string( $ea2000_dock_path ) ? $ea2000_dock_path : '', '/' );
+
+	$ea2000_dock_hit = '/' === $ea2000_dock_path
+		? '/' === $ea2000_dock_here
+		: ( $ea2000_dock_here === $ea2000_dock_path || 0 === strpos( $ea2000_dock_here, $ea2000_dock_path . '/' ) );
+
+	if ( $ea2000_dock_hit && strlen( $ea2000_dock_path ) > $ea2000_dock_score ) {
+		$ea2000_dock_active = (int) $ea2000_slot;
+		$ea2000_dock_score  = strlen( $ea2000_dock_path );
+	}
+}
+
+/* จุดกึ่งกลางของช่องที่เลือก คิดเป็นเปอร์เซ็นต์ของแถวคีย์ · CSS เอาไปวางไฟบนราง */
+$ea2000_dock_count = max( 1, count( $ea2000_mobile_nav ) );
+$ea2000_dock_lit   = $ea2000_dock_active >= 0;
+$ea2000_dock_x     = ( $ea2000_dock_active + 0.5 ) * ( 100 / $ea2000_dock_count );
+$ea2000_dock_style = $ea2000_dock_lit ? sprintf( '--dock-x:%s%%', number_format( $ea2000_dock_x, 3, '.', '' ) ) : '';
+?>
+<nav class="mobile-app-nav dock<?php echo $ea2000_dock_lit ? ' is-lit' : ''; ?>" aria-label="เมนูลัดมือถือ"<?php echo '' !== $ea2000_dock_style ? ' style="' . esc_attr( $ea2000_dock_style ) . '"' : ''; ?>>
+	<span class="dock-rail" aria-hidden="true"></span>
+	<span class="dock-lamp" aria-hidden="true"></span>
+	<div class="dock-keys">
+		<?php
+		foreach ( $ea2000_mobile_nav as $ea2000_slot => $ea2000_item ) :
+			$ea2000_is_action = ! empty( $ea2000_item['is_action'] );
+			$ea2000_is_here   = ! $ea2000_is_action && (int) $ea2000_slot === $ea2000_dock_active;
+			$ea2000_dock_cls  = 'dock-key';
+			if ( $ea2000_is_action ) {
+				$ea2000_dock_cls .= ' is-action';
+			} elseif ( $ea2000_is_here ) {
+				$ea2000_dock_cls .= ' is-active';
+			}
+			?>
+		<a class="<?php echo esc_attr( $ea2000_dock_cls ); ?>" href="<?php echo esc_url( $ea2000_item['url'] ); ?>" data-slot="<?php echo (int) $ea2000_slot; ?>"<?php echo $ea2000_is_here ? ' aria-current="page"' : ''; ?><?php echo ! empty( $ea2000_item['target_blank'] ) ? ' target="_blank" rel="noopener"' : ''; ?><?php echo ! empty( $ea2000_item['line_pos'] ) ? ' data-line-pos="' . esc_attr( $ea2000_item['line_pos'] ) . '"' : ''; ?>>
+			<span class="dock-cap">
+				<span class="dock-glyph"><?php echo ea2000_icon( $ea2000_item['icon'], 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+				<span class="dock-led" aria-hidden="true"></span>
+			</span>
+			<span class="dock-label"><?php echo esc_html( $ea2000_item['label'] ); ?></span>
+			<?php if ( ! empty( $ea2000_item['target_blank'] ) ) : ?>
+			<span class="sr-only">(เปิดแท็บใหม่)</span>
+			<?php endif; ?>
+		</a>
+		<?php endforeach; ?>
+	</div>
 </nav>
+<?php /* เว้นที่ท้ายหน้าไม่ให้บาร์ทับเนื้อหา · เป็นกล่องจริงในสายเนื้อหา จึงไม่ต้องพึ่ง JS ไม่ต้องพึ่ง :has() และไม่ต้องพึ่ง body class */ ?>
+<div class="dock-spacer" aria-hidden="true"></div>
 <?php endif; ?>
 
 <?php if ( $ea2000_line && ea2000_mod( 'show_float_line' ) ) : ?>

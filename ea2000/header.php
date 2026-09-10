@@ -8,7 +8,7 @@
 <html class="no-js" <?php language_attributes(); ?>>
 <head>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <script>document.documentElement.className = document.documentElement.className.replace( /\bno-js\b/, 'js' );</script>
 <?php wp_head(); ?>
 </head>

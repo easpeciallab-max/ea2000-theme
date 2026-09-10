@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.2.0
+Version: 2.3.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -6677,14 +6677,67 @@ a.lh-feature-frame:hover {
 	height: 20px;
 }
 
-/* ---------- บาร์ล่างมือถือ (dock) · เต็มขอบจอ มุมไม่โค้ง พื้น --ink-deep hairline บน ---------- */
+/* ---------- บาร์ล่างมือถือ (dock) · แผงคอนโซล (Console Deck) ----------
+   โครงจาก footer.php
+     nav.mobile-app-nav.dock
+       > span.dock-rail   รางไฟขอบบน · มีแถบสแกนวิ่งระหว่างรอหน้าใหม่
+       > span.dock-lamp   ไฟชี้ตำแหน่ง + ลำแสงที่สาดลงมาหาคีย์ของหน้าที่เปิดอยู่
+       > div.dock-keys    แถวคีย์ · มีเส้นบัสบางพาดใต้คีย์ทั้งแถว
+           > a.dock-key > span.dock-cap ( span.dock-glyph + span.dock-led ) + span.dock-label
+     div.dock-spacer      เว้นที่ท้ายหน้าไม่ให้บาร์ทับเนื้อหา
+
+   ข้อตกลงที่ต้องรักษาเวลาแก้ต่อ
+   1) ตัวเลขของบาร์อยู่ในตัวแปรชุดเดียวที่ html ในเบรกพอยต์นี้ ห้ามเขียนเลขซ้ำในกฎอื่น
+      โดยเฉพาะ --dock-pad ที่ .dock-lamp ใช้เป็น inset ซ้ายขวา ถ้าสองที่ไม่เท่ากันไฟจะเยื้องจากกลางช่อง
+   2) ระยะยกของคีย์ LINE (--lift) คำนวณจาก --dock-pad-top / --dock-punch / --dock-ring
+      ไม่ใช่เลขที่เดามา แก้ padding ของบาร์แล้วคีย์ยังโผล่พ้นรางเท่าเดิมเอง
+   3) คีย์ LINE สูงกว่าคีย์อื่น แต่ชดเชยด้วย margin-bottom ติดลบที่คิดจาก --cap-h
+      ป้ายทุกใบจึงอยู่บรรทัดเดียวกันเอง ไม่ต้องมี margin ชดเชยรายตัว
+   4) เส้นบัสของ .dock-keys วางด้วย calc จาก --cap-h ไม่ใช่เลขวิเศษ แก้ความสูงคีย์แล้วเส้นตามไปเอง
+   5) ย่อบาร์ตอนเลื่อนอ่าน (.is-slim) ทำผ่านตัวแปร --slim (0 หรือ 1) ตัวเดียว ทุกค่าคูณจากมัน
+      บาร์ "ย่อ" ไม่ใช่ "ซ่อน" เพราะปุ่ม LINE คือเหตุผลเดียวที่บาร์นี้มีอยู่ ห้ามพามันหายไปกลางหน้า
+   6) --ease-mech ของธีมคือ steps(4, end) ใช้กับการเคลื่อนที่ระยะยาวไม่ได้ (จะกระตุกเป็น 4 จังหวะ)
+      บล็อกนี้จึงประกาศ --dock-ease / --dock-ease-press เอง และเหลือ --ease-mech ไว้กับการเปลี่ยนสีเท่านั้น
+   7) z-index 120 · header ใช้ 130 ลิ้นชักเมนูจึงยังทับบาร์นี้ได้ ห้ามเพิ่มเกินนี้
+   8) ไม่มีแอนิเมชันตอนโหลดหน้า เว็บนี้เปลี่ยนหน้าเต็มทุกครั้ง บาร์ที่เด้งเข้ามาใหม่ทุกหน้าคือความรำคาญ
+      สิ่งเดียวที่ขยับเองคือไฟสถานะบนคีย์ LINE ซึ่งกะพริบ 3 ครั้งแล้วหยุด (ไม่ใช่ infinite) */
 .mobile-app-nav {
+	--slim: 0;
+	display: none;
+}
+
+.dock-spacer {
 	display: none;
 }
 
 @media (max-width: 760px) {
-	body.has-mobile-app-nav {
-		padding-bottom: calc(92px + env(safe-area-inset-bottom));
+	html {
+		/* ระยะทั้งหมดของบาร์ · ค่าฐาน (ยังไม่คิด --slim) */
+		--dock-pad: 8px;
+		--dock-pad-top-base: 15px;
+		--dock-pad-bottom-base: 9px;
+		--cap-h-base: 38px;
+		--cap-h-line: 46px;
+		--dock-gap: 6px;
+		--dock-label-h: 16px;
+		/* --dock-key-min ตั้งให้เท่ากับ cap + gap + label พอดี แถวคีย์จึงสูงคงที่ไม่ว่าเบราว์เซอร์จะวัดบรรทัดได้เท่าไร
+		   ความสูงบาร์จึงคิดล่วงหน้าได้ตรง และ .dock-spacer เว้นที่ได้พอดีเป๊ะ ไม่เหลือแถบขาวโผล่เหนือบาร์ */
+		--dock-key-min: 60px;
+		--dock-ring: 4px; /* ปลอกสีพื้นบาร์รอบคีย์ LINE ที่ทำให้มันดูเจาะรางออกมา */
+		--dock-punch: 9px; /* คีย์ LINE โผล่พ้นขอบบนของบาร์เท่านี้ */
+		--dock-h: calc(var(--dock-pad-top-base) + var(--dock-key-min) + var(--dock-pad-bottom-base) + 1px);
+		/* ธีมใช้ steps(4, end) เป็น ease หลัก · บาร์นี้เคลื่อนที่จริงจึงต้องมี ease ของตัวเอง */
+		--dock-ease: cubic-bezier(0.2, 0.72, 0.24, 1);
+		--dock-ease-press: cubic-bezier(0.3, 0, 0.2, 1);
+		/* ลิงก์ในหน้า (#top ท้ายเว็บ · #what #how #tests #pricing บนหน้าแรก) ต้องไม่กระโดดไปจอดใต้บาร์ */
+		scroll-padding-bottom: calc(var(--dock-h) + env(safe-area-inset-bottom) + 12px);
+	}
+
+	/* เว้นที่ท้ายหน้าด้วยกล่องจริง ไม่พึ่ง JS ไม่พึ่ง :has() ไม่พึ่ง body class
+	   ห้ามใส่พื้นหลังให้กล่องนี้ เพราะบนหน้าที่สั้นกว่าจอมันจะไม่ได้อยู่ใต้บาร์พอดี */
+	.dock-spacer {
+		display: block;
+		height: calc(var(--dock-h) + env(safe-area-inset-bottom));
 	}
 
 	.line-fab {
@@ -6692,120 +6745,409 @@ a.lh-feature-frame:hover {
 	}
 
 	.float-line {
-		bottom: calc(96px + env(safe-area-inset-bottom));
+		bottom: calc(var(--dock-h) + env(safe-area-inset-bottom) + 8px);
 	}
 
+	/* ---------- หน้าปัด ---------- */
 	.mobile-app-nav {
+		--hud: var(--ink-accent);
+		--dock-pad-top: calc(var(--dock-pad-top-base) - 10px * var(--slim));
+		--dock-pad-bottom: calc(var(--dock-pad-bottom-base) - 6px * var(--slim));
+		--cap-h: calc(var(--cap-h-base) - 6px * var(--slim));
 		position: fixed;
 		right: 0;
 		bottom: 0;
 		left: 0;
 		z-index: 120;
-		display: grid;
-		grid-auto-flow: column;
-		grid-auto-columns: minmax(0, 1fr);
-		gap: 0;
-		padding: 6px 4px calc(6px + env(safe-area-inset-bottom));
+		display: block;
+		padding: var(--dock-pad-top) var(--dock-pad) calc(var(--dock-pad-bottom) + env(safe-area-inset-bottom));
 		border-top: 1px solid var(--ink-border-strong);
 		border-radius: 0;
-		background: var(--ink-deep);
-		box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35);
+		background-color: var(--ink-deep);
+		background-image: var(--dot-grid-ink);
+		background-size: var(--dot-pitch) var(--dot-pitch);
+		box-shadow: 0 -12px 34px rgba(0, 0, 0, 0.45);
+		transition: padding 0.16s var(--dock-ease);
+	}
+
+	/* ย่อบาร์ตอนกำลังเลื่อนอ่าน · ป้ายหุบ คีย์เตี้ยลง แต่ทุกช่องยังกดได้ 44px และคีย์ LINE ยังอยู่ครบ */
+	.mobile-app-nav.is-slim {
+		--slim: 1;
+	}
+
+	/* มีโฟกัสคีย์บอร์ดอยู่ในบาร์ = ห้ามย่อ · เขียนเป็น CSS เพื่อให้ทำงานแม้ main.js พังก่อนถึงบล็อกนี้ */
+	.mobile-app-nav.is-slim:focus-within {
+		--slim: 0;
 	}
 
 	.mobile-app-nav :focus-visible {
-		outline-color: var(--ink-accent);
-		outline-offset: -3px;
+		outline: 2px solid var(--ink-accent);
+		outline-offset: -4px;
 	}
 
-	.mobile-app-nav-item {
+	/* ---------- รางบนสุด · ปกติเป็นแค่เส้น พอกดคีย์แล้วมีแถบสแกนวิ่งจนหน้าใหม่มาแทน ---------- */
+	.dock-rail {
+		position: absolute;
+		top: -1px;
+		right: 0;
+		left: 0;
+		height: 2px;
+		overflow: hidden;
+		pointer-events: none;
+	}
+
+	.dock-rail::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 42%;
+		height: 100%;
+		background-image: linear-gradient(90deg, transparent, var(--ink-accent), transparent);
+		opacity: 0;
+		transform: translateX(-120%);
+	}
+
+	.mobile-app-nav.is-going .dock-rail::after {
+		opacity: 0.9;
+		animation: dock-scan 0.8s linear infinite;
+	}
+
+	/* ---------- ไฟชี้ตำแหน่ง ----------
+	   right/left ของ .dock-lamp ต้องเท่ากับ --dock-pad เสมอ กล่องนี้จึงกว้างเท่าแถวคีย์เป๊ะ
+	   เปอร์เซ็นต์ --dock-x (PHP เป็นคนคิด) ถึงจะตรงกลางช่องจริงทั้งกรณี 4 และ 5 ช่อง */
+	.dock-lamp {
+		display: none;
+	}
+
+	.mobile-app-nav.is-lit .dock-lamp {
+		position: absolute;
+		top: -1px;
+		right: var(--dock-pad);
+		left: var(--dock-pad);
+		display: block;
+		height: 3px;
+		pointer-events: none;
+	}
+
+	/* ลำแสงที่สาดลงจากรางไปหาคีย์ที่เลือก ทำให้ไฟกับคีย์อ่านเป็นก้อนเดียว
+	   อยู่หลังแถวคีย์ตามลำดับ DOM จึงไม่บังไอคอน */
+	.dock-lamp::before {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: var(--dock-x, 50%);
+		width: 128px;
+		height: 56px;
+		margin-left: -64px;
+		background-image: radial-gradient(64px 46px at 50% 0, rgba(var(--ink-accent-rgb), 0.18), transparent 72%);
+		transition: left 0.32s var(--dock-ease);
+	}
+
+	.dock-lamp::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: var(--dock-x, 50%);
+		width: 34px;
+		height: 3px;
+		margin-left: -17px;
+		border-radius: 0 0 2px 2px;
+		background-color: var(--ink-accent);
+		box-shadow: 0 0 10px 1px rgba(var(--ink-accent-rgb), 0.55);
+		transition: left 0.32s var(--dock-ease);
+	}
+
+	/* ---------- แถวคีย์ · เส้นบัสบางพาดใต้คีย์ทั้งแถว ทำให้ 4 หรือ 5 คีย์อ่านเป็นแผงเดียว ----------
+	   .dock-keys ต้อง position: relative เพื่อให้ทับรางและไฟตามลำดับ DOM (คีย์ LINE จะได้เจาะรางได้) */
+	.dock-keys {
 		position: relative;
 		display: grid;
-		place-items: center;
-		gap: 5px;
+		grid-auto-flow: column;
+		grid-auto-columns: minmax(0, 1fr);
+		align-items: start;
+		background-image: linear-gradient(90deg, var(--ink-border-soft), var(--ink-border-soft));
+		background-repeat: no-repeat;
+		background-position: 0 calc(var(--cap-h) + (var(--dock-gap) / 2));
+		background-size: 100% 1px;
+	}
+
+	.dock-key {
+		position: relative;
+		display: grid;
+		justify-items: center;
+		align-content: start;
 		min-width: 0;
-		min-height: 56px;
-		padding: 5px 3px;
-		font-family: var(--font-display);
-		font-size: 0.66rem;
-		font-weight: 700;
-		line-height: 1.1;
-		text-align: center;
+		min-height: calc(var(--dock-key-min) - 12px * var(--slim));
+		padding: 0 2px;
 		color: var(--ink-muted);
-		transition: color 0.15s var(--ease-mech);
+		text-align: center;
+		text-decoration: none;
+		touch-action: manipulation;
 		-webkit-tap-highlight-color: transparent;
 	}
 
-	.mobile-app-nav-item span:last-child {
-		max-width: 100%;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		white-space: nowrap;
+	/* รอยขีดแบ่งช่องบนหน้าปัด */
+	.dock-key + .dock-key::before {
+		content: "";
+		position: absolute;
+		top: calc(var(--cap-h) - 3px);
+		left: 0;
+		width: 1px;
+		height: 12px;
+		background-color: var(--ink-border);
 	}
 
-	.mobile-app-nav-icon {
+	/* ---------- ตัวคีย์ ----------
+	   คีย์ที่ไม่ได้เลือก ตัวคีย์จะไม่มีตัวตนเลย (ไม่มีขอบ ไม่มีพื้น ไม่มีเงา) เหลือแค่ไอคอนกับป้าย
+	   ร่องคีย์จะโผล่ตอนนิ้วแตะเท่านั้น · คีย์ที่เลือกกับคีย์ LINE เป็นของสองชิ้นเดียวในแผงที่มีวัสดุจริง
+	   นี่คือการแก้ต้นเหตุของบาร์เดิมที่เป็นชิปเท่ากันห้าอันเรียงกัน */
+	.dock-cap {
+		position: relative;
 		display: grid;
 		place-items: center;
-		width: 42px;
-		height: 42px;
-		border: 1px solid var(--ink-border-strong);
+		width: 100%;
+		max-width: 52px;
+		height: var(--cap-h);
+		border: 1px solid transparent;
 		border-radius: var(--key-radius);
-		background: var(--ink-chip);
-		transition: background 0.15s var(--ease-mech), color 0.15s var(--ease-mech), border-color 0.15s var(--ease-mech);
+		background-color: transparent;
+		box-shadow: none;
+		transform: translateY(calc(var(--lift, 0px) + var(--press, 0px)));
+		transition: height 0.16s var(--dock-ease), transform 0.12s var(--dock-ease-press), box-shadow 0.12s var(--dock-ease-press), border-color 0.15s var(--ease-mech), background-color 0.15s var(--ease-mech), color 0.15s var(--ease-mech);
 	}
 
-	.mobile-app-nav-icon .icon {
-		width: 1.2rem;
-		height: 1.2rem;
+	.dock-glyph {
+		display: grid;
+		place-items: center;
 	}
 
-	.mobile-app-nav-item:hover,
-	.mobile-app-nav-item:focus-visible,
-	.mobile-app-nav-item.is-active {
+	.dock-cap .icon {
+		width: 1.15rem;
+		height: 1.15rem;
+	}
+
+	/* ไฟดวงเล็กมุมคีย์ · ติดเฉพาะคีย์ที่มีเรื่องจะบอก (หน้าปัจจุบัน กำลังไปหน้าใหม่ หรือคีย์ LINE)
+	   ทำงานได้แม้ปิด JS เพราะสถานะ is-active มากับ HTML */
+	.dock-led {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		width: 4px;
+		height: 4px;
+		border-radius: 50%;
+		background-color: transparent;
+		transition: background-color 0.15s var(--ease-mech), box-shadow 0.15s var(--ease-mech);
+	}
+
+	.dock-label {
+		max-width: 100%;
+		max-height: calc(var(--dock-label-h) * (1 - var(--slim)));
+		margin-top: calc(var(--dock-gap) * (1 - var(--slim)));
+		overflow: hidden;
+		opacity: calc(1 - var(--slim));
+		font-family: var(--font-display);
+		font-size: 0.66rem;
+		font-weight: 600;
+		letter-spacing: 0.02em;
+		line-height: 1.4;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		transition: max-height 0.16s var(--dock-ease), margin-top 0.16s var(--dock-ease), opacity 0.12s linear, color 0.15s var(--ease-mech);
+	}
+
+	/* ---------- ตอนกด · คีย์ยุบลงไปในแผงแล้วสันหาย ---------- */
+	.dock-key:active,
+	.dock-key.is-press {
+		--press: 2px;
+	}
+
+	.dock-key:active .dock-cap,
+	.dock-key.is-press .dock-cap {
+		background-color: rgba(0, 0, 0, 0.4);
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.7);
+	}
+
+	/* ---------- คีย์ที่กดไปแล้วและกำลังรอหน้าใหม่ ---------- */
+	.dock-key.is-going .dock-cap {
+		border-color: rgba(var(--ink-accent-rgb), 0.55);
 		color: var(--ink-accent);
 	}
 
-	.mobile-app-nav-item:hover .mobile-app-nav-icon,
-	.mobile-app-nav-item:focus-visible .mobile-app-nav-icon {
-		border-color: rgba(var(--ink-accent-rgb), 0.45);
-		background: rgba(var(--ink-accent-rgb), 0.20);
+	.dock-key.is-going .dock-led {
+		background-color: var(--ink-accent);
+		box-shadow: 0 0 6px 1px rgba(var(--ink-accent-rgb), 0.6);
+	}
+
+	/* ---------- คีย์ของหน้าที่เปิดอยู่ · ยกตัวขึ้นมามีสันข้าง 3px และติดวงเล็บ HUD แบบเดียวกับหน้าแรก ---------- */
+	.dock-key.is-active {
 		color: var(--ink-accent);
 	}
 
-	.mobile-app-nav-item.is-pressing .mobile-app-nav-icon {
-		transform: translateY(2px);
+	.dock-key.is-active .dock-cap {
+		border-color: rgba(var(--ink-accent-rgb), 0.7);
+		background-color: rgba(var(--ink-accent-rgb), 0.16);
+		background-image: linear-gradient(180deg, rgba(var(--ink-accent-rgb), 0.26), rgba(var(--ink-accent-rgb), 0.08));
+		color: var(--ink-accent);
+		box-shadow: inset 0 1px 0 rgba(var(--ink-accent-rgb), 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 rgba(0, 0, 0, 0.6), 0 8px 16px -6px rgba(var(--ink-accent-rgb), 0.45);
 	}
 
-	.mobile-app-nav-item.is-active .mobile-app-nav-icon {
-		border-color: var(--ink-accent);
-		background: var(--ink-accent);
-		color: var(--ink-deep);
+	.dock-key.is-active .dock-cap::before,
+	.dock-key.is-active .dock-cap::after {
+		content: "";
+		position: absolute;
+		z-index: 2;
+		width: 8px;
+		height: 8px;
+		border: 2px solid var(--hud);
+		pointer-events: none;
 	}
 
-	/* คีย์ LINE กลางบาร์ · ยกขึ้น 10px พื้นสีเน้น ตัวหนังสือ --ink-deep (13.11:1) · กดได้ 44px ขึ้นไป */
-	.mobile-app-nav-item.is-action {
+	.dock-key.is-active .dock-cap::before {
+		top: -3px;
+		left: -3px;
+		border-right: 0;
+		border-bottom: 0;
+	}
+
+	.dock-key.is-active .dock-cap::after {
+		right: -3px;
+		bottom: -3px;
+		border-left: 0;
+		border-top: 0;
+	}
+
+	.dock-key.is-active .dock-led {
+		background-color: var(--ink-accent);
+		box-shadow: 0 0 6px 1px rgba(var(--ink-accent-rgb), 0.6);
+	}
+
+	.dock-key.is-active .dock-label {
+		font-weight: 700;
+		color: var(--ink-text);
+	}
+
+	/* ---------- คีย์ LINE · ยกพ้นหน้าปัดจนเจาะรางบน มีสันเขียวเข้ม 4px และปลอกสีพื้นบาร์รอบตัว ----------
+	   --lift คิดจากระยะจริง ไม่ใช่เลขเดา · margin-bottom ติดลบทำให้ที่ในสายเนื้อหาเท่าคีย์อื่น ป้ายจึงตรงบรรทัดเดียวกัน */
+	.dock-key.is-action {
+		--lift: calc(var(--dock-ring) - var(--dock-pad-top) - var(--dock-punch));
 		color: var(--ink-accent);
 	}
 
-	.mobile-app-nav-item.is-action .mobile-app-nav-icon {
-		width: 48px;
-		height: 48px;
-		margin-top: -10px;
-		border-color: var(--ink-accent);
-		background: var(--ink-accent);
+	.dock-key.is-action .dock-cap {
+		max-width: 54px;
+		height: var(--cap-h-line);
+		margin-bottom: calc(var(--cap-h) - var(--cap-h-line));
+		border-color: var(--accent-2);
+		background-color: var(--ink-accent);
+		background-image: none;
 		color: var(--ink-deep);
-		box-shadow: 0 4px 0 var(--primary-deep), 0 8px 18px rgba(0, 0, 0, 0.45);
+		box-shadow: inset 0 2px 0 var(--accent-2), inset 0 -3px 0 rgba(0, 0, 0, 0.22), 0 4px 0 var(--primary-deep), 0 0 0 var(--dock-ring) var(--ink-deep), 0 12px 20px -6px rgba(0, 0, 0, 0.7);
 	}
 
-	.mobile-app-nav-item.is-action:hover .mobile-app-nav-icon,
-	.mobile-app-nav-item.is-action:focus-visible .mobile-app-nav-icon {
-		border-color: var(--ink-accent);
-		background: var(--ink-accent);
-		color: var(--ink-deep);
+	.dock-key.is-action .dock-cap .icon {
+		width: 1.4rem;
+		height: 1.4rem;
 	}
 
-	.mobile-app-nav-item.is-action.is-pressing .mobile-app-nav-icon {
-		transform: translateY(4px);
-		box-shadow: 0 0 0 var(--primary-deep), 0 2px 8px rgba(0, 0, 0, 0.45);
+	.dock-key.is-action .dock-led {
+		background-color: rgba(0, 0, 0, 0.35);
+		box-shadow: none;
+		animation: dock-live 1.8s ease-in-out 3;
+	}
+
+	.dock-key.is-action .dock-label {
+		font-weight: 700;
+		color: var(--ink-accent);
+	}
+
+	.dock-key.is-action:active,
+	.dock-key.is-action.is-press {
+		--press: 4px;
+	}
+
+	.dock-key.is-action:active .dock-cap,
+	.dock-key.is-action.is-press .dock-cap {
+		box-shadow: inset 0 2px 0 var(--accent-2), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 0 0 var(--primary-deep), 0 0 0 var(--dock-ring) var(--ink-deep), 0 4px 10px -4px rgba(0, 0, 0, 0.7);
+	}
+
+	/* ---------- โฟกัสคีย์บอร์ด ---------- */
+	.dock-key:focus-visible .dock-cap {
+		border-color: var(--ink-accent);
+		color: var(--ink-accent);
+	}
+
+	.dock-key:focus-visible .dock-led {
+		background-color: var(--ink-accent);
+	}
+
+	/* hover ต้องอยู่ในกรอบนี้เท่านั้น · บน iOS และ Android :hover จะค้างที่ปุ่มที่แตะล่าสุด
+	   ถ้าปล่อยไว้จะเห็นสองคีย์สว่างพร้อมกัน */
+	@media (hover: hover) and (pointer: fine) {
+		.dock-key:hover {
+			color: var(--ink-text);
+		}
+
+		.dock-key:hover .dock-cap {
+			border-color: rgba(var(--ink-accent-rgb), 0.45);
+			color: var(--ink-accent);
+		}
+
+		.dock-key.is-action:hover .dock-cap {
+			border-color: var(--accent-2);
+			color: var(--ink-deep);
+		}
+	}
+
+	@keyframes dock-scan {
+		from {
+			transform: translateX(-120%);
+		}
+
+		to {
+			transform: translateX(260%);
+		}
+	}
+
+	@keyframes dock-live {
+		0%,
+		100% {
+			opacity: 1;
+		}
+
+		50% {
+			opacity: 0.3;
+		}
+	}
+}
+
+/* ---------- บาร์ล่างมือถือ · โหมดลดการเคลื่อนไหว ----------
+   ต้องอยู่หลังบล็อก 760px เพราะทับค่า --slim ด้วยน้ำหนักเท่ากัน */
+@media (prefers-reduced-motion: reduce) {
+	.mobile-app-nav,
+	.dock-cap,
+	.dock-label,
+	.dock-led,
+	.dock-lamp::before,
+	.dock-lamp::after {
+		transition: none;
+	}
+
+	/* ไม่ย่อบาร์เมื่อผู้ใช้ขอลดการเคลื่อนไหว (JS ก็ไม่ใส่คลาสนี้อยู่แล้ว) */
+	.mobile-app-nav.is-slim {
+		--slim: 0;
+	}
+
+	.mobile-app-nav.is-going .dock-rail::after {
+		width: 100%;
+		opacity: 0.45;
+		animation: none;
+		transform: none;
+	}
+
+	.dock-key.is-action .dock-led {
+		opacity: 1;
+		animation: none;
 	}
 }
 

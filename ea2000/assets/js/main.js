@@ -218,41 +218,179 @@
 		});
 	});
 
-	/* Mobile app-style bottom navigation */
-	var mobileNav = document.querySelector('.mobile-app-nav');
-	if (mobileNav) {
+	/* บาร์ล่างมือถือ · แผงคอนโซล (Console Deck)
+	   PHP ส่ง is-active / aria-current / --dock-x มากับ HTML แล้ว บล็อกนี้มีหน้าที่เพิ่มลูกเล่นอย่างเดียว
+	   ปิด JS แล้วบาร์ยังถูกต้องครบ: ลิงก์กดได้ คีย์ของหน้าปัจจุบันติดไฟ ไฟบนรางจอดถูกช่อง
+	   ทุกช่องกว้างเท่ากัน (grid 1fr) ตำแหน่งไฟจึงเป็นเปอร์เซ็นต์ ไม่ต้องวัดขนาดจริง
+	   จึงไม่ต้องคำนวณใหม่ตอนหมุนจอหรือเปลี่ยนขนาดหน้าต่าง */
+	var dock = document.querySelector('.mobile-app-nav');
+
+	if (dock) {
+		var dockKeys = Array.prototype.slice.call(dock.querySelectorAll('.dock-key'));
+		var dockSeats = Math.max(1, dockKeys.length);
+		var dockNarrow = window.matchMedia('(max-width: 760px)');
+		var dockWait = 0;
+		var dockLastY = Math.max(0, window.pageYOffset || 0);
+		var dockDrift = 0;
+
+		/* คลาสเดิมของธีม เก็บไว้เป็นจุดเกาะให้โค้ดอื่น · การเว้นที่ท้ายหน้าเป็นงานของ div.dock-spacer แล้ว */
 		document.body.classList.add('has-mobile-app-nav');
 
-		var currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
-		var activeItem = null;
-		var activeLength = 0;
-		var mobileItems = mobileNav.querySelectorAll('.mobile-app-nav-item');
-
-		mobileItems.forEach(function (item) {
-			var itemUrl = new URL(item.href, window.location.origin);
-			var itemPath = itemUrl.pathname.replace(/\/+$/, '') || '/';
-			var isMatch = itemPath === '/' ? currentPath === '/' : (currentPath === itemPath || currentPath.indexOf(itemPath + '/') === 0);
-
-			if (!item.classList.contains('is-action') && isMatch && itemPath.length >= activeLength) {
-				activeItem = item;
-				activeLength = itemPath.length;
+		/* ย้ายไฟบนรางไปจอดช่องที่ระบุ */
+		function dockLight(seat) {
+			if (seat < 0 || seat >= dockSeats) {
+				return;
 			}
+			dock.style.setProperty('--dock-x', ((seat + 0.5) * (100 / dockSeats)).toFixed(3) + '%');
+			dock.classList.add('is-lit');
+		}
 
-			item.addEventListener('pointerdown', function () {
-				item.classList.add('is-pressing');
+		/* เลิกสถานะกำลังไปหน้าใหม่ */
+		function dockRest() {
+			window.clearTimeout(dockWait);
+			dock.classList.remove('is-going');
+			dockKeys.forEach(function (key) {
+				key.classList.remove('is-going');
+				key.classList.remove('is-press');
+			});
+		}
+
+		/* กันเหนียว: ถ้าฝั่ง PHP หาแท็บของหน้านี้ไม่เจอ (ปลั๊กอินเปลี่ยน URL หรือแคชแปลก) ให้ JS หาให้
+		   นี่เป็นที่เดียวที่ JS แตะ aria-current เพราะเป็นการบอกตำแหน่งจริง ไม่ใช่ผลของการกด */
+		if (!dock.querySelector('.dock-key.is-active')) {
+			var dockHere = window.location.pathname.replace(/\/+$/, '') || '/';
+			var dockBest = -1;
+			var dockPick = null;
+			var dockSeat = -1;
+
+			dockKeys.forEach(function (key, seat) {
+				if (key.classList.contains('is-action')) {
+					return;
+				}
+
+				var path;
+				try {
+					path = new URL(key.href, window.location.href).pathname.replace(/\/+$/, '') || '/';
+				} catch (err) {
+					return;
+				}
+
+				var hit = path === '/' ? dockHere === '/' : (dockHere === path || dockHere.indexOf(path + '/') === 0);
+				if (hit && path.length > dockBest) {
+					dockBest = path.length;
+					dockPick = key;
+					dockSeat = seat;
+				}
 			});
 
-			item.addEventListener('pointerup', function () {
-				item.classList.remove('is-pressing');
+			if (dockPick) {
+				dockPick.classList.add('is-active');
+				dockPick.setAttribute('aria-current', 'page');
+				dockLight(dockSeat);
+			}
+		}
+
+		/* แรงกด · CSS :active ทำงานอยู่แล้ว คลาสนี้ช่วยให้คีย์เด้งกลับตอนเลื่อนนิ้วออกหรือการแตะถูกยกเลิก
+		   และช่วยให้ iOS ยอมติด :active ด้วย เพราะมีตัวรับ pointer อยู่บนอิลิเมนต์ */
+		dockKeys.forEach(function (key) {
+			key.addEventListener('pointerdown', function () {
+				key.classList.add('is-press');
 			});
 
-			item.addEventListener('pointerleave', function () {
-				item.classList.remove('is-pressing');
+			['pointerup', 'pointercancel', 'pointerleave', 'blur'].forEach(function (evt) {
+				key.addEventListener(evt, function () {
+					key.classList.remove('is-press');
+				});
 			});
 		});
 
-		if (activeItem) {
-			activeItem.classList.add('is-active');
+		/* แตะบาร์ตอนที่มันย่ออยู่ = คลี่กลับมาเต็มก่อน จะได้อ่านป้ายก่อนเลือก */
+		dock.addEventListener('pointerdown', function () {
+			dock.classList.remove('is-slim');
+			dockDrift = 0;
+		});
+
+		/* กดคีย์แล้วไฟวิ่งไปจอดช่องนั้นทันที พร้อมแถบสแกนบนราง ค้างไว้จนหน้าใหม่มาแทน
+		   ย้ายแค่ภาพ ไม่แตะ aria-current เพราะหน้ายังไม่เปลี่ยน */
+		dock.addEventListener('click', function (e) {
+			var key = e.target && e.target.closest ? e.target.closest('.dock-key') : null;
+			if (!key || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) {
+				return;
+			}
+			if ('_blank' === key.target) {
+				return; // ปุ่ม LINE เปิดแท็บใหม่ หน้านี้ไม่ได้ไปไหน
+			}
+
+			var href = key.getAttribute('href') || '';
+			if ('' === href || '#' === href.charAt(0) || key.href === window.location.href) {
+				return;
+			}
+
+			var seat = parseInt(key.getAttribute('data-slot'), 10);
+			if (!isNaN(seat)) {
+				dockLight(seat);
+			}
+
+			key.classList.add('is-going');
+			dock.classList.add('is-going');
+			window.clearTimeout(dockWait);
+			dockWait = window.setTimeout(dockRest, 8000);
+		});
+
+		/* กลับมาด้วยปุ่มย้อนกลับ (bfcache) ต้องไม่ค้างสถานะกำลังโหลด */
+		window.addEventListener('pageshow', dockRest);
+
+		/* ย่อบาร์เมื่อเลื่อนอ่านลงต่อเนื่อง คลี่กลับทันทีเมื่อเลื่อนขึ้น · ย่อ ไม่ใช่ ซ่อน
+		   ปุ่ม LINE จึงอยู่บนจอตลอด เพราะคนที่กำลังอ่านกลางหน้าคือคนที่พร้อมทักที่สุด
+		   ติดหัวหน้าและท้ายหน้าให้กางไว้เสมอ */
+		function dockScroll() {
+			if (!dockNarrow.matches || reduced) {
+				return;
+			}
+
+			var y = Math.max(0, window.pageYOffset || 0);
+			var step = y - dockLastY;
+			dockLastY = y;
+			if (Math.abs(step) < 2) {
+				return;
+			}
+
+			var toEnd = document.documentElement.scrollHeight - window.innerHeight - y;
+			if (y < 220 || toEnd < 140) {
+				dockDrift = 0;
+				dock.classList.remove('is-slim');
+				return;
+			}
+
+			dockDrift = (dockDrift > 0) === (step > 0) ? dockDrift + step : step;
+			if (dockDrift > 56) {
+				dockDrift = 0;
+				dock.classList.add('is-slim');
+			} else if (dockDrift < -18) {
+				dockDrift = 0;
+				dock.classList.remove('is-slim');
+			}
+		}
+
+		window.addEventListener('scroll', dockScroll, { passive: true });
+
+		/* หมุนจอหรือแถบ URL ของเบราว์เซอร์ยืดหด: ตั้งจุดวัดใหม่
+		   คลี่บาร์กลับเฉพาะตอนหน้าเลื่อนแทบไม่ได้แล้วหรือออกจากช่วงจอมือถือ */
+		function dockRecalibrate() {
+			dockLastY = Math.max(0, window.pageYOffset || 0);
+			dockDrift = 0;
+			if (!dockNarrow.matches || document.documentElement.scrollHeight - window.innerHeight < 260) {
+				dock.classList.remove('is-slim');
+			}
+		}
+
+		window.addEventListener('resize', dockRecalibrate, { passive: true });
+		window.addEventListener('orientationchange', dockRecalibrate);
+
+		if (dockNarrow.addEventListener) {
+			dockNarrow.addEventListener('change', dockRecalibrate);
+		} else if (dockNarrow.addListener) {
+			dockNarrow.addListener(dockRecalibrate);
 		}
 	}
 
