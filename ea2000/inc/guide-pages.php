@@ -234,6 +234,21 @@ function ea2000_guide_defaults() {
 		'sub'    => 'เข้า VPS จากมือถือหรือแท็บเล็ต Android ด้วยแอป Windows App ของ Microsoft เอาไว้ดูสถานะระหว่างวันเมื่อไม่ได้อยู่หน้าคอม',
 		'intro'  => 'ถ้าคุณเช่า VPS ไว้รัน MetaTrader 5 อยู่แล้ว ก็เข้าไปดูหน้าจอเดียวกันจากมือถือได้ เหมาะกับตอนที่อยากเช็กว่าระบบยังทำงานปกติ โดยไม่ต้องกลับไปเปิดคอมพิวเตอร์',
 		'quick'  => 'ติดตั้งแอป Windows App จาก Play Store แล้วกด Add เลือก PC จากนั้นใส่ IP ของ VPS ตั้ง Credentials แล้วบันทึก',
+		'dl_title' => 'ดาวน์โหลดแอปที่ใช้เชื่อมต่อ',
+		'dl'     => array(
+			array(
+				'Windows App บน Android',
+				'แอปของไมโครซอฟท์ ใช้ฟรี',
+				"เปิดแอป Google Play Store
+พิมพ์ค้นหาว่า Windows App
+เลือกแอปที่ผู้พัฒนาเป็น Microsoft Corporation
+กดติดตั้งแล้วรอจนเสร็จ
+กดเปิดแอป แล้วไปทำขั้นที่ 2 ต่อ",
+				'https://play.google.com/store/apps/details?id=com.microsoft.rdc.androidx',
+				'android',
+				'แอปนี้เคยใช้ชื่อ Microsoft Remote Desktop ถ้าเครื่องคุณยังขึ้นชื่อเดิมก็ใช้ตัวเดียวกันได้',
+			),
+		),
 		'steps'  => array(
 			array(
 				'ติดตั้งแอป Windows App จาก Play Store',
@@ -289,6 +304,21 @@ function ea2000_guide_defaults() {
 		'sub'    => 'เข้า VPS จาก iPhone หรือ iPad ด้วยแอป Windows App ของ Microsoft ขั้นตอนคล้ายกับ Android ต่างกันที่หน้าตาของแอป',
 		'intro'  => 'ถ้าคุณให้ MetaTrader 5 ทำงานอยู่บน VPS การเข้าไปดูจาก iPhone ทำได้ด้วยแอปฟรีของ Microsoft ใช้เวลาตั้งค่าครั้งเดียวประมาณห้านาที',
 		'quick'  => 'ติดตั้ง Windows App จาก App Store แล้วกด Add เลือก PC ใส่ IP ของ VPS ตั้ง Credentials แล้วบันทึก',
+		'dl_title' => 'ดาวน์โหลดแอปที่ใช้เชื่อมต่อ',
+		'dl'     => array(
+			array(
+				'Windows App บน iPhone และ iPad',
+				'แอปของไมโครซอฟท์ ใช้ฟรี',
+				"เปิดแอป App Store
+พิมพ์ค้นหาว่า Windows App
+เลือกแอปที่ผู้พัฒนาเป็น Microsoft Corporation
+กดรับหรือ Get แล้วรอติดตั้งให้เสร็จ
+กดเปิดแอป แล้วไปทำขั้นที่ 2 ต่อ",
+				'https://apps.apple.com/us/app/windows-app-mobile/id714464092',
+				'apple',
+				'ในร้านแอปจะขึ้นชื่อว่า Windows App Mobile เป็นตัวเดียวกัน',
+			),
+		),
 		'steps'  => array(
 			array(
 				'ติดตั้งแอป Windows App จาก App Store',
