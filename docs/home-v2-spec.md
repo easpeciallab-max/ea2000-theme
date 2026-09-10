@@ -772,7 +772,7 @@ CSS: .site-footer.console { position:relative; background-color:var(--ink); back
 | `show_footer_signal` | checkbox | true |
 
 ### 4.5 Fixed UI (C ใน footer.php · B ใน section 41)
-- **Mobile dock**: คง class `.mobile-app-nav` / `.mobile-app-nav-item` / `.mobile-app-nav-icon` / `.is-action` (สัญญากับ JS เดิม) เพิ่ม modifier `.dock` บน nav · **C จัดลำดับให้ LINE อยู่กลาง** (index 2 ของ 5) เมื่อมี LINE · B: bar เต็มขอบจอ มุมไม่โค้ง พื้น `--ink-deep` hairline บน ไม่มี backdrop-filter ไม่มี `mobile-nav-rise` · ไอคอนเป็นสี่เหลี่ยม radius 4px ไม่ใช่วงกลม · `.is-action` เป็นคีย์สี่เหลี่ยมยกขึ้น 10px พื้น `--ink-accent` ตัวหนังสือ `--ink-deep` · `body.has-mobile-app-nav` padding-bottom เดิม (92px) คงไว้ · `data-line-pos="dock"` บนลิงก์ LINE
+- **Mobile dock**: **เขียนใหม่ทั้งบล็อก 10 ก.ย. 2026 (v2.3.0) ดู CLAUDE.md ข้อ 29** · สัญญา class ชุดใหม่คือ `.mobile-app-nav.dock` > `.dock-rail` + `.dock-lamp` + `.dock-keys` > `a.dock-key` > `.dock-cap` ( `.dock-glyph` + `.dock-led` ) + `.dock-label` และมี `div.dock-spacer` ต่อท้าย nav · สถานะ `.is-lit` `.is-active` `.is-action` `.is-press` `.is-going` `.is-slim` · **คลาสเดิม `.mobile-app-nav-item` `.mobile-app-nav-icon` `.is-pressing` เลิกใช้แล้ว** · หา active ฝั่ง PHP จึงถูกต้องตั้งแต่ HTML ที่เสิร์ฟ ไม่ต้องรอ JS และมี `aria-current="page"` · เว้นที่ท้ายหน้าด้วย `.dock-spacer` ไม่ใช่ `body.has-mobile-app-nav` แล้ว · `data-line-pos="dock"` บนลิงก์ LINE ยังอยู่
 - **Desktop `.line-fab`**: สี่เหลี่ยม 56px radius 4px มุมวงเล็บ (ใช้ `.key` ::before/::after เดียวกัน) พื้น `--primary` ไอคอน LINE ขาว · `data-line-pos="fab"` · `.float-line` (โหมดมีข้อความ) เป็น `.key.key-line` ลอย
 - **Cookie bar**: ไม่แตะ
 
