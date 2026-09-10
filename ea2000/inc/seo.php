@@ -322,6 +322,7 @@ function ea2000_placeholder_page_rules() {
 		'template-backtest.php' => array(
 			'prefix'     => 'bt_stat',
 			'count'      => 8,
+			'doc'        => array( 'backtest', 6 ),
 			'link'       => '',
 			'link_label' => '',
 			'image'      => 'backtest_img',
@@ -329,6 +330,7 @@ function ea2000_placeholder_page_rules() {
 		'template-forward.php'  => array(
 			'prefix'     => 'fw_stat',
 			'count'      => 6,
+			'doc'        => array( 'forward', 6 ),
 			'link'       => 'forward_link_url',
 			'link_label' => 'forward_link_label',
 			'image'      => 'forward_img',
@@ -360,6 +362,19 @@ function ea2000_placeholder_rule_is_empty( $rule ) {
 		}
 		if ( $has_link ) {
 			return false;
+		}
+	}
+
+	/* มีเนื้อหาหัวข้อที่เขียนไว้จริง (inc/page-content.php) = หน้าไม่ใช่หน้าเปล่าอีกต่อไป
+	   แม้ตัวเลขผลทดสอบจะยังไม่มี เพราะเนื้อหาสอนใช้งานมีคุณค่าให้ผู้อ่านด้วยตัวเอง */
+	if ( ! empty( $rule['doc'] ) && is_array( $rule['doc'] ) ) {
+		list( $doc_prefix, $doc_max ) = $rule['doc'];
+		for ( $d = 1; $d <= (int) $doc_max; $d++ ) {
+			$doc_title = trim( (string) ea2000_mod( $doc_prefix . '_sec' . $d . '_title' ) );
+			$doc_text  = trim( (string) ea2000_mod( $doc_prefix . '_sec' . $d . '_text' ) );
+			if ( '' !== $doc_title && '' !== $doc_text && ! ea2000_is_placeholder( $doc_title ) && ! ea2000_is_placeholder( $doc_text ) ) {
+				return false;
+			}
 		}
 	}
 
