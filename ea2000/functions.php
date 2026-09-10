@@ -1545,9 +1545,18 @@ function ea2000_product_offers() {
 			continue;
 		}
 
+		$ea2000_price = ea2000_offer_price( $ea2000_pkg . '_price' );
+
+		/* แพ็กเกจราคา 0 (เช่น Starter ที่เขียนว่า Free) เป็นขั้นปรึกษา ไม่ใช่การขายตัวโปรแกรม
+		   จึงไม่ประกาศเป็น Offer เพื่อไม่ให้ผลค้นหาขึ้นว่าสินค้าเริ่มต้นที่ 0 บาท (เจ้าของเลือก 10 ก.ย. 2026)
+		   หน้าเว็บยังแสดงคำว่า Free ตามเดิม เปลี่ยนเฉพาะข้อมูลโครงสร้างที่ส่งให้เสิร์ชเอนจิน
+		   ปิดพฤติกรรมนี้ได้ด้วยฟิลเตอร์ ea2000_offer_skip_free */
+		if ( null !== $ea2000_price && 0.0 === (float) $ea2000_price && apply_filters( 'ea2000_offer_skip_free', true, $ea2000_pkg ) ) {
+			continue;
+		}
+
 		++$visible;
 
-		$ea2000_price = ea2000_offer_price( $ea2000_pkg . '_price' );
 		if ( null === $ea2000_price ) {
 			continue;
 		}
