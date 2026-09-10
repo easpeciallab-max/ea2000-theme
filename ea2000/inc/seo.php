@@ -596,6 +596,11 @@ function ea2000_register_yoast_meta_rest() {
 		'_yoast_wpseo_opengraph-description',
 		'_yoast_wpseo_twitter-title',
 		'_yoast_wpseo_twitter-description',
+
+		/* เปิดปิดการเก็บดัชนีรายหน้า · ค่า "1" คือ noindex ค่า "2" คือ index ค่าว่างคือใช้ค่าเริ่มต้นของชนิดเนื้อหา
+		   เป็นการตั้งค่ารายหน้าเท่านั้น ไม่เกี่ยวกับสวิตช์ระดับเว็บซึ่งเป็นการตัดสินใจของเจ้าของ */
+		'_yoast_wpseo_meta-robots-noindex',
+		'_yoast_wpseo_meta-robots-nofollow',
 	);
 	$args = array(
 		'type'              => 'string',
@@ -702,6 +707,33 @@ function ea2000_seo_social_keys() {
 }
 
 /**
+ * ประกอบข้อมูลภาพในรูปแบบที่ Yoast เก็บไว้ใน company_logo_meta
+ *
+ * @param int $id เลขไฟล์แนบ
+ * @return array|false
+ */
+function ea2000_seo_attachment_meta( $id ) {
+	$src = wp_get_attachment_image_src( $id, 'full' );
+	if ( ! $src ) {
+		return false;
+	}
+
+	$path = get_attached_file( $id );
+
+	return array(
+		'type'   => get_post_mime_type( $id ),
+		'width'  => (int) $src[1],
+		'height' => (int) $src[2],
+		'url'    => $src[0],
+		'path'   => $path ? $path : '',
+		'size'   => 'full',
+		'id'     => (int) $id,
+		'alt'    => (string) get_post_meta( $id, '_wp_attachment_image_alt', true ),
+		'pixels' => (int) $src[1] * (int) $src[2],
+	);
+}
+
+/**
  * สิทธิ์สำหรับ endpoint ตั้งค่า Yoast ระดับเว็บ
  *
  * @return bool
@@ -795,6 +827,23 @@ function ea2000_seo_options_post( $request ) {
 
 	if ( $direct_social ) {
 		update_option( 'wpseo_social', $social );
+	}
+
+	/* Yoast แคชขนาดและ URL ของโลโก้ไว้ใน company_logo_meta ถ้าไม่อัปเดตตาม
+	   JSON-LD จะยังพ่นค่าเดิมของไฟล์เก่าต่อไปแม้ตั้ง company_logo แล้ว */
+	if ( isset( $applied['company_logo_id'] ) && $applied['company_logo_id'] > 0 ) {
+		$ea2000_logo_meta = ea2000_seo_attachment_meta( (int) $applied['company_logo_id'] );
+		if ( $ea2000_logo_meta ) {
+			if ( class_exists( 'WPSEO_Options' ) && method_exists( 'WPSEO_Options', 'set' ) ) {
+				WPSEO_Options::set( 'company_logo_meta', $ea2000_logo_meta );
+			} else {
+				$social_now                        = get_option( 'wpseo_social' );
+				$social_now                        = is_array( $social_now ) ? $social_now : array();
+				$social_now['company_logo_meta'] = $ea2000_logo_meta;
+				update_option( 'wpseo_social', $social_now );
+			}
+			$applied['company_logo_meta'] = $ea2000_logo_meta;
+		}
 	}
 
 	return new WP_REST_Response(
