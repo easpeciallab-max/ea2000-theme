@@ -866,6 +866,11 @@ function ea2000_defaults() {
 		)
 	);
 
+	/* เนื้อหาหัวข้อของหน้าย่อย (inc/page-content.php) */
+	if ( function_exists( 'ea2000_page_content_defaults' ) ) {
+		$d = array_merge( $d, ea2000_page_content_defaults() );
+	}
+
 	return $d;
 }
 
@@ -2352,3 +2357,4 @@ add_action( 'init', 'ea2000_disable_emoji', 20 );
  * -------------------------------------------------------------- */
 require get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/page-content.php';

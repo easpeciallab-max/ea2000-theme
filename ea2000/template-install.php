@@ -78,6 +78,8 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 	<?php endif; ?>
 </section>
 
+<?php ea2000_page_sections( 'installdoc', 8 ); ?>
+
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( 'อยากให้ทีมงานช่วยติดตั้ง?', 'ทักมาทาง LINE ทีมงานช่วยติดตั้งและตั้งค่าให้จนระบบพร้อมใช้งาน' ); ?>
 <?php endif; ?>

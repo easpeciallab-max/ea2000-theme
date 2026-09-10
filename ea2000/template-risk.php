@@ -62,6 +62,8 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 	</div>
 </section>
 
+<?php ea2000_page_sections( 'riskdoc', 6 ); ?>
+
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( 'มีคำถามเรื่องความเสี่ยง?', 'ทักมาสอบถามทีมงานก่อนตัดสินใจใช้งานได้ทาง LINE' ); ?>
 <?php endif; ?>

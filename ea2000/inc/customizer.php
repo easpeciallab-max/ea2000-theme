@@ -575,6 +575,26 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 	);
 
+	/* เนื้อหาหัวข้อของหน้าย่อย (inc/page-content.php) */
+	if ( function_exists( 'ea2000_page_section_fields' ) ) {
+		$ea2000_docs = array(
+			'ea2000_backtest'      => array( 'backtest', 6 ),
+			'ea2000_forward'       => array( 'forward', 6 ),
+			'ea2000_pricing_extra' => array( 'pricingdoc', 5 ),
+			'ea2000_install'       => array( 'installdoc', 8 ),
+			'ea2000_riskpage'      => array( 'riskdoc', 6 ),
+			'ea2000_links'         => array( 'linksdoc', 4 ),
+		);
+		foreach ( $ea2000_docs as $ea2000_sec => $ea2000_doc ) {
+			if ( isset( $sections[ $ea2000_sec ] ) ) {
+				$sections[ $ea2000_sec ]['fields'] = array_merge(
+					$sections[ $ea2000_sec ]['fields'],
+					ea2000_page_section_fields( $ea2000_doc[0], $ea2000_doc[1] )
+				);
+			}
+		}
+	}
+
 	/* เพิ่ม FAQ 10 ข้อเข้า section FAQ */
 	for ( $i = 1; $i <= 10; $i++ ) {
 		$sections['ea2000_faq']['fields'][ 'faq' . $i . '_q' ] = array( 'คำถามข้อ ' . $i, 'text' );

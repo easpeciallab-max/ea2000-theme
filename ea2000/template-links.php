@@ -328,6 +328,20 @@ foreach ( array(
 			</div>
 		<?php endif; ?>
 
+		<?php
+		$lh_doc = '';
+		if ( function_exists( 'ea2000_page_sections' ) ) {
+			ob_start();
+			ea2000_page_sections( 'linksdoc', 4, false );
+			$lh_doc = trim( (string) ob_get_clean() );
+		}
+		if ( '' !== $lh_doc ) :
+			?>
+			<section class="lh-doc entry-content doc-body">
+				<?php echo $lh_doc; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ea2000_page_sections ?>
+			</section>
+		<?php endif; ?>
+
 		<?php if ( $lh_note ) : ?>
 			<p class="lh-note"><?php echo esc_html( $lh_note ); ?></p>
 		<?php endif; ?>

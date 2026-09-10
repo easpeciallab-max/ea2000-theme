@@ -142,6 +142,8 @@ if ( count( $ea2000_rows ) >= 2 ) :
 	</section>
 <?php endif; ?>
 
+<?php ea2000_page_sections( 'pricingdoc', 5 ); ?>
+
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( 'ยังไม่แน่ใจว่าแพ็กเกจไหนเหมาะ?', 'ทักมาปรึกษาทีมงานเพื่อเลือกแพ็กเกจที่เหมาะกับทุนและการใช้งานของคุณ' ); ?>
 <?php endif; ?>

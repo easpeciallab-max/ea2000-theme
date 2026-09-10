@@ -95,6 +95,8 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 	</div>
 </section>
 
+<?php ea2000_page_sections( 'forward', 6 ); ?>
+
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( 'ติดตามผลแบบเรียลไทม์?', 'สอบถามผลการทดสอบล่าสุดและช่องทางติดตามได้ทาง LINE' ); ?>
 <?php endif; ?>
