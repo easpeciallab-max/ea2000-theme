@@ -672,6 +672,32 @@ function ea2000_seo_option_whitelist() {
 		'disable-date'         => 'bool',
 		'disable-post_format'  => 'bool',
 		'disable-attachment'   => 'bool',
+
+		/* กลุ่ม wpseo_social · ภาพที่ใช้ตอนแชร์ลิงก์ ถ้าไม่ตั้งจะไม่มี og:image เลยทั้งเว็บ */
+		'og_default_image'      => 'text',
+		'og_default_image_id'   => 'int',
+		'og_frontpage_image'    => 'text',
+		'og_frontpage_image_id' => 'int',
+		'company_logo'          => 'text',
+		'company_logo_id'       => 'int',
+		'twitter_card_type'     => 'text',
+	);
+}
+
+/**
+ * คีย์ที่เก็บอยู่ในกลุ่ม wpseo_social ไม่ใช่ wpseo_titles
+ *
+ * @return array
+ */
+function ea2000_seo_social_keys() {
+	return array(
+		'og_default_image',
+		'og_default_image_id',
+		'og_frontpage_image',
+		'og_frontpage_image_id',
+		'company_logo',
+		'company_logo_id',
+		'twitter_card_type',
 	);
 }
 
@@ -692,10 +718,14 @@ function ea2000_seo_options_permission() {
 function ea2000_seo_options_get() {
 	$titles = get_option( 'wpseo_titles' );
 	$titles = is_array( $titles ) ? $titles : array();
+	$social = get_option( 'wpseo_social' );
+	$social = is_array( $social ) ? $social : array();
+	$socialkeys = array_flip( ea2000_seo_social_keys() );
 	$out    = array();
 
 	foreach ( ea2000_seo_option_whitelist() as $key => $type ) {
-		$out[ $key ] = isset( $titles[ $key ] ) ? $titles[ $key ] : null;
+		$bag         = isset( $socialkeys[ $key ] ) ? $social : $titles;
+		$out[ $key ] = isset( $bag[ $key ] ) ? $bag[ $key ] : null;
 	}
 
 	return new WP_REST_Response(
@@ -727,7 +757,10 @@ function ea2000_seo_options_post( $request ) {
 	$rejected = array();
 	$titles   = get_option( 'wpseo_titles' );
 	$titles   = is_array( $titles ) ? $titles : array();
+	$social   = get_option( 'wpseo_social' );
+	$social   = is_array( $social ) ? $social : array();
 	$direct   = false;
+	$direct_social = false;
 
 	foreach ( $body as $key => $value ) {
 		if ( ! isset( $allowed[ $key ] ) ) {
@@ -737,12 +770,17 @@ function ea2000_seo_options_post( $request ) {
 
 		if ( 'bool' === $allowed[ $key ] ) {
 			$clean = (bool) $value;
+		} elseif ( 'int' === $allowed[ $key ] ) {
+			$clean = (int) $value;
 		} else {
 			$clean = sanitize_text_field( wp_unslash( (string) $value ) );
 		}
 
 		if ( class_exists( 'WPSEO_Options' ) && method_exists( 'WPSEO_Options', 'set' ) ) {
 			WPSEO_Options::set( $key, $clean );
+		} elseif ( in_array( $key, ea2000_seo_social_keys(), true ) ) {
+			$social[ $key ] = $clean;
+			$direct_social  = true;
 		} else {
 			$titles[ $key ] = $clean;
 			$direct         = true;
@@ -753,6 +791,10 @@ function ea2000_seo_options_post( $request ) {
 
 	if ( $direct ) {
 		update_option( 'wpseo_titles', $titles );
+	}
+
+	if ( $direct_social ) {
+		update_option( 'wpseo_social', $social );
 	}
 
 	return new WP_REST_Response(
