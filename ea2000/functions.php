@@ -398,6 +398,7 @@ function ea2000_defaults() {
 		'what_img'      => '',
 		'what_img_alt'  => 'หน้าจอ MetaTrader 5 ขณะรัน EA2000',
 		'what_img_note' => 'รูปที่ต้องใส่: ภาพหน้าจอ MT5 ขณะ EA2000 ทำงาน เห็นกราฟและแผง Dashboard ไม่ต้องเห็นตัวเลขบัญชี · แนะนำ 1280x800 px',
+		'what_img_caption' => '',
 
 		/* ทำงานอย่างไร · บล็อก 4 (how_*) */
 		'show_how'        => true,
@@ -417,6 +418,7 @@ function ea2000_defaults() {
 		'how_img'         => '',
 		'how_img_alt'     => 'แผง Dashboard ของ EA2000 บนกราฟ MT5',
 		'how_img_note'    => 'รูปที่ต้องใส่: ภาพกราฟ MT5 ที่แนบ EA2000 แล้ว เห็นแผง Dashboard ปิดตัวเลขบัญชีได้ · แนะนำ 1280x800 px',
+		'how_img_caption'  => '',
 		/* เทอร์มินัลจำลองลำดับการทำงาน (บล็อก 3) · ไม่มีเวลา ราคา หรือผลเทรดในบรรทัดใด */
 		'show_how_log'    => true,
 		'how_log_title'   => 'ภาพจำลองลำดับการทำงาน',

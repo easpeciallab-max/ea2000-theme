@@ -106,6 +106,7 @@ function ea2000_customize_register( $wp_customize ) {
 				'what_img'      => array( 'ภาพประกอบ (หน้าจอ MT5 ขณะรัน EA2000)', 'image', 'แนะนำ 1280x800 px' ),
 				'what_img_alt'  => array( 'ข้อความอธิบายภาพ (Alt)', 'text' ),
 				'what_img_note' => array( 'ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text' ),
+				'what_img_caption' => array( 'คำบรรยายใต้ภาพ', 'text' ),
 			),
 		),
 
@@ -157,6 +158,7 @@ function ea2000_customize_register( $wp_customize ) {
 				'how_img'         => array( 'ภาพประกอบ (Dashboard ของ EA2000)', 'image', 'แนะนำ 1280x800 px' ),
 				'how_img_alt'     => array( 'ข้อความอธิบายภาพ (Alt)', 'text' ),
 				'how_img_note'    => array( 'ข้อความแนะนำรูปที่ต้องใส่ (แสดงเมื่อยังไม่มีรูป)', 'text' ),
+				'how_img_caption'  => array( 'คำบรรยายใต้ภาพ', 'text' ),
 			),
 		),
 

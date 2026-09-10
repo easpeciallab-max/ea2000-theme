@@ -64,6 +64,11 @@ if ( ! function_exists( 'ea2000_front_media' ) ) {
 			$note = $alt;
 		}
 		$caption = trim( (string) $caption );
+		/* ถ้าบล็อกไม่ได้ส่งคำบรรยายมา ให้ใช้ค่าจาก setting ของช่องนั้น
+		   ใช้กำกับว่าตัวเลขในภาพเป็นตัวอย่าง ไม่ใช่ผลการเทรดจริง */
+		if ( '' === $caption ) {
+			$caption = trim( (string) ea2000_mod( $key . '_img_caption' ) );
+		}
 		$extra   = trim( (string) $extra_class );
 		$classes = ( '' !== $src ? 'hud-frame media-frame watch wipe' : 'hud-frame img-slot watch wipe' ) . ( '' !== $extra ? ' ' . $extra : '' );
 
