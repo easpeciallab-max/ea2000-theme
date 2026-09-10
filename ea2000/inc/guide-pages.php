@@ -124,10 +124,10 @@ function ea2000_guide_store_cards( $prefix ) {
 		<ul class="dl-cards" data-count="<?php echo count( $cards ); ?>">
 			<?php foreach ( $cards as $card ) : ?>
 				<li class="dl-card hud-frame">
-					<span class="hud-c hud-tl" aria-hidden="true"></span>
-					<span class="hud-c hud-tr" aria-hidden="true"></span>
-					<span class="hud-c hud-bl" aria-hidden="true"></span>
-					<span class="hud-c hud-br" aria-hidden="true"></span>
+					<span class="hud-c tl" aria-hidden="true"></span>
+					<span class="hud-c tr" aria-hidden="true"></span>
+					<span class="hud-c bl" aria-hidden="true"></span>
+					<span class="hud-c br" aria-hidden="true"></span>
 					<div class="dl-card-head">
 						<?php echo ea2000_store_icon( $card['icon'] ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG คงที่ในโค้ด */ ?>
 						<div>
@@ -144,13 +144,14 @@ function ea2000_guide_store_cards( $prefix ) {
 							<?php endforeach; ?>
 						</ol>
 					<?php endif; ?>
-					<a class="keycap dl-btn" href="<?php echo esc_url( $card['url'] ); ?>" target="_blank" rel="noopener nofollow">
-						<span class="keycap-text"><?php echo esc_html__( 'ดาวน์โหลด', 'ea2000' ); ?></span>
-						<span class="dl-arrow mono keep-case" aria-hidden="true">&#8599;</span>
-					</a>
 					<?php if ( $card['note'] ) : ?>
 						<p class="dl-note"><?php echo esc_html( $card['note'] ); ?></p>
 					<?php endif; ?>
+					<a class="keycap dl-btn" href="<?php echo esc_url( $card['url'] ); ?>" target="_blank" rel="noopener nofollow"
+						aria-label="<?php echo esc_attr( sprintf( 'ดาวน์โหลดสำหรับ %s (เปิดแท็บใหม่)', $card['label'] ) ); ?>">
+						<span class="keycap-text"><?php echo esc_html__( 'ดาวน์โหลด', 'ea2000' ); ?></span>
+						<span class="dl-arrow mono keep-case" aria-hidden="true">&#8599;</span>
+					</a>
 				</li>
 			<?php endforeach; ?>
 		</ul>
