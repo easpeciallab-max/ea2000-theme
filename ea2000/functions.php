@@ -793,7 +793,7 @@ function ea2000_defaults() {
 			'inst_step5_desc'   => 'ในหน้าต่างตั้งค่า ที่แท็บ Common ให้ติ๊ก Allow Algo Trading และตรวจว่าปุ่ม Algo Trading ด้านบนของ MT5 เปิดอยู่เป็นสีเขียวด้วย ถ้าไม่เปิด EA จะติดบนกราฟได้แต่ไม่ส่งคำสั่ง',
 			'inst_step5_img'    => $install_assets . 'guide-05.webp',
 			'inst_step6_title'  => 'ตรวจค่าที่ตั้งไว้แล้วกด OK',
-			'inst_step6_desc'   => 'เข้าแท็บ Inputs ตรวจค่าตามที่ทีมงานแนะนำ หรือกด Load เพื่อโหลดไฟล์ Preset ที่ได้รับ แล้วกด OK เพื่อยืนยัน จากนั้นดูมุมขวาบนของกราฟว่ามีชื่อ EA2000 ขึ้นแล้ว',
+			'inst_step6_desc'   => 'เข้าแท็บ Inputs ตรวจค่าตามที่ทีมงานแนะนำ หรือกด Load เพื่อโหลดไฟล์ Preset ที่ได้รับ แล้วกด OK เพื่อยืนยัน จากนั้นดูมุมขวาบนของกราฟว่ามีชื่อ EA2000 ขึ้นแล้ว ภาพตัวอย่างนี้เบลอค่าพารามิเตอร์ไว้ ค่าจริงทีมงานส่งให้ตอนติดตั้ง',
 			'inst_step6_img'    => $install_assets . 'guide-06.webp',
 			'inst_step1_img_alt'  => 'เมนู File เลือก Open Data Folder ใน MetaTrader 5',
 			'inst_step1_img_note' => 'รูปที่ต้องใส่: เมนู File ที่กางอยู่และเห็นบรรทัด Open Data Folder',
@@ -805,7 +805,7 @@ function ea2000_defaults() {
 			'inst_step4_img_note' => 'รูปที่ต้องใส่: กราฟคู่เงินที่จะใช้ พร้อม Timeframe ที่ตั้งไว้',
 			'inst_step5_img_alt'  => 'ช่องติ๊ก Allow Algo Trading ในแท็บ Common ของหน้าต่างตั้งค่า EA',
 			'inst_step5_img_note' => 'รูปที่ต้องใส่: แท็บ Common ที่ติ๊ก Allow Algo Trading แล้ว',
-			'inst_step6_img_alt'  => 'แท็บ Inputs พร้อมปุ่ม Load และ OK ในหน้าต่างตั้งค่า EA',
+			'inst_step6_img_alt'  => 'แท็บ Inputs ของหน้าต่างตั้งค่า EA เห็นปุ่ม Load Save และ OK โดยเบลอค่าพารามิเตอร์ไว้',
 			'inst_step6_img_note' => 'รูปที่ต้องใส่: แท็บ Inputs ให้เห็นปุ่ม Load และ OK · ปิดบังค่าพารามิเตอร์ที่ไม่ต้องการเปิดเผยได้',
 			'install_note'      => 'ต้องการให้ทีมงานช่วยติดตั้งให้? ทักมาทาง LINE ได้เลย',
 
