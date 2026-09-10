@@ -275,6 +275,12 @@ function ea2000_media_slot( $key, $width = 1280, $height = 800, $caption = '' ) 
 	$alt  = (string) ea2000_mod( $key . '_img_alt' );
 	$note = trim( (string) ea2000_mod( $key . '_img_note' ) );
 
+	/* ถ้าเทมเพลตไม่ได้ส่งคำบรรยายมา ให้ใช้ค่าจาก setting ของช่องนั้นแทน
+	   ใช้บอกผู้อ่านว่าตัวเลขในภาพเป็นตัวอย่าง ไม่ใช่ผลจริง */
+	if ( '' === $caption ) {
+		$caption = trim( (string) ea2000_mod( $key . '_img_caption' ) );
+	}
+
 	if ( '' === $note ) {
 		$note = $alt;
 	}
