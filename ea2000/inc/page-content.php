@@ -258,3 +258,51 @@ function ea2000_page_content_defaults() {
 
 	return $d;
 }
+
+/**
+ * ช่องรูปแบบเดียวกับหน้าแรก (กรอบ HUD) ใช้ได้ทุกหน้า
+ *
+ * มีรูป = แสดงรูปในกรอบ · ไม่มีรูป = แสดงกรอบเส้นประพร้อมข้อความบอกว่าต้องใส่รูปอะไร
+ * ข้อความในช่องรอรูปตั้งใจให้ทุกคนเห็น เพื่อให้เจ้าของรู้ว่าต้องเตรียมภาพอะไรบ้าง
+ *
+ * @param string $key   prefix ของคีย์ (อ่าน {key}_img, {key}_img_alt, {key}_img_note)
+ * @param int    $width  ความกว้างจริงของภาพ
+ * @param int    $height ความสูงจริงของภาพ
+ * @param string $caption คำบรรยายใต้ภาพ (เว้นว่าง = ไม่แสดง)
+ */
+function ea2000_media_slot( $key, $width = 1280, $height = 800, $caption = '' ) {
+	$src  = trim( (string) ea2000_mod( $key . '_img' ) );
+	$alt  = (string) ea2000_mod( $key . '_img_alt' );
+	$note = trim( (string) ea2000_mod( $key . '_img_note' ) );
+
+	if ( '' === $note ) {
+		$note = $alt;
+	}
+	if ( '' === $src && '' === $note ) {
+		return;
+	}
+
+	$corners = '<span class="hud-c tl" aria-hidden="true"></span><span class="hud-c tr" aria-hidden="true"></span><span class="hud-c bl" aria-hidden="true"></span><span class="hud-c br" aria-hidden="true"></span>';
+
+	if ( '' !== $src ) {
+		printf(
+			'<figure class="hud-frame media-frame watch wipe">%s<img src="%s" alt="%s" loading="lazy" decoding="async" width="%s" height="%s">%s</figure>',
+			$corners, // phpcs:ignore WordPress.Security.EscapeOutput
+			esc_url( $src ),
+			esc_attr( $alt ),
+			esc_attr( (string) $width ),
+			esc_attr( (string) $height ),
+			'' !== $caption ? '<figcaption class="fig mono keep-case">' . esc_html( $caption ) . '</figcaption>' : ''
+		);
+		return;
+	}
+
+	printf(
+		'<figure class="hud-frame img-slot watch wipe" aria-label="%s">%s<span class="img-slot-icon">%s</span><span class="img-slot-note">%s</span>%s</figure>',
+		esc_attr( '' !== $alt ? $alt : $note ),
+		$corners, // phpcs:ignore WordPress.Security.EscapeOutput
+		ea2000_icon( 'image', 'icon' ), // phpcs:ignore WordPress.Security.EscapeOutput
+		esc_html( $note ),
+		'' !== $caption ? '<figcaption class="fig mono keep-case">' . esc_html( $caption ) . '</figcaption>' : ''
+	);
+}

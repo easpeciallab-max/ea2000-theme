@@ -871,6 +871,11 @@ function ea2000_defaults() {
 		$d = array_merge( $d, ea2000_page_content_defaults() );
 	}
 
+	/* หน้าคู่มือการใช้งาน (inc/guide-pages.php) */
+	if ( function_exists( 'ea2000_guide_defaults' ) ) {
+		$d = array_merge( $d, ea2000_guide_defaults() );
+	}
+
 	return $d;
 }
 
@@ -2358,3 +2363,4 @@ add_action( 'init', 'ea2000_disable_emoji', 20 );
 require get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/seo.php';
 require_once get_template_directory() . '/inc/page-content.php';
+require_once get_template_directory() . '/inc/guide-pages.php';

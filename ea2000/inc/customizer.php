@@ -575,6 +575,24 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 	);
 
+	/* หน้าคู่มือการใช้งาน 5 หน้า (inc/guide-pages.php) */
+	if ( function_exists( 'ea2000_guide_fields' ) ) {
+		$ea2000_guides = array(
+			'gvwin' => '23) หน้าคู่มือ · VPS บน Windows',
+			'gvand' => '24) หน้าคู่มือ · VPS บน Android',
+			'gvios' => '25) หน้าคู่มือ · VPS บน iPhone',
+			'gmt5'  => '26) หน้าคู่มือ · ติดตั้ง MT5 และล็อกอิน',
+			'gacct' => '27) หน้าคู่มือ · เปิดบัญชี MT5',
+		);
+		foreach ( $ea2000_guides as $ea2000_gp => $ea2000_gtitle ) {
+			$sections[ 'ea2000_guide_' . $ea2000_gp ] = array(
+				'title'       => $ea2000_gtitle,
+				'description' => 'เนื้อหาคู่มือทีละขั้น · ช่องรูปที่เว้นว่างจะแสดงกรอบบอกว่าต้องใส่ภาพอะไร',
+				'fields'      => ea2000_guide_fields( $ea2000_gp ),
+			);
+		}
+	}
+
 	/* เนื้อหาหัวข้อของหน้าย่อย (inc/page-content.php) */
 	if ( function_exists( 'ea2000_page_section_fields' ) ) {
 		$ea2000_docs = array(
