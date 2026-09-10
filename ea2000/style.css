@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 1.8.1
+Version: 1.8.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -7682,7 +7682,7 @@ a.lh-feature-frame:hover {
 	margin-top: 26px;
 }
 
-.dl-title {
+.dl-block .dl-title {
 	margin: 0 0 12px;
 	color: var(--muted);
 	font-size: 0.8rem;
@@ -7727,13 +7727,13 @@ a.lh-feature-frame:hover {
 	line-height: 1.3;
 }
 
-.dl-card-sub {
+.dl-card .dl-card-sub {
 	margin: 2px 0 0;
 	color: var(--muted);
 	font-size: 0.85rem;
 }
 
-.dl-steps {
+.dl-card .dl-steps {
 	margin: 0;
 	padding-left: 1.35em;
 	color: var(--text);
@@ -7741,7 +7741,7 @@ a.lh-feature-frame:hover {
 	line-height: 1.75;
 }
 
-.dl-steps li + li {
+.dl-card .dl-steps li + li {
 	margin-top: 2px;
 }
 
@@ -7764,8 +7764,9 @@ a.lh-feature-frame:hover {
 	line-height: 1;
 }
 
-/* ข้อความเตือนดันตัวเองลงล่าง ปุ่มของทุกการ์ดจึงอยู่แนวเดียวกันเสมอ */
-.dl-note {
+/* ข้อความเตือนดันตัวเองลงล่าง ปุ่มของทุกการ์ดจึงอยู่แนวเดียวกันเสมอ
+   ต้องเจาะจงกว่า .guide-step-text p ที่ตั้ง margin 0 ไว้ ไม่งั้น margin auto ไม่ทำงาน */
+.dl-card .dl-note {
 	margin: auto 0 4px;
 	padding-top: 12px;
 	border-top: 1px solid var(--border);
