@@ -573,7 +573,15 @@ add_filter( 'rank_math/frontend/robots', 'ea2000_placeholder_robots_plugin', 20 
  * ใช้ priority 20 บน init เพื่อให้ลงทะเบียนหลังปลั๊กอิน (ค่าของเราเป็นตัวสุดท้าย)
  */
 function ea2000_register_yoast_meta_rest() {
-	$keys = array( '_yoast_wpseo_title', '_yoast_wpseo_metadesc' );
+	$keys = array(
+		'_yoast_wpseo_title',
+		'_yoast_wpseo_metadesc',
+		'_yoast_wpseo_focuskw',
+		'_yoast_wpseo_opengraph-title',
+		'_yoast_wpseo_opengraph-description',
+		'_yoast_wpseo_twitter-title',
+		'_yoast_wpseo_twitter-description',
+	);
 	$args = array(
 		'type'              => 'string',
 		'single'            => true,
@@ -609,3 +617,157 @@ function ea2000_can_edit_seo_meta( $allowed, $meta_key, $object_id = 0 ) {
 
 	return current_user_can( 'edit_post', $object_id );
 }
+
+/**
+ * รายการตั้งค่า Yoast ระดับเว็บที่ยอมให้แก้ผ่าน REST ได้
+ *
+ * ทำไมต้องมี: Yoast 28 ไม่มี REST route สำหรับหน้า Search Appearance ทำให้ต้องนั่งคลิกใน
+ * wp-admin ทีละช่อง ซึ่งบน host นี้ปุ่มบันทึกมักไม่ทำงานเมื่อสั่งจากสคริปต์
+ * เปิดเฉพาะคีย์ที่ระบุไว้เท่านั้น และเฉพาะผู้ใช้ที่มีสิทธิ์ manage_options
+ *
+ * **ไม่มีคีย์กลุ่ม noindex / index ในรายการนี้โดยตั้งใจ** การเปิดปิดการเก็บข้อมูลของ
+ * เสิร์ชเอนจินเป็นการตัดสินใจของเจ้าของเว็บเท่านั้น endpoint นี้จึงแตะไม่ได้
+ *
+ * @return array<string,string> key => ชนิดค่า (text|bool)
+ */
+function ea2000_seo_option_whitelist() {
+	return array(
+		'separator'            => 'text',
+		'title-home-wpseo'     => 'text',
+		'metadesc-home-wpseo'  => 'text',
+		'title-page'           => 'text',
+		'metadesc-page'        => 'text',
+		'title-post'           => 'text',
+		'metadesc-post'        => 'text',
+		'title-author-wpseo'   => 'text',
+		'title-archive-wpseo'  => 'text',
+		'title-search-wpseo'   => 'text',
+		'title-404-wpseo'      => 'text',
+		'company_or_person'    => 'text',
+		'company_name'         => 'text',
+		'company_alternate_name' => 'text',
+		'website_name'         => 'text',
+		'alternate_website_name' => 'text',
+		'rssbefore'            => 'text',
+		'rssafter'             => 'text',
+		'breadcrumbs-home'     => 'text',
+		'breadcrumbs-sep'      => 'text',
+		'breadcrumbs-prefix'   => 'text',
+		'disable-author'       => 'bool',
+		'disable-date'         => 'bool',
+		'disable-post_format'  => 'bool',
+		'disable-attachment'   => 'bool',
+	);
+}
+
+/**
+ * สิทธิ์สำหรับ endpoint ตั้งค่า Yoast ระดับเว็บ
+ *
+ * @return bool
+ */
+function ea2000_seo_options_permission() {
+	return current_user_can( 'manage_options' );
+}
+
+/**
+ * อ่านค่าตั้งค่า Yoast ระดับเว็บเฉพาะคีย์ในรายการอนุญาต
+ *
+ * @return WP_REST_Response
+ */
+function ea2000_seo_options_get() {
+	$titles = get_option( 'wpseo_titles' );
+	$titles = is_array( $titles ) ? $titles : array();
+	$out    = array();
+
+	foreach ( ea2000_seo_option_whitelist() as $key => $type ) {
+		$out[ $key ] = isset( $titles[ $key ] ) ? $titles[ $key ] : null;
+	}
+
+	return new WP_REST_Response(
+		array(
+			'yoast_active' => defined( 'WPSEO_VERSION' ),
+			'options'      => $out,
+		),
+		200
+	);
+}
+
+/**
+ * เขียนค่าตั้งค่า Yoast ระดับเว็บ (เฉพาะคีย์ในรายการอนุญาต)
+ *
+ * ใช้ WPSEO_Options::set() เมื่อมี เพื่อให้ผ่าน validation ของ Yoast เอง
+ * ถ้าไม่มีคลาสนี้ค่อยเขียนลง option ตรง ๆ
+ *
+ * @param WP_REST_Request $request คำขอ
+ * @return WP_REST_Response|WP_Error
+ */
+function ea2000_seo_options_post( $request ) {
+	$body = $request->get_json_params();
+	if ( ! is_array( $body ) || empty( $body ) ) {
+		return new WP_Error( 'ea2000_empty', 'ต้องส่ง JSON object ที่มีคีย์อย่างน้อยหนึ่งตัว', array( 'status' => 400 ) );
+	}
+
+	$allowed  = ea2000_seo_option_whitelist();
+	$applied  = array();
+	$rejected = array();
+	$titles   = get_option( 'wpseo_titles' );
+	$titles   = is_array( $titles ) ? $titles : array();
+	$direct   = false;
+
+	foreach ( $body as $key => $value ) {
+		if ( ! isset( $allowed[ $key ] ) ) {
+			$rejected[] = $key;
+			continue;
+		}
+
+		if ( 'bool' === $allowed[ $key ] ) {
+			$clean = (bool) $value;
+		} else {
+			$clean = sanitize_text_field( wp_unslash( (string) $value ) );
+		}
+
+		if ( class_exists( 'WPSEO_Options' ) && method_exists( 'WPSEO_Options', 'set' ) ) {
+			WPSEO_Options::set( $key, $clean );
+		} else {
+			$titles[ $key ] = $clean;
+			$direct         = true;
+		}
+
+		$applied[ $key ] = $clean;
+	}
+
+	if ( $direct ) {
+		update_option( 'wpseo_titles', $titles );
+	}
+
+	return new WP_REST_Response(
+		array(
+			'applied'  => $applied,
+			'rejected' => $rejected,
+		),
+		200
+	);
+}
+
+/**
+ * ลงทะเบียน route ตั้งค่า Yoast ระดับเว็บ
+ */
+function ea2000_register_seo_options_route() {
+	register_rest_route(
+		'ea2000/v1',
+		'/seo-options',
+		array(
+			array(
+				'methods'             => 'GET',
+				'callback'            => 'ea2000_seo_options_get',
+				'permission_callback' => 'ea2000_seo_options_permission',
+			),
+			array(
+				'methods'             => 'POST',
+				'callback'            => 'ea2000_seo_options_post',
+				'permission_callback' => 'ea2000_seo_options_permission',
+			),
+		)
+	);
+}
+add_action( 'rest_api_init', 'ea2000_register_seo_options_route' );
