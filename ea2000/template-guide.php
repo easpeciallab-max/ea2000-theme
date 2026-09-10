@@ -67,18 +67,31 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 	<section class="section guide-steps-section" id="steps">
 		<div class="container">
 			<ol class="guide-steps">
-				<?php foreach ( $ea2000_steps as $ea2000_step ) : ?>
-					<li class="guide-step">
+				<?php
+				foreach ( $ea2000_steps as $ea2000_step ) :
+					$ea2000_key = $ea2000_p . '_step' . $ea2000_step[0];
+					/* ขั้นที่ไม่มีทั้งภาพและข้อความบอกให้ใส่ภาพ ให้กินความกว้างเต็มแถว ไม่ทิ้งช่องว่างเปล่า */
+					$ea2000_has_media = (bool) ea2000_mod( $ea2000_key . '_img' ) || (bool) ea2000_mod( $ea2000_key . '_img_note' );
+					$ea2000_has_cards = 1 === $ea2000_step[0] && function_exists( 'ea2000_guide_store_cards' );
+					?>
+					<li class="guide-step<?php echo $ea2000_has_media ? '' : ' guide-step--wide'; ?>">
 						<div class="guide-step-body">
 							<span class="guide-step-num mono keep-case"><?php echo esc_html( str_pad( (string) $ea2000_step[0], 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<div class="guide-step-text">
 								<h2><?php echo esc_html( $ea2000_step[1] ); ?></h2>
 								<p><?php echo esc_html( $ea2000_step[2] ); ?></p>
+								<?php
+								if ( $ea2000_has_cards ) {
+									ea2000_guide_store_cards( $ea2000_p );
+								}
+								?>
 							</div>
 						</div>
-						<div class="guide-step-media">
-							<?php ea2000_media_slot( $ea2000_p . '_step' . $ea2000_step[0], 1280, 720 ); ?>
-						</div>
+						<?php if ( $ea2000_has_media ) : ?>
+							<div class="guide-step-media">
+								<?php ea2000_media_slot( $ea2000_key, 1280, 720 ); ?>
+							</div>
+						<?php endif; ?>
 					</li>
 				<?php endforeach; ?>
 			</ol>

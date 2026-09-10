@@ -59,6 +59,106 @@ function ea2000_guide_step_count() {
 }
 
 /**
+ * จำนวนการ์ดดาวน์โหลดสูงสุดต่อหนึ่งหน้าคู่มือ
+ */
+function ea2000_guide_dl_count() {
+	return 3;
+}
+
+/**
+ * หน้าคู่มือที่มีการ์ดดาวน์โหลดแอป (หน้าอื่นไม่ต้องมีฟิลด์นี้ให้รก)
+ */
+function ea2000_guide_dl_prefixes() {
+	return array( 'gmt5', 'gvand', 'gvios' );
+}
+
+/**
+ * ไอคอนแพลตฟอร์มของการ์ดดาวน์โหลด
+ *
+ * วาดเป็น SVG ในโค้ดเพื่อไม่ต้องโหลดไฟล์เพิ่ม และคุมสีด้วย currentColor ได้
+ */
+function ea2000_store_icon( $slug ) {
+	$paths = array(
+		'apple'   => 'M16.4 12.9c0-2.3 1.9-3.4 2-3.5-1.1-1.6-2.8-1.8-3.4-1.8-1.5-.1-2.8.8-3.5.8s-1.9-.8-3.1-.8C6.7 7.6 5 8.8 4.1 10.6c-1.8 3.1-.5 7.8 1.3 10.3.9 1.3 1.9 2.6 3.2 2.6 1.3 0 1.8-.8 3.4-.8s2 .8 3.4.8 2.2-1.2 3.1-2.5c1-1.5 1.4-2.9 1.4-3-.1 0-2.6-1-2.5-4.1zM14.1 5.9c.7-.8 1.1-2 1-3.2-1 .1-2.3.7-3 1.6-.7.7-1.2 1.9-1 3.1 1.1.1 2.3-.6 3-1.5z',
+		'android' => 'M6.7 9.4v8.2c0 .8-.6 1.4-1.4 1.4s-1.4-.6-1.4-1.4V9.4c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4zm13.4 0v8.2c0 .8-.6 1.4-1.4 1.4s-1.4-.6-1.4-1.4V9.4c0-.8.6-1.4 1.4-1.4s1.4.6 1.4 1.4zM7.6 8.6h8.8v10.1c0 .8-.6 1.4-1.4 1.4h-.5v2.5c0 .8-.6 1.4-1.4 1.4s-1.4-.6-1.4-1.4v-2.5h-1.4v2.5c0 .8-.6 1.4-1.4 1.4S7.5 23.4 7.5 22.6v-2.5H9c-.8 0-1.4-.6-1.4-1.4V8.6zm1.2-1c.2-1.6 1.2-2.9 2.6-3.6l-.9-1.6c-.1-.2 0-.4.1-.5.2-.1.4 0 .5.1l.9 1.6c.5-.2 1.1-.3 1.7-.3s1.2.1 1.7.3l.9-1.6c.1-.2.3-.2.5-.1.2.1.2.3.1.5l-.9 1.6c1.4.7 2.4 2 2.6 3.6H8.8zm2.5-1.9c0 .3.2.5.5.5s.5-.2.5-.5-.2-.5-.5-.5-.5.2-.5.5zm4 0c0 .3.2.5.5.5s.5-.2.5-.5-.2-.5-.5-.5-.5.2-.5.5z',
+		'windows' => 'M3 5.4l8.3-1.1v8H3v-6.9zm0 13.2v-6.8h8.3v7.9L3 18.6zm9.3-14.4L23 2.7v9.6H12.3v-8.1zm10.7 9.4v9.7l-10.7-1.5v-8.2H23z',
+	);
+	$key = isset( $paths[ $slug ] ) ? $slug : 'windows';
+
+	return '<svg class="dl-icon" viewBox="0 0 26 26" width="26" height="26" aria-hidden="true" focusable="false"><path fill="currentColor" d="' . $paths[ $key ] . '"/></svg>';
+}
+
+/**
+ * การ์ดดาวน์โหลดแอปของหน้าคู่มือ
+ *
+ * แสดงเมื่อการ์ดใดมีทั้งชื่อและลิงก์ · ลิงก์ออกนอกเว็บเปิดแท็บใหม่และใส่ rel ให้ครบ
+ */
+function ea2000_guide_store_cards( $prefix ) {
+	$cards = array();
+	for ( $i = 1; $i <= ea2000_guide_dl_count(); $i++ ) {
+		$label = ea2000_mod( $prefix . '_dl' . $i . '_label' );
+		$url   = ea2000_mod( $prefix . '_dl' . $i . '_url' );
+		if ( ! $label || ! $url || '#' === $url ) {
+			continue;
+		}
+		$cards[] = array(
+			'label' => $label,
+			'sub'   => ea2000_mod( $prefix . '_dl' . $i . '_sub' ),
+			'steps' => ea2000_lines( ea2000_mod( $prefix . '_dl' . $i . '_steps' ) ),
+			'url'   => $url,
+			'icon'  => ea2000_mod( $prefix . '_dl' . $i . '_icon' ),
+			'note'  => ea2000_mod( $prefix . '_dl' . $i . '_note' ),
+		);
+	}
+
+	if ( empty( $cards ) ) {
+		return;
+	}
+
+	$title = ea2000_mod( $prefix . '_dl_title' );
+	?>
+	<div class="dl-block">
+		<?php if ( $title ) : ?>
+			<p class="dl-title mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $title ); ?></p>
+		<?php endif; ?>
+		<ul class="dl-cards" data-count="<?php echo count( $cards ); ?>">
+			<?php foreach ( $cards as $card ) : ?>
+				<li class="dl-card hud-frame">
+					<span class="hud-c hud-tl" aria-hidden="true"></span>
+					<span class="hud-c hud-tr" aria-hidden="true"></span>
+					<span class="hud-c hud-bl" aria-hidden="true"></span>
+					<span class="hud-c hud-br" aria-hidden="true"></span>
+					<div class="dl-card-head">
+						<?php echo ea2000_store_icon( $card['icon'] ); /* phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- SVG คงที่ในโค้ด */ ?>
+						<div>
+							<h3 class="dl-card-title"><?php echo esc_html( $card['label'] ); ?></h3>
+							<?php if ( $card['sub'] ) : ?>
+								<p class="dl-card-sub"><?php echo esc_html( $card['sub'] ); ?></p>
+							<?php endif; ?>
+						</div>
+					</div>
+					<?php if ( ! empty( $card['steps'] ) ) : ?>
+						<ol class="dl-steps">
+							<?php foreach ( $card['steps'] as $line ) : ?>
+								<li><?php echo esc_html( $line ); ?></li>
+							<?php endforeach; ?>
+						</ol>
+					<?php endif; ?>
+					<a class="keycap dl-btn" href="<?php echo esc_url( $card['url'] ); ?>" target="_blank" rel="noopener nofollow">
+						<span class="keycap-text"><?php echo esc_html__( 'ดาวน์โหลด', 'ea2000' ); ?></span>
+						<span class="dl-arrow mono keep-case" aria-hidden="true">&#8599;</span>
+					</a>
+					<?php if ( $card['note'] ) : ?>
+						<p class="dl-note"><?php echo esc_html( $card['note'] ); ?></p>
+					<?php endif; ?>
+				</li>
+			<?php endforeach; ?>
+		</ul>
+	</div>
+	<?php
+}
+
+/**
  * ค่าเริ่มต้นของหน้าคู่มือทั้งหมด
  *
  * โครงของแต่ละหน้า: kicker, sub, intro, quick, ขั้นตอน 6 ขั้น, กล่องเช็กก่อนเริ่ม, หัวข้อเสริม 4 หัวข้อ
@@ -243,11 +343,38 @@ function ea2000_guide_defaults() {
 		'sub'    => 'ติดตั้ง MetaTrader 5 แล้วล็อกอินเข้าบัญชี Zaurix ทั้งบนมือถือและบนคอมพิวเตอร์',
 		'intro'  => 'ก่อนจะติดตั้ง EA ได้ ต้องมี MetaTrader 5 ที่ล็อกอินเข้าบัญชีเรียบร้อยก่อน หน้านี้ไล่ตั้งแต่ติดตั้งแอปจนถึงตรวจว่าล็อกอินสำเร็จจริง ภาพประกอบเป็นหน้าจอแอปบนมือถือ ส่วนบนคอมพิวเตอร์ลำดับเมนูต่างกันเล็กน้อยแต่ค่าที่ต้องกรอกเหมือนกันทุกช่อง',
 		'quick'  => 'ติดตั้งแอป MetaTrader 5 เปิดแอปแล้วเพิ่มบัญชีใหม่ พิมพ์ค้นหาคำว่า zaurix เลือก Zaurix Ltd. ตรวจว่าเซิร์ฟเวอร์เป็น Zaurix-Server แล้วกรอก Login กับ Password ที่ได้รับ',
+		'dl_title' => 'เลือกเครื่องที่จะใช้',
+		'dl'     => array(
+			array(
+				'iPhone / iPad',
+				'ติดตั้งผ่าน App Store',
+				"เปิดแอป App Store\nพิมพ์ค้นหาว่า MetaTrader 5 หรือ MT5\nเลือกแอปที่ผู้พัฒนาเป็น MetaQuotes Ltd.\nกดรับหรือ Get แล้วรอติดตั้งให้เสร็จ\nกดเปิดแอป แล้วไปทำขั้นที่ 2 ต่อ",
+				'https://apps.apple.com/us/app/metatrader-5/id413251709',
+				'apple',
+				'เช็กชื่อผู้พัฒนาให้เป็น MetaQuotes Ltd. ก่อนกดติดตั้ง เพราะมีแอปชื่อคล้ายกันอยู่หลายตัว',
+			),
+			array(
+				'Android',
+				'ติดตั้งผ่าน Google Play',
+				"เปิดแอป Google Play Store\nพิมพ์ค้นหาว่า MetaTrader 5 หรือ MT5\nเลือกแอปที่ผู้พัฒนาเป็น MetaQuotes Ltd.\nกดติดตั้งหรือ Install แล้วรอจนเสร็จ\nกดเปิดแอป แล้วไปทำขั้นที่ 2 ต่อ",
+				'https://play.google.com/store/apps/details?id=net.metaquotes.metatrader5',
+				'android',
+				'ถ้าค้นหาไม่เจอ ให้พิมพ์เต็มว่า MetaTrader 5 แล้วตรวจว่าบัญชี Google Play ใช้งานได้ปกติ',
+			),
+			array(
+				'คอมพิวเตอร์ (Windows)',
+				'เครื่องที่ใช้รัน EA2000 ได้',
+				"เปิดหน้าดาวน์โหลดของ MetaQuotes\nกดดาวน์โหลดตัวติดตั้งสำหรับ Windows\nติดตั้งแล้วเปิดโปรแกรมขึ้นมา\nไปทำขั้นที่ 2 ต่อในโปรแกรมนี้",
+				'https://www.metatrader5.com/en/download',
+				'windows',
+				'ถ้าจะให้ EA2000 ทำงาน ต้องใช้เครื่องนี้หรือ VPS เท่านั้น แอปบนมือถือรัน EA ไม่ได้',
+			),
+		),
 		'steps'  => array(
 			array(
-				'ติดตั้งแอป MetaTrader 5 ให้ถูกตัว',
-				'บนมือถือให้เข้า App Store หรือ Google Play แล้วค้นหาคำว่า MetaTrader 5 เลือกแอปที่ผู้พัฒนาเป็น MetaQuotes Ltd. เท่านั้น เพราะมีแอปชื่อคล้ายกันอยู่หลายตัว ส่วนบนคอมพิวเตอร์ให้โหลดตัวติดตั้งจากหน้าเว็บของโบรกเกอร์หรือจาก metatrader5.com แล้วติดตั้งตามปกติ',
-				'หน้าดาวน์โหลด MetaTrader 5 บนเว็บของ MetaQuotes',
+				'ติดตั้ง MetaTrader 5 ให้ถูกตัว',
+				'เลือกเครื่องที่จะใช้จากการ์ดด้านล่าง แล้วทำตามขั้นตอนในการ์ดนั้น ข้อสำคัญข้อเดียวคือต้องเป็นแอปหรือโปรแกรมที่ผู้พัฒนาเป็น MetaQuotes Ltd. เพราะมีของเลียนแบบชื่อคล้ายกันอยู่หลายตัว',
+				'',
 			),
 			array(
 				'เปิดแอปแล้วเข้าเมนูเพิ่มบัญชี',
@@ -272,7 +399,7 @@ function ea2000_guide_defaults() {
 			array(
 				'กดลงชื่อเข้าใช้แล้วเช็กว่าสำเร็จ',
 				'กดปุ่มลงชื่อเข้าใช้แล้วรอสักครู่ ถ้าเข้าได้จริงจะเห็นราคาขยับในแอปและเห็นบัญชีอยู่ในรายการ บนคอมพิวเตอร์ให้ดูมุมขวาล่างว่าขึ้นตัวเลขความเร็วการเชื่อมต่อเป็นกิโลบิต แล้วเปิดแท็บ Trade เพื่อดูยอดเงิน ถ้าขึ้นว่า Invalid account หรือ No connection ให้กลับไปตรวจเซิร์ฟเวอร์ Login และรหัสอีกครั้ง',
-				'หน้าจอแอป MT5 หลังล็อกอินสำเร็จ เห็นบัญชีในรายการและราคาที่กำลังวิ่ง',
+				'',
 			),
 		),
 		'check'  => "ดาวน์โหลดแอปชื่อ MetaTrader 5 ที่ผู้พัฒนาเป็น MetaQuotes Ltd. เท่านั้น\nช่องเซิร์ฟเวอร์ต้องเป็น Zaurix-Server ไม่ใช่เซิร์ฟเวอร์ทดลองของ MetaQuotes\nLogin คือหมายเลขบัญชี MT5 ที่เป็นตัวเลข ไม่ใช่อีเมลที่ใช้สมัครเว็บ\nใช้รหัสสำหรับเทรด ไม่ใช่รหัสสำหรับดูอย่างเดียว เพราะ EA จะส่งคำสั่งไม่ได้\nคัดลอกรหัสมาแล้วตรวจว่าไม่มีช่องว่างติดมาท้ายข้อความ\nจะรัน EA2000 ต้องใช้ MT5 บนคอมพิวเตอร์หรือ VPS แอปบนมือถือรัน EA ไม่ได้",
@@ -382,6 +509,19 @@ function ea2000_guide_defaults() {
 			$flat[ $p . '_sec' . $s . '_title' ] = $sec[0];
 			$flat[ $p . '_sec' . $s . '_text' ]  = $sec[1];
 		}
+
+		if ( in_array( $p, ea2000_guide_dl_prefixes(), true ) ) {
+			$flat[ $p . '_dl_title' ] = isset( $data['dl_title'] ) ? $data['dl_title'] : '';
+			for ( $d = 1; $d <= ea2000_guide_dl_count(); $d++ ) {
+				$card = isset( $data['dl'][ $d - 1 ] ) ? $data['dl'][ $d - 1 ] : array();
+				$flat[ $p . '_dl' . $d . '_label' ] = isset( $card[0] ) ? $card[0] : '';
+				$flat[ $p . '_dl' . $d . '_sub' ]   = isset( $card[1] ) ? $card[1] : '';
+				$flat[ $p . '_dl' . $d . '_steps' ] = isset( $card[2] ) ? $card[2] : '';
+				$flat[ $p . '_dl' . $d . '_url' ]   = isset( $card[3] ) ? $card[3] : '';
+				$flat[ $p . '_dl' . $d . '_icon' ]  = isset( $card[4] ) ? $card[4] : 'windows';
+				$flat[ $p . '_dl' . $d . '_note' ]  = isset( $card[5] ) ? $card[5] : '';
+			}
+		}
 	}
 
 	return $flat;
@@ -409,6 +549,18 @@ function ea2000_guide_fields( $prefix ) {
 		$fields[ $prefix . '_step' . $i . '_img' ]      = array( 'ขั้นที่ ' . $i . ' · ภาพประกอบ', 'image' );
 		$fields[ $prefix . '_step' . $i . '_img_alt' ]  = array( 'ขั้นที่ ' . $i . ' · ข้อความแทนภาพ (Alt)', 'text' );
 		$fields[ $prefix . '_step' . $i . '_img_note' ] = array( 'ขั้นที่ ' . $i . ' · ข้อความในช่องรอรูป', 'text' );
+	}
+
+	if ( in_array( $prefix, ea2000_guide_dl_prefixes(), true ) ) {
+		$fields[ $prefix . '_dl_title' ] = array( 'ป้ายเหนือการ์ดดาวน์โหลด', 'text' );
+		for ( $d = 1; $d <= ea2000_guide_dl_count(); $d++ ) {
+			$fields[ $prefix . '_dl' . $d . '_label' ] = array( 'การ์ดดาวน์โหลดที่ ' . $d . ' · ชื่อแพลตฟอร์ม (เว้นว่าง = ซ่อนการ์ด)', 'text' );
+			$fields[ $prefix . '_dl' . $d . '_sub' ]   = array( 'การ์ดที่ ' . $d . ' · บรรทัดรอง', 'text' );
+			$fields[ $prefix . '_dl' . $d . '_steps' ] = array( 'การ์ดที่ ' . $d . ' · ขั้นตอน (บรรทัดละ 1 ข้อ)', 'textarea' );
+			$fields[ $prefix . '_dl' . $d . '_url' ]   = array( 'การ์ดที่ ' . $d . ' · ลิงก์ดาวน์โหลด (เว้นว่าง = ซ่อนการ์ด)', 'url' );
+			$fields[ $prefix . '_dl' . $d . '_icon' ]  = array( 'การ์ดที่ ' . $d . ' · ไอคอน (apple, android หรือ windows)', 'text' );
+			$fields[ $prefix . '_dl' . $d . '_note' ]  = array( 'การ์ดที่ ' . $d . ' · ข้อความเตือนใต้ปุ่ม', 'text' );
+		}
 	}
 
 	$fields[ $prefix . '_check_title' ] = array( 'หัวข้อกล่องเช็กลิสต์', 'text' );
