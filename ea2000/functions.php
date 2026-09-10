@@ -795,6 +795,18 @@ function ea2000_defaults() {
 			'inst_step6_title'  => 'ปรับความเสี่ยงให้เหมาะกับตัวเอง',
 			'inst_step6_desc'   => 'ทบทวนการตั้งค่าความเสี่ยงเป็นระยะ ใช้เงินเย็น และปรับ Lot ให้สอดคล้องกับทุน เพื่อให้ Drawdown อยู่ในระดับที่รับได้',
 			'inst_step6_img'    => $install_assets . 'guide-06.webp',
+			'inst_step1_img_alt'  => 'หน้าดาวน์โหลด MetaTrader 5 จากเว็บไซต์ของโบรกเกอร์',
+			'inst_step1_img_note' => 'รูปที่ต้องใส่: หน้าดาวน์โหลด MT5 จากเว็บโบรกเกอร์ หรือหน้าจอ VPS ที่ติดตั้ง MT5 แล้ว',
+			'inst_step2_img_alt'  => 'เมนู File เลือก Open Data Folder และโฟลเดอร์ MQL5 Experts ที่มีไฟล์ EA2000',
+			'inst_step2_img_note' => 'รูปที่ต้องใส่: โฟลเดอร์ MQL5 > Experts ที่มีไฟล์ EA2000 วางอยู่',
+			'inst_step3_img_alt'  => 'ลาก EA2000 จากหน้าต่าง Navigator ขึ้นกราฟใน MT5',
+			'inst_step3_img_note' => 'รูปที่ต้องใส่: หน้าต่าง Navigator ที่เห็นชื่อ EA2000 และกราฟที่จะลากไปวาง',
+			'inst_step4_img_alt'  => 'ปุ่ม Algo Trading บนแถบเครื่องมือของ MT5 ที่เปิดเป็นสีเขียว',
+			'inst_step4_img_note' => 'รูปที่ต้องใส่: ปุ่ม Algo Trading ที่เป็นสีเขียว และมุมขวาบนของกราฟที่มีชื่อ EA2000',
+			'inst_step5_img_alt'  => 'แผง Dashboard ของ EA2000 บนกราฟ พร้อมแท็บ Experts ด้านล่าง',
+			'inst_step5_img_note' => 'รูปที่ต้องใส่: แผง Dashboard บนกราฟและแท็บ Experts ที่ไม่มีข้อความผิดพลาด',
+			'inst_step6_img_alt'  => 'หน้าต่างตั้งค่าขนาดออเดอร์และระดับความเสี่ยงของ EA2000',
+			'inst_step6_img_note' => 'รูปที่ต้องใส่: หน้าต่างตั้งค่าความเสี่ยง ปิดบังค่าที่ไม่ต้องการเปิดเผยได้',
 			'install_note'      => 'ต้องการให้ทีมงานช่วยติดตั้งให้? ทักมาทาง LINE ได้เลย',
 
 			/* หน้า Pricing (เพิ่มเติม) */
@@ -1170,13 +1182,9 @@ function ea2000_language_switcher() {
 function ea2000_page_hero( $kicker, $title, $subtitle = '' ) {
 	?>
 	<section class="phero">
-		<div class="phero-bg" aria-hidden="true">
-			<span class="ember ember-a"></span>
-			<span class="ember ember-b"></span>
-		</div>
-		<div class="container phero-inner reveal">
+		<div class="container phero-inner">
 			<?php if ( $kicker ) : ?>
-				<span class="kicker"><?php echo esc_html( $kicker ); ?></span>
+				<p class="phero-kicker mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $kicker ); ?></p>
 			<?php endif; ?>
 			<h1 class="phero-title"><?php echo esc_html( $title ); ?></h1>
 			<?php if ( $subtitle ) : ?>
@@ -1197,18 +1205,23 @@ function ea2000_line_cta( $title = '', $sub = '' ) {
 
 	$title = $title ? $title : 'มีคำถาม? ทักมาคุยกับเราได้เลย';
 	$sub   = $sub ? $sub : 'สอบถามรายละเอียด การติดตั้ง และความเหมาะสมกับทุนของคุณได้ทาง LINE';
+
+	$ea2000_cta_label = trim( (string) ea2000_mod( 'footer_console_label' ) );
+	$ea2000_cta_btn   = trim( (string) ea2000_mod( 'footer_line_text' ) );
 	?>
-	<section class="section cta cta--slim" id="cta">
-		<div class="cta-bg" aria-hidden="true"><span class="ember ember-c"></span></div>
-		<div class="container container-narrow">
-			<div class="cta-inner reveal">
-				<h2><?php echo esc_html( $title ); ?></h2>
-				<p><?php echo esc_html( $sub ); ?></p>
-				<a class="btn btn-line btn-lg" href="<?php echo esc_url( ea2000_mod( 'line_url' ) ); ?>" target="_blank" rel="noopener">
-					<?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-					ทัก LINE เพื่อสอบถาม
-				</a>
+	<section class="cta-console" id="cta">
+		<div class="container cta-console-inner">
+			<div class="cta-console-copy">
+				<?php if ( '' !== $ea2000_cta_label ) : ?>
+					<p class="console-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $ea2000_cta_label ); ?></p>
+				<?php endif; ?>
+				<h2 class="cta-console-title"><?php echo esc_html( $title ); ?></h2>
+				<p class="cta-console-sub"><?php echo esc_html( $sub ); ?></p>
 			</div>
+			<a class="keycap" href="<?php echo esc_url( ea2000_mod( 'line_url' ) ); ?>" target="_blank" rel="noopener" data-line-pos="page-cta">
+				<?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+				<span class="keycap-text"><?php echo esc_html( '' !== $ea2000_cta_btn ? $ea2000_cta_btn : 'ทัก LINE เพื่อสอบถาม' ); ?></span>
+			</a>
 		</div>
 	</section>
 	<?php

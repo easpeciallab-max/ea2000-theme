@@ -56,32 +56,8 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 
 		<?php
 		$ea2000_img_cap = ea2000_is_placeholder( ea2000_mod( 'forward_img_caption' ) ) ? '' : ea2000_mod( 'forward_img_caption' );
-		if ( ea2000_mod( 'forward_img' ) ) :
-			?>
-			<figure class="perf-figure reveal">
-				<img src="<?php echo esc_url( ea2000_mod( 'forward_img' ) ); ?>" alt="<?php echo esc_attr( $ea2000_img_cap ); ?>" loading="lazy">
-				<?php if ( $ea2000_img_cap ) : ?>
-					<figcaption><?php echo esc_html( $ea2000_img_cap ); ?></figcaption>
-				<?php endif; ?>
-			</figure>
-		<?php else : ?>
-			<figure class="perf-figure shot-placeholder reveal">
-				<div class="shot-empty">
-					<img src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="" loading="lazy" width="110" height="110">
-					<span class="chip">ภาพประกอบ</span>
-					<?php if ( current_user_can( 'customize' ) ) : ?><p>อัปโหลดภาพผล Forward Test ได้ที่ ปรับแต่ง : หน้า Forward Test (ข้อความนี้เห็นเฉพาะแอดมิน)</p><?php endif; ?>
-				</div>
-			</figure>
-		<?php endif; ?>
-
-		<?php if ( $ea2000_has_link ) : ?>
-			<p class="reveal" style="text-align:center;">
-				<a class="btn btn-ghost" href="<?php echo esc_url( ea2000_link_url( $ea2000_link_url ) ); ?>" target="_blank" rel="noopener">
-					<?php echo esc_html( $ea2000_link_label ); ?>
-					<?php echo ea2000_icon( 'arrow', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
-				</a>
-			</p>
-		<?php endif; ?>
+		ea2000_media_slot( 'forward', 1280, 720, $ea2000_img_cap );
+		?>
 
 		<?php if ( ! ea2000_is_placeholder( ea2000_mod( 'forward_note' ) ) ) : ?>
 			<p class="sec-note reveal"><?php echo esc_html( ea2000_mod( 'forward_note' ) ); ?></p>

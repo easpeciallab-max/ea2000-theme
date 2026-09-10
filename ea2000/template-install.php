@@ -30,42 +30,39 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 		$ea2000_reqs = ea2000_lines( ea2000_mod( 'install_req' ) );
 		if ( ! empty( $ea2000_reqs ) ) :
 			?>
-			<div class="req-box reveal">
-				<h3><?php echo ea2000_icon( 'check' ); // phpcs:ignore WordPress.Security.EscapeOutput ?> สิ่งที่ต้องเตรียม</h3>
-				<ul>
+			<aside class="guide-check">
+				<h2 class="guide-check-title">สิ่งที่ต้องเตรียม</h2>
+				<ul class="mono-marks">
 					<?php foreach ( $ea2000_reqs as $ea2000_req ) : ?>
-						<li><?php echo ea2000_icon( 'check', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo esc_html( $ea2000_req ); ?></span></li>
+						<li><span class="mark mono keep-case" aria-hidden="true">[x]</span><span><?php echo esc_html( $ea2000_req ); ?></span></li>
 					<?php endforeach; ?>
 				</ul>
-			</div>
+			</aside>
 		<?php endif; ?>
 
 	</div>
 
 	<div class="container">
-		<ol class="guide">
+		<ol class="guide-steps">
 			<?php
 			for ( $i = 1; $i <= 6; $i++ ) :
 				$g_title = ea2000_mod( 'inst_step' . $i . '_title' );
 				$g_desc  = ea2000_mod( 'inst_step' . $i . '_desc' );
-				$g_img   = ea2000_mod( 'inst_step' . $i . '_img' );
 				if ( ! $g_title && ! $g_desc ) {
 					continue;
 				}
 				?>
-				<li class="guide-step reveal">
-					<div class="guide-body">
-						<span class="guide-num"><?php echo esc_html( str_pad( (string) $i, 2, '0', STR_PAD_LEFT ) ); ?></span>
-						<div class="guide-text">
-							<h3><?php echo esc_html( $g_title ); ?></h3>
+				<li class="guide-step">
+					<div class="guide-step-body">
+						<span class="guide-step-num mono keep-case"><?php echo esc_html( str_pad( (string) $i, 2, '0', STR_PAD_LEFT ) ); ?></span>
+						<div class="guide-step-text">
+							<h2><?php echo esc_html( $g_title ); ?></h2>
 							<p><?php echo esc_html( $g_desc ); ?></p>
 						</div>
 					</div>
-					<?php if ( $g_img ) : ?>
-						<figure class="guide-img">
-							<img src="<?php echo esc_url( $g_img ); ?>" alt="<?php echo esc_attr( $g_title ); ?>" loading="lazy">
-						</figure>
-					<?php endif; ?>
+					<div class="guide-step-media">
+						<?php ea2000_media_slot( 'inst_step' . $i, 1280, 720 ); ?>
+					</div>
 				</li>
 			<?php endfor; ?>
 		</ol>

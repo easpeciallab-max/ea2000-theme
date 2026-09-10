@@ -52,23 +52,8 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 
 		<?php
 		$ea2000_img_cap = ea2000_is_placeholder( ea2000_mod( 'backtest_img_caption' ) ) ? '' : ea2000_mod( 'backtest_img_caption' );
-		if ( ea2000_mod( 'backtest_img' ) ) :
-			?>
-			<figure class="perf-figure reveal">
-				<img src="<?php echo esc_url( ea2000_mod( 'backtest_img' ) ); ?>" alt="<?php echo esc_attr( $ea2000_img_cap ); ?>" loading="lazy">
-				<?php if ( $ea2000_img_cap ) : ?>
-					<figcaption><?php echo esc_html( $ea2000_img_cap ); ?></figcaption>
-				<?php endif; ?>
-			</figure>
-		<?php else : ?>
-			<figure class="perf-figure shot-placeholder reveal">
-				<div class="shot-empty">
-					<img src="<?php echo esc_url( ea2000_logo_url() ); ?>" alt="" loading="lazy" width="110" height="110">
-					<span class="chip">ภาพประกอบ</span>
-					<?php if ( current_user_can( 'customize' ) ) : ?><p>อัปโหลดภาพกราฟผล Backtest ได้ที่ ปรับแต่ง : หน้า Backtest (ข้อความนี้เห็นเฉพาะแอดมิน)</p><?php endif; ?>
-				</div>
-			</figure>
-		<?php endif; ?>
+		ea2000_media_slot( 'backtest', 1280, 720, $ea2000_img_cap );
+		?>
 
 		<?php if ( ! ea2000_is_placeholder( ea2000_mod( 'backtest_note' ) ) ) : ?>
 			<p class="sec-note reveal"><?php echo esc_html( ea2000_mod( 'backtest_note' ) ); ?></p>

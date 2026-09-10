@@ -99,9 +99,47 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 
 			<?php else : ?>
 
-				<p class="no-posts">
-					<?php echo is_search() ? 'ไม่พบบทความที่ตรงกับคำค้นหา' : 'ยังไม่มีบทความในขณะนี้'; ?>
-				</p>
+				<?php if ( is_search() ) : ?>
+					<p class="no-posts">ไม่พบบทความที่ตรงกับคำค้นหา ลองใช้คำที่สั้นลง หรือดูคู่มือด้านล่าง</p>
+				<?php else : ?>
+					<p class="no-posts">กำลังเตรียมบทความอยู่ ระหว่างนี้อ่านคู่มือที่เขียนไว้แล้วได้เลย</p>
+				<?php endif; ?>
+
+				<?php
+				$ea2000_hub = array();
+				foreach ( array(
+					'how-to-install'   => 'ติดตั้ง EA2000 บน MT5 ทีละขั้น',
+					'backtest'         => 'ทดสอบย้อนหลังและอ่านผลให้เป็น',
+					'forward-test'     => 'Forward Test ต่างจาก Backtest อย่างไร',
+					'open-mt5-account' => 'เปิดบัญชีที่ใช้กับ MT5 ได้',
+					'mt5-login'        => 'ติดตั้ง MT5 และล็อกอินเข้าบัญชี',
+					'vps-windows'      => 'ใช้ VPS ให้ระบบทำงานต่อเนื่อง',
+					'risk-disclosure'  => 'ความเสี่ยงที่ต้องรู้ก่อนเริ่ม',
+				) as $ea2000_hub_slug => $ea2000_hub_desc ) {
+					$ea2000_hub_page = get_page_by_path( $ea2000_hub_slug );
+					if ( $ea2000_hub_page && 'publish' === $ea2000_hub_page->post_status ) {
+						$ea2000_hub[] = array( get_the_title( $ea2000_hub_page ), get_permalink( $ea2000_hub_page ), $ea2000_hub_desc );
+					}
+				}
+				?>
+
+				<?php if ( ! empty( $ea2000_hub ) ) : ?>
+					<h2 class="guide-more-title">คู่มือที่อ่านได้ตอนนี้</h2>
+					<ul class="guide-more">
+						<?php foreach ( $ea2000_hub as $ea2000_idx => $ea2000_row ) : ?>
+							<li class="guide-more-item">
+								<a href="<?php echo esc_url( $ea2000_row[1] ); ?>">
+									<span class="guide-more-idx mono keep-case"><?php echo esc_html( str_pad( (string) ( $ea2000_idx + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
+									<span class="guide-more-body">
+										<span class="guide-more-name"><?php echo esc_html( $ea2000_row[0] ); ?></span>
+										<span class="guide-more-sub"><?php echo esc_html( $ea2000_row[2] ); ?></span>
+									</span>
+									<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+								</a>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php endif; ?>
 
 			<?php endif; ?>
 
