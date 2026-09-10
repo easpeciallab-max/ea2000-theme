@@ -748,6 +748,8 @@ function ea2000_defaults() {
 			'bt_stat8_value'      => 'ระบุจำนวน',
 			'backtest_img'        => '',
 			'backtest_img_caption'=> 'กราฟ Equity / รายงานผล Backtest จาก MT5',
+			'backtest_img_alt'    => 'รายงานผล Backtest จาก Strategy Tester ของ MetaTrader 5 พร้อมกราฟ Balance และ Equity',
+			'backtest_img_note'   => '',
 			'backtest_note'       => 'หมายเหตุ: ผลขึ้นอยู่กับคุณภาพข้อมูลราคา Spread, Commission และ Slippage ที่ใช้ในการทดสอบ',
 			'backtest_disclaimer' => 'ผลการทดสอบย้อนหลังใช้เพื่อการศึกษาเท่านั้น ไม่ได้รับประกันผลลัพธ์ในอนาคต และไม่ใช่คำแนะนำในการลงทุน',
 
@@ -768,6 +770,8 @@ function ea2000_defaults() {
 			'fw_stat6_value'     => 'ระบุ %',
 			'forward_img'        => '',
 			'forward_img_caption'=> 'ภาพผลการทดสอบจากบัญชี MT5 หรือบริการติดตามผลที่ตรวจสอบได้',
+			'forward_img_alt'    => 'ผลการทดสอบบนบัญชีจริงหรือเดโม แสดงกราฟการเติบโตของทุนและช่วงขาดทุนสูงสุด',
+			'forward_img_note'   => '',
 			'forward_link_label' => '',
 			'forward_link_url'   => '',
 			'forward_note'       => 'หมายเหตุ: ผลในช่วงเวลาหนึ่งไม่ได้บ่งบอกถึงผลในอีกช่วงเวลาหนึ่ง',
