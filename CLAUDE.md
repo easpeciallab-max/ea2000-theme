@@ -481,3 +481,42 @@
 - **ตรวจก่อนเชื่อบันทึกของตัวเอง**: ข้อ 30 เขียนว่าติดคำบรรยายกำกับแล้ว แต่ไม่เคยเปิดหน้าเว็บดูว่าขึ้นจริง
 - ภาพที่ AI สร้างเลียนหน้าจอโปรแกรมจริง มักผสมรุ่นโปรแกรมและใส่ค่าที่ดูเหมือนคำแนะนำ ก่อนใช้ประกอบบทสอน ให้เทียบกับขั้นตอนบนหน้าเดียวกันทีละช่อง
 - ถ่ายภาพหน้าเว็บจริงแบบเวลาจริงได้ด้วย Chrome DevTools Protocol ผ่าน WebSocket ในตัว Node 25 (scratchpad `tests/cdp-shot.js`) · ต้องตั้ง `scrollBehavior = auto` ก่อน `scrollTo` ไม่งั้นหน้าไม่เลื่อน และภาพ lazy ไม่โหลด · ถ้า `--user-data-dir` เดิมถูกล็อก Chrome จะไม่เขียนภาพและไม่แจ้ง error ให้ใช้โฟลเดอร์ใหม่
+
+## 35) ตรวจการตั้งค่า Yoast ทั้งหมด และแก้แล้ว (11 ก.ย. 2026 · deploy แล้ว v2.7.0)
+### วิธีตรวจ (ใช้ซ้ำได้)
+- `GET ea2000/v1/seo-options?dump=1` คืนค่า Yoast ทุกกลุ่ม (`wpseo`, `wpseo_titles`, `wpseo_social`, `wpseo_llmstxt`) แบบอ่านอย่างเดียว ค่าที่เป็นรหัสหรือโทเค็นจะแสดงแค่ว่ามีค่าหรือไม่
+- scratchpad `yoast-audit/collect.js` เก็บ head จริงของทุกหน้า sitemap robots.txt และ URL พิเศษ 35 แบบ · `verify.js` ตรวจผลหลังแก้ 39 ข้อ
+- workflow 9 agent (4 ด้าน + ผู้หักล้างด้านละคน + สรุป) ได้ 23 รายการที่ควรแก้ ผ่านแล้ว 47 รายการ ตีตก 11 รายการ
+
+### แก้ในธีม (`inc/seo.php` ข้อ 6 และ `functions.php`)
+- **oEmbed เคยบอกชื่อบัญชีผู้ดูแล**: `/wp-json/oembed/1.0/embed` ตอบ author_name และ author_url `/author/adminwp/` ทุกหน้า · `ea2000_oembed_hide_author()` ตัดออกทั้ง JSON และ XML
+- `/page/2/`, `/page/999/` และ `/pricing/page/2/` เคยตอบ 200 เนื้อหาซ้ำ · `ea2000_redirect_paged_singular()` ส่ง 301 กลับหน้าจริงพร้อมพารามิเตอร์โฆษณา ยกเว้นหน้ารวมบทความ (is_home) และเพจที่มี `<!--nextpage-->`
+- `/category/other/` ที่ว่างเคยเป็น index · `ea2000_noindex_empty_terms()` ใส่ noindex ให้หมวดหมู่หรือแท็กที่ยังไม่มีบทความ มีบทความแล้วกลับเป็น index เอง
+- robots.txt เคยมีบรรทัด Sitemap ซ้ำ (ของธีมกับของ Yoast) · ธีมไม่เติมแล้วเมื่อ Yoast เปิด sitemap · **Cloudflare ต่อบล็อกของตัวเองไว้ด้านบนของ robots.txt ที่ WordPress สร้าง ไม่ได้เสิร์ฟไฟล์แทน** (คำอธิบายเดิมในโค้ดผิด)
+- node สินค้าเคยฝัง Organization เต็มที่ใช้โลโก้แนวนอน ขณะที่ Yoast ใช้ตรากลม หน้าแรกกับหน้าแพ็กเกจจึงมีโลโก้สองแบบ · `ea2000_publisher_ref()` อ้าง `@id` อย่างเดียวเมื่อ `ea2000_yoast_prints_organization()` เป็นจริง · ไม่ใช้ลิงก์เพิ่มเพื่อน LINE เป็น sameAs แล้ว
+- **Yoast ไม่อ่านช่องโซเชียลใน Customizer เอง** (ข้อ 17 เขียนผิด) · `ea2000_yoast_org_same_as()` บน `wpseo_schema_organization` เติม facebook_url, instagram_url, tiktok_url, youtube_url เข้า sameAs · เจ้าของกรอกที่ Customizer ข้อ 1 ที่เดียวพอ
+- **endpoint เคยทำตัวแปรเสียตอนเขียน**: `sanitize_text_field` ของคอร์ลบ `%` ที่ตามด้วยเลขฐานสิบหกสองตัว `%%date%%` จึงกลายเป็น `%te%%` · ใช้ `WPSEO_Utils::sanitize_text_field()` แทน · GET อ่าน company_logo จาก `wpseo_titles` แล้ว (เดิมอ่านผิดกลุ่มเลยได้ null) · เพิ่มคีย์กลุ่ม `wpseo` ที่ตรวจแล้วว่าปลอดภัยใน whitelist
+
+### ตั้งค่าผ่าน API แล้ว
+- เปิด: remove_shortlinks, remove_rest_api_links, remove_oembed_links, remove_generator, remove_feed_global_comments, remove_feed_post_comments, remove_feed_search, remove_atom_rdf_feeds, remove_feed_categories, remove_feed_tags, search_cleanup, search_cleanup_patterns, redirect_search_pretty_urls
+- ปิด: enable_enhanced_slack_sharing (เคยพิมพ์ป้าย "Est. reading time" ภาษาอังกฤษ และจะพิมพ์ "Written by ADMIN" บนบทความ)
+- `title-archive-wpseo` = `%%date%% %%page%% %%sep%% %%sitename%%` · หัวเรื่องหมวดหมู่และแท็กเป็น "หมวดหมู่ ..." และ "แท็ก ..."
+- meta description ของ /articles/ เคยบอกว่ามีบทความ แก้เป็นรวมคู่มือที่เผยแพร่แล้ว
+- **ห้ามเปิด** `search_cleanup_emoji` (Yoast มองสระและวรรณยุกต์ไทยเป็นอีโมจิ ค้นหาภาษาไทยจะพาไปหน้าแรกหมด) · **ห้ามเปิด** `clean_permalinks` และ `clean_campaign_tracking_urls` (ตัด fbclid และรหัสคลิกโฆษณา) · คง `remove_feed_global` = false และ `deny_search_crawling` = false และไม่กัน AdsBot (ต้องตรวจหน้า /go/)
+
+### ข้อเท็จจริงที่บันทึกก่อนหน้านี้ไม่ตรง
+- ภาพตอนแชร์ลิงก์ (`og_default_image`) ตอนนี้คือ media **125** `EA2000-LOGO.png` (2001x364 พื้นโปร่ง) ไม่ใช่ media 69 ตามข้อ 32 · โลโก้ Organization ของ Yoast คือ media **124** `EA2000-ICON.png` 256x256 ไม่ใช่ 125 · มีคนเปลี่ยนใน wp-admin หลังข้อ 32
+- focus keyphrase หน้าแรกตอนนี้เป็น `EA2000` ไม่ใช่ `EA2000 EA MT5` ตามข้อ 17 · มีคนเปลี่ยนภายหลัง จึงยังไม่ทับ
+- `metadesc-home-wpseo` และ `title-home-wpseo` **ไม่ถูกใช้เลย** เพราะหน้าแรกเป็นเพจคงที่ (65) Yoast ใช้ meta ของเพจ 65 · ห้ามล้าง meta ของเพจ 65 เพราะค่าสำรองจริงคือ `metadesc-page` ที่ว่าง
+- SoftwareApplication **ยังไม่ได้ rich result** แม้เปิด pricing_confirmed เพราะ Google ต้องมี aggregateRating หรือ review ด้วย (ข้อ 21 เข้าใจผิด) · ไม่เพิ่มจนกว่าจะมีรีวิวจริง
+
+### ข้อควรทำทุกครั้งต่อจากนี้
+- **เพจที่เนื้อหามาจากธีมไม่ขยับวันที่แก้ไข** เมื่อแก้ข้อความในโค้ดหรือ Customizer · sitemap lastmod และ dateModified จึงค้าง · หลัง deploy งานเนื้อหา ให้ส่ง `{"status":"publish"}` ไปที่ `wp/v2/pages/ID` ของหน้าที่เปลี่ยน (รอบนี้ทำแล้ว 65, 49 ถึง 53, 90 ถึง 94)
+
+### รอเจ้าของตัดสินใจหรือทำเอง
+1. เปลี่ยนภาพตอนแชร์ลิงก์เป็น `assets/img/og-share.jpg` 1200x630 หรือไม่ (ภาพปัจจุบันถูก LINE และ Facebook ตัดเหลือแค่ "A20")
+2. focus keyphrase หน้าแรกจะใช้ `EA2000` ต่อ หรือกลับเป็น `EA2000 EA MT5`
+3. ตั้ง Cloudflare Redirect Rule ให้ www ไปโดเมนหลัก
+4. ลิงก์โปรไฟล์ Facebook, YouTube, TikTok ของแบรนด์ (กรอกที่ Customizer แล้ว sameAs ขึ้นเอง)
+5. การวัดผล: Site Kit ติดตั้งแต่ยังไม่เชื่อม ไม่มี GA4 ในหน้าเว็บเลย · ถ้าใช้ GA4 ของธีม (`ga_measurement_id` + `show_cookie_consent`) ต้องแก้ให้แถบยินยอมคุกกี้ขึ้นบน /go/ ด้วย เพราะ `template-links.php` ไม่โหลด footer.php
+- ไม่ได้ทำโดยตั้งใจ: redirect URL ตัวพิมพ์ใหญ่ (canonical ครอบแล้ว) · llms.txt (ปิดไว้ ไม่มีผลกับ Google)
