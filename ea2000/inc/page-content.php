@@ -73,12 +73,19 @@ function ea2000_rich_text( $text ) {
 
 		if ( $is_table ) {
 			$html .= '<div class="doc-table-wrap"><table class="doc-table">';
+			$heads = array_map( 'trim', explode( ' | ', $lines[0] ) );
 			foreach ( $lines as $idx => $line ) {
 				$cells = array_map( 'trim', explode( ' | ', $line ) );
 				$tag   = 0 === $idx ? 'th' : 'td';
 				$html .= 0 === $idx ? '<thead><tr>' : ( 1 === $idx ? '<tbody><tr>' : '<tr>' );
-				foreach ( $cells as $cell ) {
-					$html .= '<' . $tag . '>' . ( 'th' === $tag ? esc_html( $cell ) : ea2000_rich_inline( $cell ) ) . '</' . $tag . '>';
+				foreach ( $cells as $col => $cell ) {
+					if ( 'th' === $tag ) {
+						$html .= '<th>' . esc_html( $cell ) . '</th>';
+						continue;
+					}
+					/* data-label = ชื่อคอลัมน์ ใช้แสดงหัวแต่ละช่องตอนเรียงเป็นการ์ดบนจอแคบ */
+					$label = isset( $heads[ $col ] ) ? $heads[ $col ] : '';
+					$html .= '<td data-label="' . esc_attr( $label ) . '">' . ea2000_rich_inline( $cell ) . '</td>';
 				}
 				$html .= '</tr>' . ( 0 === $idx ? '</thead>' : '' );
 			}
@@ -256,7 +263,7 @@ function ea2000_page_content_defaults() {
 
 	/* ---------- /risk-disclosure/ ---------- */
 	$d['riskdoc_sec1_title'] = 'ความเสี่ยงช่วงข่าวและช่วงที่ Spread กว้าง';
-	$d['riskdoc_sec1_text']  = "ช่วงประกาศตัวเลขเศรษฐกิจสำคัญ ช่วงตลาดเปิดปิด และช่วงสภาพคล่องต่ำ ราคาสามารถกระโดดข้ามระดับที่ระบบตั้งไว้ได้ในเสี้ยววินาที Spread ของโบรกเกอร์อาจถ่างกว้างกว่าปกติหลายเท่า และคำสั่งอาจถูกเติมที่ราคาต่างจากที่สั่ง (Slippage)\n\nผลคือออเดอร์ที่ควรปิดขาดทุนจำกัด อาจปิดได้ที่ราคาแย่กว่าที่ตั้งไว้ และผลรวมของบัญชีอาจต่างจากที่เห็นใน[การทดสอบย้อนหลัง](/backtest/)อย่างมาก EA ทุกตัวรวมถึง EA2000 ไม่สามารถควบคุมเหตุการณ์เหล่านี้ได้ ผู้ใช้ควรทราบตารางข่าวและพิจารณาเองว่าจะให้ระบบทำงานในช่วงนั้นหรือไม่";
+	$d['riskdoc_sec1_text']  = "ช่วงประกาศตัวเลขเศรษฐกิจสำคัญ ช่วงตลาดเปิดปิด และช่วงสภาพคล่องต่ำ ราคาสามารถกระโดดข้ามระดับที่ระบบตั้งไว้ได้ในเสี้ยววินาที Spread ของโบรกเกอร์อาจถ่างกว้างกว่าปกติหลายเท่า และคำสั่งอาจถูกเติมที่ราคาต่างจากที่สั่ง (Slippage)\n\nผลคือคำสั่งเปิดหรือปิดออเดอร์ทุกแบบ ทั้งที่ระบบส่งและที่คุณสั่งเอง อาจถูกเติมที่ราคาแย่กว่าที่คาดไว้มาก และผลรวมของบัญชีอาจต่างจากที่เห็นใน[การทดสอบย้อนหลัง](/backtest/)อย่างมาก EA ทุกตัวรวมถึง EA2000 ไม่สามารถควบคุมเหตุการณ์เหล่านี้ได้ ผู้ใช้ควรทราบตารางข่าวและพิจารณาเองว่าจะให้ระบบทำงานในช่วงนั้นหรือไม่";
 
 	$d['riskdoc_sec2_title'] = 'Drawdown และ Margin Call คืออะไร';
 	$d['riskdoc_sec2_text']  = "Drawdown คือระยะที่เงินในบัญชีลดลงจากจุดสูงสุดก่อนหน้า วัดเป็นจำนวนเงินหรือเปอร์เซ็นต์ของทุน ระบบเทรดทุกระบบมี Drawdown เป็นเรื่องปกติ คำถามคือลึกแค่ไหนและนานแค่ไหน ซึ่งไม่มีใครรับประกันได้ล่วงหน้า\n\nMargin Call คือสถานะที่เงินในบัญชีเหลือไม่พอค้ำประกันออเดอร์ที่เปิดอยู่ โบรกเกอร์จะเตือนและหากยังลดลงถึงระดับ Stop Out โบรกเกอร์จะปิดออเดอร์ให้โดยอัตโนมัติ ซึ่งอาจทำให้เงินในบัญชีเหลือน้อยมากหรือหมด (ที่มักเรียกกันว่าล้างพอร์ต) การตั้งขนาดออเดอร์ให้เหมาะกับทุน และไม่ใช้ Leverage สูงเกินความจำเป็น คือสิ่งที่ผู้ใช้ควบคุมได้และควรทำก่อนเปิดระบบ";
@@ -284,7 +291,7 @@ function ea2000_page_content_defaults() {
 	$d['linksdoc_sec3_text']  = "1. ทุนโดยประมาณที่จะใช้กับบัญชีนี้ เพื่อให้แนะนำระดับความเสี่ยงได้ตรง\n2. โบรกเกอร์ที่ใช้และชนิดบัญชี MT5 (Standard, Cent หรืออื่น ๆ) ถ้ายังไม่มีบัญชี ดู[วิธีเปิดบัญชี MT5](/open-mt5-account/)\n3. ต้องการอะไร เช่น ติดตั้ง สอบถามราคา หรือประเมินว่าเหมาะไหม\n4. ช่วงเวลาที่สะดวกให้ตอบกลับ และเคยใช้ EA มาก่อนหรือไม่";
 
 	$d['linksdoc_sec4_title'] = 'ช่องทางและการตอบกลับ';
-	$d['linksdoc_sec4_text']  = "ช่องทางหลักคือ LINE Official Account ด้านบน ทีมงานตอบด้วยตัวเองตามลำดับข้อความ ส่วนกลุ่ม OpenChat ใช้พูดคุยกับผู้ใช้งานคนอื่นและติดตามประกาศ ไม่ใช่ช่องทางแจ้งปัญหารายบุคคล\n\nอ่าน[นโยบายความเป็นส่วนตัว](/privacy-policy/)และ[เงื่อนไขการใช้บริการ](/terms-of-use/)ก่อนใช้บริการ การเทรดมีความเสี่ยง โปรดอ่าน[ประกาศความเสี่ยง](/risk-disclosure/)ก่อนตัดสินใจ หรือกลับไปดูข้อมูลทั้งหมดของ EA2000 ที่[หน้าแรก](/)";
+	$d['linksdoc_sec4_text']  = "ช่องทางหลักคือ LINE Official Account ที่ปุ่มบนหน้านี้ ทีมงานตอบด้วยตัวเองตามลำดับข้อความ ส่วนกลุ่ม OpenChat ใช้พูดคุยกับผู้ใช้งานคนอื่นและติดตามประกาศ ไม่ใช่ช่องทางแจ้งปัญหารายบุคคล\n\nอ่าน[นโยบายความเป็นส่วนตัว](/privacy-policy/)และ[เงื่อนไขการใช้บริการ](/terms-of-use/)ก่อนใช้บริการ การเทรดมีความเสี่ยง โปรดอ่าน[ประกาศความเสี่ยง](/risk-disclosure/)ก่อนตัดสินใจ หรือกลับไปดูข้อมูลทั้งหมดของ EA2000 ที่[หน้าแรก](/)";
 
 	return $d;
 }
@@ -296,12 +303,15 @@ function ea2000_page_content_defaults() {
  * จึงให้ใส่ภาพที่จัดหน้าใหม่สำหรับมือถือแยกได้ ขนาดของ source ใส่ไว้กันหน้ากระโดดตอนโหลด
  */
 function ea2000_media_picture( $key, $src, $alt, $width, $height ) {
-	$img = sprintf(
-		'<img src="%s" alt="%s" loading="lazy" decoding="async" width="%s" height="%s">',
+	$main   = ea2000_media_info( $src, $width, $height );
+	$srcset = '' !== $main['srcset'] ? sprintf( ' srcset="%s" sizes="(max-width: 760px) 100vw, 1120px"', esc_attr( $main['srcset'] ) ) : '';
+	$img    = sprintf(
+		'<img src="%s"%s alt="%s" loading="lazy" decoding="async" width="%s" height="%s">',
 		esc_url( $src ),
+		$srcset,
 		esc_attr( $alt ),
-		esc_attr( (string) (int) $width ),
-		esc_attr( (string) (int) $height )
+		esc_attr( (string) $main['width'] ),
+		esc_attr( (string) $main['height'] )
 	);
 
 	$mobile = trim( (string) ea2000_mod( $key . '_img_mobile' ) );
@@ -309,11 +319,53 @@ function ea2000_media_picture( $key, $src, $alt, $width, $height ) {
 		return $img;
 	}
 
+	$small = ea2000_media_info( $mobile, 1080, 1350 );
 	return sprintf(
-		'<picture><source media="(max-width: 640px)" srcset="%s" width="1080" height="1350">%s</picture>',
+		'<picture><source media="(max-width: 640px)" srcset="%s" width="%s" height="%s">%s</picture>',
 		esc_url( $mobile ),
+		esc_attr( (string) $small['width'] ),
+		esc_attr( (string) $small['height'] ),
 		$img
 	);
+}
+
+/**
+ * ขนาดจริงและ srcset ของรูปในคลังสื่อ
+ *
+ * เดิมทุกช่องใส่ width/height ตามที่เทมเพลตส่งมา (เช่น 1280x720) ทั้งที่รูปจริงเป็นแนวตั้งบ้าง สัดส่วนอื่นบ้าง
+ * เบราว์เซอร์จึงจองที่ผิดแล้วหน้ากระโดดตอนรูปโหลด และลิงก์ไปหัวข้อพาไปผิดที่ · รูปที่ไม่ได้อยู่ในคลังสื่อใช้ค่าที่ส่งมา
+ *
+ * @param string $url    URL ของรูป
+ * @param int    $width  ความกว้างสำรอง
+ * @param int    $height ความสูงสำรอง
+ * @return array { width, height, srcset }
+ */
+function ea2000_media_info( $url, $width, $height ) {
+	static $cache = array();
+	$url = (string) $url;
+	if ( isset( $cache[ $url ] ) ) {
+		return $cache[ $url ];
+	}
+
+	$info = array(
+		'width'  => (int) $width,
+		'height' => (int) $height,
+		'srcset' => '',
+	);
+
+	$id = function_exists( 'attachment_url_to_postid' ) ? (int) attachment_url_to_postid( $url ) : 0;
+	if ( $id ) {
+		$meta = wp_get_attachment_metadata( $id );
+		if ( is_array( $meta ) && ! empty( $meta['width'] ) && ! empty( $meta['height'] ) ) {
+			$info['width']  = (int) $meta['width'];
+			$info['height'] = (int) $meta['height'];
+			$srcset         = wp_get_attachment_image_srcset( $id, 'full', $meta );
+			$info['srcset'] = is_string( $srcset ) ? $srcset : '';
+		}
+	}
+
+	$cache[ $url ] = $info;
+	return $info;
 }
 
 /**

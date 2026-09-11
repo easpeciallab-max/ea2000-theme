@@ -54,15 +54,18 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 			<?php endfor; ?>
 		</div>
 
-		<?php /* วันที่ปรับปรุงที่ยังเป็น placeholder (ขึ้นต้นด้วย "ระบุ") จะไม่แสดง */ ?>
-		<?php if ( ! ea2000_is_placeholder( ea2000_mod( 'riskpage_updated' ) ) ) : ?>
-			<p class="riskdoc-updated reveal"><?php echo esc_html( ea2000_mod( 'riskpage_updated' ) ); ?></p>
-		<?php endif; ?>
 
 	</div>
 </section>
 
 <?php ea2000_page_sections( 'riskdoc', 6 ); ?>
+
+<?php /* วันที่ปรับปรุงอยู่ท้ายเนื้อหาทั้งหมด ตามที่หัวข้อการอัปเดตประกาศบอกไว้ · ค่า placeholder (ขึ้นต้นด้วย "ระบุ") ไม่แสดง */ ?>
+<?php if ( ! ea2000_is_placeholder( ea2000_mod( 'riskpage_updated' ) ) ) : ?>
+	<div class="container container-narrow">
+		<p class="riskdoc-updated"><?php echo esc_html( ea2000_mod( 'riskpage_updated' ) ); ?></p>
+	</div>
+<?php endif; ?>
 
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( 'มีคำถามเรื่องความเสี่ยง?', 'ทักมาสอบถามทีมงานก่อนตัดสินใจใช้งานได้ทาง LINE' ); ?>

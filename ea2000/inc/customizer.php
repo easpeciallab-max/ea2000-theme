@@ -519,6 +519,8 @@ function ea2000_customize_register( $wp_customize ) {
 				'inst_step6_img_note' => array( 'ขั้นที่ 6 · ข้อความในช่องรอรูป', 'text' ),
 				'inst_step6_img_caption' => array( 'ขั้นที่ 6 · คำบรรยายใต้ภาพ', 'text' ),
 				'install_note'     => array( 'ข้อความปิดท้าย', 'text' ),
+				'install_cta_title' => array( 'แถบ LINE ท้ายหน้า · หัวข้อ', 'text' ),
+				'install_cta_text'  => array( 'แถบ LINE ท้ายหน้า · ข้อความ', 'text', 'เขียนให้ตรงกับสิทธิ์ของแต่ละแพ็กเกจ' ),
 			),
 		),
 

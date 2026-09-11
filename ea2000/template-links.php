@@ -21,7 +21,8 @@ $lh_has_url = static function ( $url ) {
 
 $lh_logo = ea2000_mod( 'links_logo' );
 if ( ! $lh_logo ) {
-	$lh_logo = ea2000_logo_url();
+	/* กรอบโลโก้ของหน้านี้เป็นวงกลม ใช้ตรากลมของธีม (19 KB) ไม่ใช้โลโก้แนวนอนที่ถูกตัดขาดและหนัก 826 KB */
+	$lh_logo = get_template_directory_uri() . '/assets/img/logo-mark.webp';
 }
 
 $lh_title  = ea2000_mod( 'links_title' );
@@ -47,7 +48,7 @@ $lh_show_openchat      = $lh_has_url( $lh_openchat_url ) && '' !== $lh_openchat_
 
 /* ไอคอนประกอบปุ่มตามลำดับ (ตกแต่ง · เปลี่ยนความหมายปุ่มได้โดยไม่ผูกกับไอคอน) */
 $lh_btn_icons = array( 1 => 'guide', 2 => 'tag', 3 => 'download', 4 => 'layout', 5 => 'arrow', 6 => 'arrow' );
-$lh_guide_icons = array( 1 => 'download', 2 => 'windows', 3 => 'android', 4 => 'apple', 5 => 'macos' );
+$lh_guide_icons = array( 1 => 'guide', 2 => 'windows', 3 => 'android', 4 => 'apple', 5 => 'macos' );
 
 $lh_socials = array();
 foreach ( array(
@@ -126,7 +127,7 @@ foreach ( array(
 		<?php endif; ?>
 
 		<?php if ( $lh_show_line ) : ?>
-			<a class="lh-btn lh-btn-line" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener">
+			<a class="lh-btn lh-btn-line" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
 				<span class="lh-ic"><?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 				<span class="lh-lbl"><?php echo esc_html( $lh_line_label ); ?></span>
 			</a>
@@ -139,7 +140,7 @@ foreach ( array(
 			</a>
 		<?php endif; ?>
 
-		<?php if ( ea2000_mod( 'links_fast_enabled' ) ) : ?>
+		<?php if ( ea2000_mod( 'links_fast_enabled' ) && $lh_has_url( ea2000_mod( 'links_fast_url' ) ) ) : ?>
 			<?php
 			/*
 			 * การ์ดดาวน์โหลดเด่น: ใช้ภาพจาก links_fast_img (ถ้าว่างใช้ links_feature_img)
@@ -180,13 +181,14 @@ foreach ( array(
 					<?php endif; ?>
 				</div>
 			<?php endif; ?>
-		<?php else : ?>
+		<?php elseif ( ! ea2000_mod( 'links_fast_enabled' ) ) : ?>
 			<?php
 			$lh_feat_img     = trim( (string) ea2000_mod( 'links_feature_img' ) );
 			$lh_feat_url     = trim( (string) ea2000_mod( 'links_feature_url' ) );
 			$lh_feat_caption = trim( (string) ea2000_mod( 'links_feature_caption' ) );
 			$lh_feat_has_url = $lh_has_url( $lh_feat_url );
-			if ( '' !== $lh_feat_img ) :
+			/* รูปการ์ดเริ่มต้นเป็นภาพรอไฟล์ จึงแสดงเฉพาะเมื่อมีลิงก์จริง */
+			if ( '' !== $lh_feat_img && $lh_feat_has_url ) :
 				?>
 				<div class="lh-feature">
 					<?php if ( $lh_feat_has_url ) : ?>
@@ -212,7 +214,8 @@ foreach ( array(
 			$lh_feat2_caption     = trim( (string) ea2000_mod( 'links_feature2_caption' ) );
 			$lh_feat2_placeholder = trim( (string) ea2000_mod( 'links_feature2_placeholder' ) );
 			$lh_feat2_has_url     = $lh_has_url( $lh_feat2_url );
-			if ( '' !== $lh_feat2_img || '' !== $lh_feat2_placeholder ) :
+			/* ข้อความรอรูป (เช่น 1200 × 630) ให้เห็นเฉพาะแอดมิน ผู้เข้าชมไม่ควรเห็นกล่องว่าง */
+			if ( '' !== $lh_feat2_img || ( '' !== $lh_feat2_placeholder && current_user_can( 'customize' ) ) ) :
 				?>
 				<div class="lh-feature lh-feature-secondary">
 					<?php if ( $lh_feat2_has_url ) : ?>
@@ -340,6 +343,13 @@ foreach ( array(
 			<section class="lh-doc entry-content doc-body">
 				<?php echo $lh_doc; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped in ea2000_page_sections ?>
 			</section>
+		<?php endif; ?>
+
+		<?php if ( $lh_show_line ) : ?>
+			<a class="lh-btn lh-btn-line lh-btn-line-bottom" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="go-bottom">
+				<span class="lh-ic"><?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+				<span class="lh-lbl"><?php echo esc_html( $lh_line_label ); ?></span>
+			</a>
 		<?php endif; ?>
 
 		<?php if ( $lh_note ) : ?>

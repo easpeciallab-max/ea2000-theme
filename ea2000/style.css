@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.7.2
+Version: 2.8.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -8136,4 +8136,155 @@ a.lh-feature-frame:hover {
 	.dl-card {
 		padding: 18px 16px 16px;
 	}
+}
+
+/* ==========================================================
+   46) แก้ตามผลตรวจความพร้อมทั้งเว็บ (11 ก.ย. 2026)
+   ========================================================== */
+
+/* ตารางเทียบแพ็กเกจ · span.sr-only ในช่อง ✓ ✗ เป็น position absolute ถ้ากรอบไม่ตั้ง relative
+   มันจะหลุดไปอยู่นอกกรอบเลื่อน ทำให้ทั้งหน้ากว้าง 502px บนจอ 375 และบาร์ล่างล้นจอ */
+.compare-wrap {
+	position: relative;
+}
+
+@media (max-width: 640px) {
+	/* 4 คอลัมน์พอดีจอโดยไม่ต้องเลื่อนข้าง เห็น Pro และ VIP ทันที */
+	.compare-table {
+		min-width: 0;
+		table-layout: fixed;
+	}
+
+	.compare-table th,
+	.compare-table td {
+		padding: 10px 6px;
+		font-size: 0.8125rem;
+		line-height: 1.45;
+		overflow-wrap: anywhere;
+	}
+
+	.compare-table th:first-child,
+	.compare-table td:first-child {
+		width: 38%;
+		padding-left: 12px;
+	}
+}
+
+/* ป้าย "แนะนำ" · กฎเก่ายังใส่ left 50% + translateX ทำให้ป้ายยืดเป็นแถบยาวทับหัวการ์ด */
+.price-flag {
+	left: auto;
+	transform: none;
+	border-radius: 0;
+}
+
+.price-card.is-featured,
+.price-teaser-card.is-featured {
+	margin-top: 0;
+	background: var(--card-bg);
+}
+
+/* kicker "// " · กฎเก่ายังวาดจุดเขียวกลมทับเครื่องหมาย */
+.kicker::before {
+	width: auto;
+	height: auto;
+	border-radius: 0;
+	background: none;
+}
+
+/* เลขหัวข้อหน้าความเสี่ยง · เหลือเป็นตัวอักษรธรรมดา ไม่ใช่ป้ายมุมมนซ้อนกับแท่งเขียว */
+.riskdoc-num {
+	display: inline;
+	width: auto;
+	height: auto;
+	border: 0;
+	border-radius: 0;
+	background: none;
+}
+
+.riskdoc-updated {
+	margin-top: 0;
+	margin-bottom: 48px;
+}
+
+/* ตารางในเนื้อหา · จอแคบเรียงเป็นการ์ดทีละแถว หัวคอลัมน์มาจาก data-label ที่ ea2000_rich_text() ใส่ให้ทุกช่อง */
+@media (max-width: 640px) {
+	.doc-table-wrap {
+		overflow: visible;
+	}
+
+	.doc-table {
+		min-width: 0;
+	}
+
+	.doc-table thead {
+		display: none;
+	}
+
+	.doc-table,
+	.doc-table tbody,
+	.doc-table tr,
+	.doc-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.doc-table tr {
+		padding: 12px 14px;
+		border-bottom: 1px solid var(--border);
+	}
+
+	.doc-table tbody tr:last-child {
+		border-bottom: 0;
+	}
+
+	.doc-table td,
+	.doc-table tbody tr:last-child td {
+		padding: 3px 0;
+		border-bottom: 0;
+	}
+
+	.doc-table td::before {
+		content: attr(data-label);
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		font-weight: 400;
+		letter-spacing: 0.04em;
+		color: var(--muted);
+	}
+
+	.doc-table tbody td:first-child {
+		padding-bottom: 6px;
+	}
+
+	.doc-table tbody td:first-child::before {
+		display: none;
+	}
+}
+
+/* ฟิล์มภาพติดตั้งบนหน้าแรก · จอกว้างวางครบ 3 ภาพในแถวเดียว ไม่ตัดภาพที่ 3 และคำบรรยาย */
+@media (min-width: 1100px) {
+	.film {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		overflow: visible;
+		scroll-snap-type: none;
+	}
+
+	.film .frame {
+		flex: none;
+	}
+}
+
+/* คำอธิบายใต้รายการคู่มือ · แสดงเต็มแล้วตัดด้วยจำนวนบรรทัด ไม่ตัดกลางคำภาษาไทย */
+.guide-more-sub {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+
+/* ปุ่ม LINE ท้ายหน้า /go/ */
+.lh-btn-line-bottom {
+	margin-top: 22px;
 }

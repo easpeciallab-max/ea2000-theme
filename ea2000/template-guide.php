@@ -150,7 +150,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 							<span class="guide-more-body">
 								<span class="guide-more-name"><?php echo esc_html( $ea2000_other[0] ); ?></span>
 								<?php if ( $ea2000_other[2] && ! ea2000_is_placeholder( $ea2000_other[2] ) ) : ?>
-									<span class="guide-more-sub"><?php echo esc_html( wp_trim_words( $ea2000_other[2], 18, '' ) ); ?></span>
+									<span class="guide-more-sub"><?php echo esc_html( $ea2000_other[2] ); ?></span>
 								<?php endif; ?>
 							</span>
 							<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
