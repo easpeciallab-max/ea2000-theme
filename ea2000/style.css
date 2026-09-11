@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.9.1
+Version: 2.10.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -1546,113 +1546,325 @@ h3 {
 }
 
 /* ==========================================================
-   Cookie consent
+   Consent · การ์ดความยินยอมคุกกี้ (PDPA) · inc/consent.php + main.js
+   ไม่มีฉากหลังมืด ไม่บังการใช้เว็บ ปุ่มยอมรับกับปฏิเสธหน้าตาและน้ำหนักเท่ากัน
+   จอคอมวางมุมซ้ายล่าง (ปุ่ม LINE ลอยอยู่ขวา) · มือถือเป็นแผ่นเต็มกว้างเหนือบาร์ล่าง
+   z-index 125: เหนือบาร์ล่าง (120) ใต้ลิ้นชักเมนูที่อยู่ใน header (130)
    ========================================================== */
-.cookie-consent {
+.consent {
 	position: fixed;
-	left: 16px;
-	right: 16px;
-	bottom: 16px;
-	z-index: 140;
-	display: none;
-	flex-wrap: wrap;
+	left: 24px;
+	bottom: 24px;
+	z-index: 125;
+	width: min(420px, calc(100vw - 48px));
+	max-height: calc(100vh - 48px);
+	max-height: calc(100dvh - 48px);
+	overflow-y: auto;
+	overscroll-behavior: contain;
+	padding: 18px 18px 16px;
+	border: 1px solid var(--ink-border-strong);
+	border-top: 2px solid var(--ink-accent);
+	border-radius: 0;
+	background-color: var(--ink);
+	background-image: var(--dot-grid-ink);
+	background-size: var(--dot-pitch) var(--dot-pitch);
+	color: var(--ink-text);
+	box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.consent[hidden],
+.consent [hidden] {
+	display: none !important;
+}
+
+.consent-kicker {
+	margin: 0 44px 4px 0;
+	font-size: 0.7rem;
+	letter-spacing: 0.06em;
+	color: var(--ink-accent);
+}
+
+.consent-title {
+	margin: 0 44px 8px 0;
+	font-size: 1.05rem;
+	line-height: 1.4;
+	color: var(--ink-text);
+}
+
+.consent-title:focus {
+	outline: none;
+}
+
+.consent-text,
+.consent-note {
+	margin: 0 0 14px;
+	font-size: 0.86rem;
+	line-height: 1.7;
+	color: var(--ink-muted);
+}
+
+.consent-text a,
+.consent-note a {
+	color: var(--ink-accent);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.consent-cats {
+	margin: 0 0 12px;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--ink-border);
+}
+
+.consent-cat {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 12px;
 	align-items: center;
-	gap: 14px 20px;
-	max-width: 760px;
-	margin: 0 auto;
-	padding: 16px 52px 16px 20px;
-	border: 1px solid var(--border);
-	border-radius: 16px;
-	background: rgba(var(--bg-rgb), 0.97);
-	box-shadow: var(--shadow-lg);
-	-webkit-backdrop-filter: blur(12px);
-	backdrop-filter: blur(12px);
+	padding: 10px 0;
+	border-bottom: 1px solid var(--ink-border);
 }
 
-.cookie-consent.is-visible {
-	display: flex;
+.consent-cat-name {
+	margin: 0 0 2px;
+	font-family: var(--font-display);
+	font-size: 0.9rem;
+	font-weight: 600;
+	color: var(--ink-text);
 }
 
-.cookie-consent-text {
-	flex: 1 1 280px;
+.consent-cat-desc {
 	margin: 0;
-	color: var(--muted);
-	font-size: 0.88rem;
-	line-height: 1.65;
+	font-size: 0.8rem;
+	line-height: 1.6;
+	color: var(--ink-muted);
 }
 
-.cookie-consent-link {
-	color: var(--primary-deep);
+.consent-always {
+	font-size: 0.72rem;
 	white-space: nowrap;
+	color: var(--ink-accent);
 }
 
-.cookie-consent-actions {
-	display: flex;
-	gap: 10px;
-	flex-shrink: 0;
-}
-
-.cookie-consent-close {
-	position: absolute;
-	top: 50%;
-	right: 14px;
-	transform: translateY(-50%);
+/* สวิตช์ · checkbox จริงคลุมพื้นที่กด 52x44 ทั้งกล่อง ไม่มีค่าเริ่มต้นเป็นเปิด */
+.consent-switch {
+	position: relative;
 	display: inline-grid;
 	place-items: center;
-	width: 30px;
-	height: 30px;
-	border: 0;
-	border-radius: 50%;
-	background: var(--surface-2);
-	color: var(--muted);
+	width: 52px;
+	height: 44px;
 	cursor: pointer;
-	transition: color 0.16s ease, background 0.16s ease;
 }
 
-.cookie-consent-close:hover {
-	color: var(--text);
-	background: var(--surface-3);
+.consent-switch input {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	opacity: 0;
+	cursor: pointer;
 }
 
-.cookie-consent-close .icon {
-	width: 0.95rem;
-	height: 0.95rem;
+.consent-track {
+	position: relative;
+	width: 40px;
+	height: 22px;
+	border: 1px solid var(--ink-border-strong);
+	background-color: var(--ink-chip);
+	transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.consent-track::after {
+	content: "";
+	position: absolute;
+	top: 3px;
+	left: 3px;
+	width: 14px;
+	height: 14px;
+	background-color: var(--ink-muted);
+	transition: translate 0.18s ease, background-color 0.15s ease;
+}
+
+.consent-switch input:checked + .consent-track {
+	border-color: var(--ink-accent);
+	background-color: rgba(var(--ink-accent-rgb), 0.22);
+}
+
+.consent-switch input:checked + .consent-track::after {
+	translate: 18px 0;
+	background-color: var(--ink-accent);
+}
+
+.consent-switch input:focus-visible + .consent-track {
+	outline: 2px solid var(--ink-accent);
+	outline-offset: 2px;
+}
+
+.consent-actions {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+	gap: 8px;
+	align-items: stretch;
+}
+
+.consent.is-prefs .consent-actions {
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+
+.consent-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 0;
+	min-height: 44px;
+	padding: 8px 10px;
+	border: 1px solid var(--ink-border-strong);
+	border-radius: var(--key-radius);
+	background-color: var(--ink-raise);
+	box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.35);
+	color: var(--ink-text);
+	font-family: var(--font-display);
+	font-size: 0.86rem;
+	font-weight: 600;
+	line-height: 1.3;
+	text-align: center;
+	cursor: pointer;
+	transition: border-color 0.15s ease, color 0.15s ease;
+}
+
+.consent-btn:active {
+	transform: translateY(1px);
+}
+
+.consent-btn--link {
+	padding: 8px 6px;
+	border-color: transparent;
+	background: transparent;
+	box-shadow: none;
+	color: var(--ink-muted);
+	font-weight: 500;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.consent-btn--save {
+	grid-column: 1 / -1;
+	order: -1;
+}
+
+.consent :focus-visible {
+	outline: 2px solid var(--ink-accent);
+	outline-offset: 2px;
+}
+
+.consent-close {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+	display: inline-grid;
+	place-items: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: 0;
+	background: transparent;
+	color: var(--ink-muted);
+	cursor: pointer;
+}
+
+.consent-close .icon {
+	width: 1.05rem;
+	height: 1.05rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.consent-btn:hover {
+		border-color: var(--ink-accent);
+		color: var(--ink-accent);
+	}
+
+	.consent-btn--link:hover {
+		border-color: transparent;
+		color: var(--ink-text);
+	}
+
+	.consent-close:hover {
+		color: var(--ink-text);
+	}
+}
+
+@media (prefers-reduced-motion: no-preference) {
+	.consent:not([hidden]) {
+		animation: consent-in 0.2s ease-out both;
+	}
+
+	@keyframes consent-in {
+		from {
+			opacity: 0;
+			transform: translateY(10px);
+		}
+
+		to {
+			opacity: 1;
+			transform: none;
+		}
+	}
 }
 
 @media (max-width: 760px) {
-	/* การ์ดกลางจอ + พื้นหลังเบลอ */
-	.cookie-consent {
-		top: 50%;
-		bottom: auto;
-		left: 16px;
-		right: 16px;
-		max-width: 420px;
-		max-height: calc(100dvh - 32px);
-		overflow-y: auto;
-		flex-direction: column;
-		align-items: stretch;
-		padding: 42px 22px 22px;
-		transform: translateY(-50%);
+	.consent {
+		right: 0;
+		bottom: calc(var(--dock-h) + env(safe-area-inset-bottom));
+		left: 0;
+		width: auto;
+		max-height: calc(100dvh - var(--dock-h) - 80px);
+		padding: 14px 16px 12px;
+		border-right: 0;
+		border-left: 0;
+		box-shadow: 0 -12px 30px rgba(0, 0, 0, 0.4);
 	}
 
-	/* ในแนวตั้ง flex-basis 280px จะกลายเป็นความสูง ต้องรีเซ็ตไม่ให้กล่องสูงเกิน */
-	.cookie-consent-text {
-		flex: none;
+	/* หน้า /go/ ไม่มีบาร์ล่าง แผ่นจึงชิดขอบล่างจอ */
+	.link-hub-page .consent {
+		bottom: 0;
+		padding-bottom: calc(12px + env(safe-area-inset-bottom));
 	}
 
-	.cookie-consent-close {
-		top: 12px;
-		right: 12px;
-		transform: none;
+	.consent-kicker {
+		display: none;
 	}
 
-	.cookie-consent-actions {
-		width: 100%;
+	.consent-title {
+		margin-bottom: 4px;
+		font-size: 0.98rem;
 	}
 
-	.cookie-consent-actions .btn {
-		flex: 1;
+	.consent-text,
+	.consent-note {
+		margin-bottom: 10px;
+		font-size: 0.82rem;
+		line-height: 1.6;
 	}
+
+	.consent-btn {
+		font-size: 0.82rem;
+	}
+}
+
+/* ลิงก์ตั้งค่าคุกกี้ท้ายหน้า /go/ */
+.lh-cookie {
+	margin: 14px 0 0;
+	text-align: center;
+	font-size: 0.85rem;
+}
+
+.lh-cookie a {
+	color: inherit;
+	opacity: 0.8;
+	text-decoration: underline;
+	text-underline-offset: 3px;
 }
 
 /* ==========================================================

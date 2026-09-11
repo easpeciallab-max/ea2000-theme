@@ -115,6 +115,10 @@ foreach ( array(
 	}
 }
 $ea2000_docs[] = array( (string) ea2000_mod( 'footer_risk_link' ), home_url( '/risk-disclosure/' ) ); // slug ตามแผนเพจ EA2000 · ยังไม่มี setting เฉพาะสำหรับ URL นี้
+/* เปิดการตั้งค่าคุกกี้ (inc/consent.php) · main.js ดักลิงก์ที่ลงท้ายด้วย #cookie-settings ถอนความยินยอมได้จากทุกหน้า */
+if ( '' !== trim( (string) ea2000_mod( 'footer_cookie_link' ) ) ) {
+	$ea2000_docs[] = array( (string) ea2000_mod( 'footer_cookie_link' ), '#cookie-settings' );
+}
 
 /* Watermark · แยกส่วนตัวอักษรกับส่วนตั้งแต่ตัวเลขตัวแรก */
 $ea2000_wm      = trim( (string) ea2000_mod( 'footer_watermark_text' ) );
@@ -403,25 +407,7 @@ $ea2000_dock_style = $ea2000_dock_lit ? sprintf( '--dock-x:%s%%', number_format(
 </a>
 <?php endif; ?>
 
-<?php if ( ea2000_mod( 'show_cookie_consent' ) ) : ?>
-<div class="cookie-consent" role="region" aria-label="ความยินยอมการใช้คุกกี้">
-	<button type="button" class="cookie-consent-close" aria-label="ปิด"><?php echo ea2000_icon( 'x', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
-	<p class="cookie-consent-text">
-		<?php echo esc_html( ea2000_mod( 'cookie_consent_text' ) ); ?>
-		<?php
-		$ea2000_privacy = get_page_by_path( 'privacy-policy' );
-		if ( $ea2000_privacy ) :
-			?>
-			<a class="cookie-consent-link" href="<?php echo esc_url( get_permalink( $ea2000_privacy ) ); ?>">อ่านนโยบาย</a>
-		<?php endif; ?>
-	</p>
-	<div class="cookie-consent-actions">
-		<button type="button" class="btn btn-ghost btn-sm cookie-decline">ปฏิเสธ</button>
-		<button type="button" class="btn btn-fire btn-sm cookie-accept">ยอมรับ</button>
-	</div>
-</div>
-<?php endif; ?>
-
+<?php /* การ์ดความยินยอมคุกกี้พิมพ์ผ่าน wp_footer ใน inc/consent.php เพื่อให้หน้า /go/ ได้ด้วย */ ?>
 <?php wp_footer(); ?>
 </body>
 </html>

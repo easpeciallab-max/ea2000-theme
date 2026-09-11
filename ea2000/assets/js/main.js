@@ -394,40 +394,51 @@
 		}
 	}
 
-	/* Analytics · dedicated LINE click event for GA4/Site Kit */
+	/* นับคลิก LINE · แยกบัญชี LINE OA (line_click) กับกลุ่ม OpenChat (openchat_click)
+	   ส่งเฉพาะเมื่อแท็กถูกโหลดแล้ว ซึ่งเกิดหลังผู้ใช้ยินยอมหมวดนั้นเท่านั้น (บล็อกความยินยอมท้ายไฟล์)
+	   Meta ได้ Contact เฉพาะการทัก LINE OA · ตำแหน่งปุ่มอ่านจาก data-line-pos ถ้าไม่มีใช้ id ของกล่องที่ใกล้ที่สุด */
 	document.addEventListener('click', function (e) {
-		var link = e.target.closest('a[href]');
+		var link = e.target && e.target.closest ? e.target.closest('a[href]') : null;
 		if (!link) {
 			return;
 		}
 
-		var href = link.getAttribute('href') || '';
 		var absoluteUrl;
 		try {
-			absoluteUrl = new URL(href, window.location.href);
+			absoluteUrl = new URL(link.getAttribute('href') || '', window.location.href);
 		} catch (err) {
 			return;
 		}
 
 		var host = absoluteUrl.hostname.replace(/^www\./, '').toLowerCase();
-		var isLineLink = host === 'line.me' || host === 'lin.ee' || host === 'liff.line.me' || href.indexOf('line://') === 0;
+		var isLineLink = host === 'line.me' || host === 'lin.ee' || host === 'liff.line.me' || absoluteUrl.protocol === 'line:';
 		if (!isLineLink) {
 			return;
 		}
 
-		var label = (link.textContent || link.getAttribute('aria-label') || 'LINE').replace(/\s+/g, ' ').trim();
+		var isOpenChat = host === 'line.me' && /^\/ti\/g2\//.test(absoluteUrl.pathname);
+		var copy = link.cloneNode(true);
+		Array.prototype.forEach.call(copy.querySelectorAll('.sr-only'), function (node) {
+			node.parentNode.removeChild(node);
+		});
+		var label = (link.getAttribute('aria-label') || copy.textContent || 'LINE').replace(/\s+/g, ' ').trim();
+		var box = link.parentNode && link.parentNode.closest ? link.parentNode.closest('[id]') : null;
 		var payload = {
 			link_url: absoluteUrl.href,
 			link_text: label,
+			link_pos: link.getAttribute('data-line-pos') || (box ? box.id : ''),
 			page_path: window.location.pathname,
-			page_title: document.title,
-			link_pos: link.dataset.linePos || ''
+			page_title: document.title
 		};
+		if (link.getAttribute('data-line-pkg')) {
+			payload.package_name = link.getAttribute('data-line-pkg');
+		}
 
 		if (typeof window.gtag === 'function') {
-			window.gtag('event', 'line_click', payload);
-		} else if (Array.isArray(window.dataLayer)) {
-			window.dataLayer.push(Object.assign({ event: 'line_click' }, payload));
+			window.gtag('event', isOpenChat ? 'openchat_click' : 'line_click', payload);
+		}
+		if (!isOpenChat && typeof window.fbq === 'function') {
+			window.fbq('track', 'Contact', { content_name: payload.link_pos || 'line' });
 		}
 	});
 
@@ -649,85 +660,251 @@
 		});
 	}
 
-	/* Cookie consent + gated tracking (โหลด GA/Pixel เฉพาะหลังยอมรับ; ผู้ที่เคยยอมรับโหลดต่อแม้ปิดแบนเนอร์) */
-	var trackingCfg = window.ea2000Tracking || {};
-	var cookieBar = document.querySelector('.cookie-consent');
+	/* ความยินยอมคุกกี้ (PDPA) · inc/consent.php
+	   - การ์ดพิมพ์เหมือนกันทุกหน้า ที่นี่ตัดสินใจเองว่าจะแสดงไหม เพราะแคชของโฮสต์เสิร์ฟ HTML ชุดเดียวให้ทุกคน
+	   - ไม่โหลด gtag.js หรือ fbevents.js ก่อนผู้ใช้ยินยอมหมวดนั้น · กดปิด (X) = ไม่ยินยอมสำหรับรอบนั้น แล้วถามใหม่รอบหน้า
+	   - คุกกี้ ea2000_consent = v<รุ่น>.a<0|1>.m<0|1>.t<unix>.id<สุ่ม> อายุ 12 เดือนเท่ากันทั้งยอมรับและปฏิเสธ
+	   - ถอนความยินยอม: หยุดแท็ก ลบคุกกี้ของหมวดนั้นทั้งบนโดเมนหลักและ .โดเมน แล้วรีโหลดหน้า */
+	var consentCfg = window.ea2000Consent || {};
+	var consentBox = document.getElementById('cookie-settings');
+	var consentVersion = /^\d+$/.test(String(consentCfg.version)) ? String(consentCfg.version) : '1';
+	var consentTools = { analytics: !!consentCfg.ga, marketing: !!consentCfg.pixel };
+	var consentHasOptional = consentTools.analytics || consentTools.marketing;
+	var consentLoaded = { analytics: false, marketing: false };
+	var consentTrigger = null;
 
-	if (trackingCfg.ga || trackingCfg.pixel || cookieBar) {
-		var getConsent = function () {
-			var m = document.cookie.match(/(?:^|;\s*)ea2000_consent=([^;]+)/);
-			return m ? m[1] : '';
-		};
-		var setConsent = function (value) {
-			var d = new Date();
-			d.setTime(d.getTime() + 365 * 24 * 60 * 60 * 1000);
-			document.cookie = 'ea2000_consent=' + value + '; expires=' + d.toUTCString() + '; path=/; SameSite=Lax';
-		};
-		var loadTrackers = function () {
-			if (trackingCfg.ga) {
-				var g = document.createElement('script');
-				g.async = true;
-				g.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(trackingCfg.ga);
-				document.head.appendChild(g);
-				window.dataLayer = window.dataLayer || [];
-				window.gtag = function () { window.dataLayer.push(arguments); };
-				window.gtag('js', new Date());
-				window.gtag('config', trackingCfg.ga);
-			}
-			if (trackingCfg.pixel) {
-				!function (f, b, e, v, n, t, s) {
-					if (f.fbq) return;
-					n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
-					if (!f._fbq) f._fbq = n;
-					n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
-					t = b.createElement(e); t.async = !0; t.src = v;
-					s = b.getElementsByTagName(e)[0];
-					if (s && s.parentNode) { s.parentNode.insertBefore(t, s); } else { (b.head || b.documentElement).appendChild(t); }
-				}(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
-				window.fbq('init', trackingCfg.pixel);
-				window.fbq('track', 'PageView');
-			}
-		};
+	function consentRead() {
+		var m = document.cookie.match(/(?:^|;\s*)ea2000_consent=([^;]+)/);
+		var p = m ? /^v(\d+)\.a([01])\.m([01])\.t\d+\.id[a-z0-9]+$/.exec(m[1]) : null;
+		if (!p || p[1] !== consentVersion) {
+			return null;
+		}
+		return { analytics: p[2] === '1', marketing: p[3] === '1' };
+	}
 
-		if (getConsent() === 'accepted') {
-			loadTrackers();
+	function consentWrite(choice) {
+		var id = '';
+		try {
+			var bytes = new Uint8Array(6);
+			window.crypto.getRandomValues(bytes);
+			for (var i = 0; i < bytes.length; i++) {
+				id += ('0' + bytes[i].toString(16)).slice(-2);
+			}
+		} catch (err) {
+			id = Math.random().toString(36).slice(2, 14);
+		}
+		var value = 'v' + consentVersion + '.a' + (choice.analytics ? 1 : 0) + '.m' + (choice.marketing ? 1 : 0) + '.t' + Math.floor(Date.now() / 1000) + '.id' + id;
+		document.cookie = 'ea2000_consent=' + value + '; max-age=' + (365 * 24 * 60 * 60) + '; path=/; SameSite=Lax' + (window.location.protocol === 'https:' ? '; Secure' : '');
+	}
+
+	function consentClearCookies(pattern) {
+		var host = window.location.hostname;
+		var bare = host.replace(/^www\./, '');
+		var domains = ['', host, '.' + bare];
+		document.cookie.split(';').forEach(function (part) {
+			var name = part.split('=')[0].trim();
+			if (!pattern.test(name)) {
+				return;
+			}
+			domains.forEach(function (domain) {
+				document.cookie = name + '=; max-age=0; path=/' + (domain ? '; domain=' + domain : '');
+			});
+		});
+	}
+
+	function consentAdSignals(choice) {
+		var ads = choice.marketing ? 'granted' : 'denied';
+		return { analytics_storage: choice.analytics ? 'granted' : 'denied', ad_storage: ads, ad_user_data: ads, ad_personalization: ads };
+	}
+
+	function consentLoadAnalytics(choice) {
+		if (consentLoaded.analytics || !consentCfg.ga) {
+			return;
+		}
+		consentLoaded.analytics = true;
+		window['ga-disable-' + consentCfg.ga] = false;
+		window.dataLayer = window.dataLayer || [];
+		window.gtag = window.gtag || function () { window.dataLayer.push(arguments); };
+		window.gtag('consent', 'default', consentAdSignals(choice));
+		window.gtag('js', new Date());
+		window.gtag('config', consentCfg.ga);
+		var tag = document.createElement('script');
+		tag.async = true;
+		tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(consentCfg.ga);
+		document.head.appendChild(tag);
+	}
+
+	function consentLoadMarketing() {
+		if (consentLoaded.marketing || !consentCfg.pixel) {
+			return;
+		}
+		consentLoaded.marketing = true;
+		!function (f, b, e, v, n, t, s) {
+			if (f.fbq) return;
+			n = f.fbq = function () { n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments); };
+			if (!f._fbq) f._fbq = n;
+			n.push = n; n.loaded = !0; n.version = '2.0'; n.queue = [];
+			t = b.createElement(e); t.async = !0; t.src = v;
+			s = b.getElementsByTagName(e)[0];
+			if (s && s.parentNode) { s.parentNode.insertBefore(t, s); } else { (b.head || b.documentElement).appendChild(t); }
+		}(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+		window.fbq('consent', 'grant');
+		window.fbq('init', consentCfg.pixel);
+		window.fbq('track', 'PageView');
+	}
+
+	function consentApply(choice) {
+		if (choice.analytics) {
+			consentLoadAnalytics(choice);
+		}
+		if (choice.marketing) {
+			consentLoadMarketing();
+		}
+		if (consentLoaded.analytics && typeof window.gtag === 'function') {
+			window.gtag('consent', 'update', consentAdSignals(choice));
+		}
+	}
+
+	function consentSave(choice) {
+		choice = { analytics: consentTools.analytics && !!choice.analytics, marketing: consentTools.marketing && !!choice.marketing };
+		var revoke = (consentLoaded.analytics && !choice.analytics) || (consentLoaded.marketing && !choice.marketing);
+		consentWrite(choice);
+		if (!choice.analytics) {
+			if (consentCfg.ga) {
+				window['ga-disable-' + consentCfg.ga] = true;
+			}
+			consentClearCookies(/^(_ga(_.*)?|_gid|_gat(_.*)?)$/);
+		}
+		if (!choice.marketing) {
+			if (consentLoaded.marketing && typeof window.fbq === 'function') {
+				window.fbq('consent', 'revoke');
+			}
+			consentClearCookies(/^(_fbp|_fbc)$/);
+		}
+		if (revoke) {
+			if (typeof window.gtag === 'function') {
+				window.gtag('consent', 'update', consentAdSignals(choice));
+			}
+			window.location.reload();
+			return;
+		}
+		consentApply(choice);
+		consentHide();
+	}
+
+	function consentView(view) {
+		if (!consentBox) {
+			return;
+		}
+		consentBox.classList.toggle('is-prefs', view === 'prefs');
+		Array.prototype.forEach.call(consentBox.querySelectorAll('[data-show]'), function (el) {
+			el.hidden = el.getAttribute('data-show') !== view;
+		});
+		Array.prototype.forEach.call(consentBox.querySelectorAll('[data-when]'), function (el) {
+			el.hidden = el.getAttribute('data-when') === 'optional' ? !consentHasOptional : consentHasOptional;
+		});
+		Array.prototype.forEach.call(consentBox.querySelectorAll('[data-cat]'), function (el) {
+			var cat = el.getAttribute('data-cat');
+			el.hidden = !consentTools[cat];
+			var input = el.querySelector('input');
+			if (input) {
+				var stored = consentRead();
+				input.checked = !!(stored && stored[cat]);
+			}
+		});
+	}
+
+	function consentShow(view, focus) {
+		if (!consentBox) {
+			return;
+		}
+		consentView(view);
+		consentBox.hidden = false;
+		if (focus) {
+			var title = consentBox.querySelector('.consent-title');
+			if (title) {
+				title.focus();
+			}
+		}
+	}
+
+	function consentHide() {
+		if (!consentBox) {
+			return;
+		}
+		consentBox.hidden = true;
+		if (consentTrigger && document.contains(consentTrigger)) {
+			consentTrigger.focus();
+		}
+		consentTrigger = null;
+	}
+
+	function consentDismissedThisVisit() {
+		try { return window.sessionStorage.getItem('ea2000ConsentDismissed') === '1'; } catch (err) { return false; }
+	}
+
+	var consentStored = consentRead();
+	if (consentStored) {
+		consentApply(consentStored);
+	}
+
+	if (consentBox) {
+		if (consentHasOptional && !consentStored && !consentDismissedThisVisit()) {
+			consentShow('intro', false);
 		}
 
-		if (cookieBar) {
-			var sessionDismissed = function () {
-				try { return sessionStorage.getItem('ea2000ConsentDismissed') === '1'; } catch (e) { return false; }
-			};
-			var setSessionDismissed = function () {
-				try { sessionStorage.setItem('ea2000ConsentDismissed', '1'); } catch (e) {}
-			};
+		consentBox.addEventListener('click', function (e) {
+			var btn = e.target && e.target.closest ? e.target.closest('[data-consent]') : null;
+			if (!btn) {
+				return;
+			}
+			var action = btn.getAttribute('data-consent');
+			if (action === 'accept') {
+				consentSave({ analytics: true, marketing: true });
+			} else if (action === 'reject') {
+				consentSave({ analytics: false, marketing: false });
+			} else if (action === 'prefs') {
+				consentView('prefs');
+				var title = consentBox.querySelector('.consent-title');
+				if (title) {
+					title.focus();
+				}
+			} else if (action === 'save') {
+				var picked = {};
+				Array.prototype.forEach.call(consentBox.querySelectorAll('[data-cat] input'), function (input) {
+					picked[input.name] = input.checked;
+				});
+				consentSave(picked);
+			} else if (action === 'close') {
+				if (!consentRead()) {
+					try { window.sessionStorage.setItem('ea2000ConsentDismissed', '1'); } catch (err) {}
+				}
+				consentHide();
+			}
+		});
 
-			var consent = getConsent();
-			if (consent !== 'accepted' && consent !== 'declined' && !sessionDismissed()) {
-				cookieBar.classList.add('is-visible');
+		consentBox.addEventListener('keydown', function (e) {
+			if (e.key === 'Escape') {
+				if (!consentRead()) {
+					try { window.sessionStorage.setItem('ea2000ConsentDismissed', '1'); } catch (err) {}
+				}
+				consentHide();
 			}
+		});
 
-			var acceptBtn = cookieBar.querySelector('.cookie-accept');
-			var declineBtn = cookieBar.querySelector('.cookie-decline');
-			var closeBtn = cookieBar.querySelector('.cookie-consent-close');
-			if (acceptBtn) {
-				acceptBtn.addEventListener('click', function () {
-					setConsent('accepted');
-					cookieBar.classList.remove('is-visible');
-					loadTrackers();
-				});
+		/* ลิงก์ "ตั้งค่าคุกกี้" ท้ายเว็บ ท้ายหน้า /go/ และในนโยบายความเป็นส่วนตัว */
+		document.addEventListener('click', function (e) {
+			var trigger = e.target && e.target.closest ? e.target.closest('a[href$="#cookie-settings"]') : null;
+			if (!trigger) {
+				return;
 			}
-			if (declineBtn) {
-				declineBtn.addEventListener('click', function () {
-					setConsent('declined');
-					cookieBar.classList.remove('is-visible');
-				});
-			}
-			if (closeBtn) {
-				closeBtn.addEventListener('click', function () {
-					setSessionDismissed();
-					cookieBar.classList.remove('is-visible');
-				});
-			}
+			e.preventDefault();
+			consentTrigger = trigger;
+			consentShow('prefs', true);
+		});
+
+		if (window.location.hash === '#cookie-settings') {
+			consentShow('prefs', true);
 		}
 	}
 })();

@@ -358,6 +358,10 @@ foreach ( array(
 			<p class="lh-note"><?php echo esc_html( $lh_note ); ?></p>
 		<?php endif; ?>
 
+		<?php if ( '' !== trim( (string) ea2000_mod( 'footer_cookie_link' ) ) ) : ?>
+			<p class="lh-cookie"><a href="#cookie-settings"><?php echo esc_html( ea2000_mod( 'footer_cookie_link' ) ); ?></a></p>
+		<?php endif; ?>
+
 	</div>
 </main>
 

@@ -65,7 +65,7 @@ $ea2000_mode = ea2000_mod( 'pricing_mode' );
 						<?php endforeach; ?>
 					</ul>
 					<?php if ( $ea2000_has_line ) : ?>
-					<a class="btn <?php echo $k_featured ? 'btn-fire' : 'btn-ghost'; ?> btn-block" href="<?php echo esc_url( $ea2000_line ); ?>" target="_blank" rel="noopener">
+					<a class="btn <?php echo $k_featured ? 'btn-fire' : 'btn-ghost'; ?> btn-block" href="<?php echo esc_url( $ea2000_line ); ?>" target="_blank" rel="noopener" data-line-pos="pricing" data-line-pkg="<?php echo esc_attr( $k_name ); ?>">
 						<?php echo esc_html( ea2000_mod( 'pricing_btn_text' ) ); ?>
 					</a>
 					<?php elseif ( $ea2000_go_url ) : ?>

@@ -33,7 +33,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 						กลับหน้าแรก
 					</a>
 					<?php if ( $ea2000_line ) : ?>
-					<a class="btn btn-line" href="<?php echo esc_url( $ea2000_line ); ?>" target="_blank" rel="noopener">
+					<a class="btn btn-line" href="<?php echo esc_url( $ea2000_line ); ?>" target="_blank" rel="noopener" data-line-pos="404">
 						<?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 						ทัก LINE
 					</a>

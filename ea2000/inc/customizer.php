@@ -397,13 +397,31 @@ function ea2000_customize_register( $wp_customize ) {
 		),
 
 		'ea2000_cookie' => array(
-			'title'       => '16) คุกกี้ / Tracking',
-			'description' => 'แถบขอความยินยอมคุกกี้ และโค้ดติดตาม (Google Analytics / Facebook Pixel จะโหลดเฉพาะหลังผู้ใช้กด "ยอมรับ" เท่านั้น)',
+			'title'       => '16) คุกกี้และความยินยอม (PDPA)',
+			'description' => 'การ์ดขอความยินยอมจะขึ้นเองเมื่อกรอกรหัส Google Analytics 4 หรือ Meta Pixel ที่ถูกต้อง · แต่ละแท็กโหลดเฉพาะหลังผู้ใช้ยินยอมหมวดนั้น · ห้ามเปิดการวางแท็ก Analytics ใน Site Kit และห้ามติดตั้งปลั๊กอิน Pixel อื่น เพราะจะโหลดก่อนผู้ใช้ยินยอม · เปลี่ยนการใช้คุกกี้เมื่อไรให้เพิ่มเลขรุ่นความยินยอม ผู้เข้าชมทุกคนจะถูกถามใหม่',
 			'fields'      => array(
-				'show_cookie_consent' => array( 'แสดงแถบขอความยินยอมคุกกี้', 'checkbox' ),
-				'cookie_consent_text' => array( 'ข้อความบนแถบคุกกี้', 'textarea' ),
-				'ga_measurement_id'   => array( 'Google Analytics 4 ID (เช่น G-XXXXXXXXXX)', 'text' ),
-				'fb_pixel_id'         => array( 'Facebook Pixel ID', 'text' ),
+				'ga_measurement_id'      => array( 'รหัส Google Analytics 4 (เช่น G-ABC123XYZ9)', 'text' ),
+				'fb_pixel_id'            => array( 'รหัส Meta Pixel (ตัวเลขล้วน)', 'text' ),
+				'consent_version'        => array( 'รุ่นความยินยอม (ตัวเลข)', 'text' ),
+				'consent_kicker'         => array( 'การ์ด · ป้ายเล็กด้านบน', 'text' ),
+				'consent_title'          => array( 'การ์ด · หัวข้อ', 'text' ),
+				'consent_text'           => array( 'การ์ด · ข้อความชั้นแรก', 'textarea' ),
+				'consent_policy_label'   => array( 'การ์ด · ลิงก์นโยบาย', 'text' ),
+				'consent_accept_label'   => array( 'ปุ่ม · ยอมรับทั้งหมด', 'text' ),
+				'consent_reject_label'   => array( 'ปุ่ม · ปฏิเสธทั้งหมด', 'text' ),
+				'consent_prefs_label'    => array( 'ปุ่ม · ตั้งค่า', 'text' ),
+				'consent_save_label'     => array( 'ปุ่ม · บันทึกการตั้งค่า', 'text' ),
+				'consent_close_label'    => array( 'ปุ่มปิด · ข้อความสำหรับโปรแกรมอ่านหน้าจอ', 'text' ),
+				'consent_always_label'   => array( 'ป้ายหมวดที่ปิดไม่ได้', 'text' ),
+				'consent_necessary_name' => array( 'หมวดจำเป็น · ชื่อ', 'text' ),
+				'consent_necessary_desc' => array( 'หมวดจำเป็น · คำอธิบาย', 'textarea' ),
+				'consent_analytics_name' => array( 'หมวดวิเคราะห์การใช้งาน · ชื่อ', 'text' ),
+				'consent_analytics_desc' => array( 'หมวดวิเคราะห์การใช้งาน · คำอธิบาย', 'textarea' ),
+				'consent_marketing_name' => array( 'หมวดการตลาด · ชื่อ', 'text' ),
+				'consent_marketing_desc' => array( 'หมวดการตลาด · คำอธิบาย', 'textarea' ),
+				'consent_none_text'      => array( 'ข้อความเมื่อยังไม่มีคุกกี้เสริม', 'textarea' ),
+				'consent_prefs_note'     => array( 'ข้อความท้ายหน้าตั้งค่า', 'textarea' ),
+				'footer_cookie_link'     => array( 'ลิงก์ตั้งค่าคุกกี้ท้ายเว็บ', 'text' ),
 			),
 		),
 
@@ -696,14 +714,20 @@ function ea2000_customize_register( $wp_customize ) {
 					$sanitize = 'sanitize_text_field';
 			}
 
-			$wp_customize->add_setting(
-				$field_id,
-				array(
-					'default'           => isset( $d[ $field_id ] ) ? $d[ $field_id ] : '',
-					'type'              => 'theme_mod',
-					'sanitize_callback' => $sanitize,
-				)
+			$ea2000_setting_args = array(
+				'default'           => isset( $d[ $field_id ] ) ? $d[ $field_id ] : '',
+				'type'              => 'theme_mod',
+				'sanitize_callback' => $sanitize,
 			);
+			/* รหัสติดตาม: เก็บเฉพาะรูปแบบที่ถูกต้อง และแจ้งแอดมินทันทีถ้ากรอกผิด (inc/consent.php) */
+			if ( 'ga_measurement_id' === $field_id || 'fb_pixel_id' === $field_id ) {
+				$ea2000_setting_args['sanitize_callback'] = 'ga_measurement_id' === $field_id ? 'ea2000_sanitize_ga_id' : 'ea2000_sanitize_pixel_id';
+				$ea2000_setting_args['validate_callback'] = 'ea2000_validate_tracking_id';
+			}
+			if ( 'consent_version' === $field_id ) {
+				$ea2000_setting_args['sanitize_callback'] = 'absint';
+			}
+			$wp_customize->add_setting( $field_id, $ea2000_setting_args );
 
 			if ( 'image' === $type ) {
 				$wp_customize->add_control(

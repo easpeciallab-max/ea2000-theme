@@ -74,16 +74,7 @@ function ea2000_assets() {
 			'nonce'   => wp_create_nonce( 'ea2000_load_more' ),
 		)
 	);
-	if ( ea2000_mod( 'ga_measurement_id' ) || ea2000_mod( 'fb_pixel_id' ) ) {
-		wp_localize_script(
-			'ea2000-main',
-			'ea2000Tracking',
-			array(
-				'ga'    => ea2000_mod( 'ga_measurement_id' ),
-				'pixel' => ea2000_mod( 'fb_pixel_id' ),
-			)
-		);
-	}
+	/* รหัสติดตามและรุ่นความยินยอมส่งให้ main.js ใน inc/consent.php (ea2000_consent_script_data) */
 }
 add_action( 'wp_enqueue_scripts', 'ea2000_assets' );
 
@@ -337,11 +328,32 @@ function ea2000_defaults() {
 		'links_guide5_url'   => '',
 		'links_note'       => 'การเทรด Forex, CFD และสินทรัพย์ทางการเงินอื่น ๆ มีความเสี่ยงสูง คุณอาจสูญเสียเงินลงทุนบางส่วนหรือทั้งหมด ผลในอดีตไม่รับประกันผลในอนาคต · EA2000 เป็นเครื่องมือช่วยเทรดตามเงื่อนไขที่กำหนด ไม่ใช่คำแนะนำการลงทุนและไม่ใช่การรับประกันผลกำไร',
 
-		/* คุกกี้ / Consent + Tracking (โหลด tracking เฉพาะหลังกดยอมรับ) */
-		'show_cookie_consent' => false,
-		'cookie_consent_text' => 'เว็บไซต์นี้ใช้คุกกี้เพื่อปรับปรุงประสบการณ์การใช้งานและวิเคราะห์การเข้าชม คุณเลือกยอมรับหรือปฏิเสธคุกกี้ที่ไม่จำเป็นได้',
-		'ga_measurement_id'   => '',
-		'fb_pixel_id'         => '',
+		/* คุกกี้และความยินยอม (PDPA) · inc/consent.php + main.js · แท็กโหลดทีละหมวดหลังผู้ใช้ยินยอมเท่านั้น
+		   show_cookie_consent และ cookie_consent_text เลิกใช้แล้ว (การ์ดขึ้นเองเมื่อมีรหัส GA4 หรือ Pixel ที่ถูกต้อง) คงไว้เพื่อ REST */
+		'show_cookie_consent'    => false,
+		'cookie_consent_text'    => '',
+		'ga_measurement_id'      => '',
+		'fb_pixel_id'            => '',
+		'consent_version'        => '1',
+		'consent_kicker'         => 'ความเป็นส่วนตัว',
+		'consent_title'          => 'การตั้งค่าคุกกี้',
+		'consent_text'           => 'เราใช้คุกกี้ที่จำเป็นเพื่อให้เว็บไซต์ทำงาน ส่วนคุกกี้วิเคราะห์การใช้งานและคุกกี้การตลาดจะใช้เมื่อคุณยินยอมเท่านั้น',
+		'consent_policy_label'   => 'อ่านนโยบาย',
+		'consent_accept_label'   => 'ยอมรับทั้งหมด',
+		'consent_reject_label'   => 'ปฏิเสธทั้งหมด',
+		'consent_prefs_label'    => 'ตั้งค่า',
+		'consent_save_label'     => 'บันทึกการตั้งค่า',
+		'consent_close_label'    => 'ปิด',
+		'consent_always_label'   => 'เปิดตลอด',
+		'consent_necessary_name' => 'คุกกี้ที่จำเป็น',
+		'consent_necessary_desc' => 'ทำให้เว็บไซต์เปิดได้และปลอดภัย และจำการตั้งค่าคุกกี้ของคุณ ปิดไม่ได้',
+		'consent_analytics_name' => 'วิเคราะห์การใช้งาน',
+		'consent_analytics_desc' => 'Google Analytics ช่วยให้เรารู้ว่ามีคนเข้าชมหน้าไหนและใช้งานเว็บไซต์อย่างไร เพื่อนำไปปรับปรุงเว็บไซต์',
+		'consent_marketing_name' => 'การตลาด',
+		'consent_marketing_desc' => 'Meta Pixel ช่วยวัดผลโฆษณาบน Facebook และ Instagram และแสดงโฆษณาที่เกี่ยวข้องให้ผู้ที่เคยเข้าชมเว็บไซต์',
+		'consent_none_text'      => 'ตอนนี้เว็บไซต์ใช้เฉพาะคุกกี้ที่จำเป็น ยังไม่มีคุกกี้วิเคราะห์การใช้งานหรือคุกกี้การตลาด',
+		'consent_prefs_note'     => 'เปลี่ยนใจได้ทุกเมื่อจากลิงก์ตั้งค่าคุกกี้ท้ายเว็บ การปฏิเสธหรือถอนความยินยอมไม่กระทบการใช้เว็บไซต์หรือการทักทีมงานทาง LINE',
+		'footer_cookie_link'     => 'ตั้งค่าคุกกี้',
 
 		/* Hero · บล็อก 0 "Boot" (H1 = hero_title + hero_subtitle) · หน้าแรก v3 Control Room */
 		'show_hero'      => true,
@@ -2308,6 +2320,12 @@ function ea2000_mods_sanitize( $key, $value, $default ) {
 	if ( is_bool( $default ) ) {
 		return in_array( $value, array( true, 1, '1', 'true', 'on' ), true );
 	}
+	if ( 'ga_measurement_id' === $key ) {
+		return ea2000_sanitize_ga_id( $value );
+	}
+	if ( 'fb_pixel_id' === $key ) {
+		return ea2000_sanitize_pixel_id( $value );
+	}
 	if ( preg_match( '/(_url|_img|_img_mobile|_image|_logo|_wordmark)$/', $key ) ) {
 		return esc_url_raw( (string) $value );
 	}
@@ -2465,5 +2483,6 @@ add_action( 'init', 'ea2000_disable_emoji', 20 );
  * -------------------------------------------------------------- */
 require get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/seo.php';
+require_once get_template_directory() . '/inc/consent.php';
 require_once get_template_directory() . '/inc/page-content.php';
 require_once get_template_directory() . '/inc/guide-pages.php';
