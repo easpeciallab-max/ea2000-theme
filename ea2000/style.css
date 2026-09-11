@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.10.0
+Version: 2.10.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -7112,7 +7112,7 @@ a.lh-feature-frame:hover {
    2) คีย์ LINE หน้าตาเหมือนคีย์อื่นทุกอย่าง ไม่ยก ไม่มีพื้นเขียว ไม่มีไฟกะพริบ (เจ้าของสั่ง 11 ก.ย. 2026)
       คลาส .is-action ยังอยู่เพื่อให้ main.js ไม่นับคีย์นี้เป็นหน้าปัจจุบัน · ห้ามใส่วัสดุหรือยกคีย์นี้กลับโดยไม่ถามเจ้าของ
    3) ป้ายของทุกคีย์เป็นสีเขียว --ink-accent (เจ้าของสั่ง 11 ก.ย. 2026)
-      คีย์ของหน้าที่เปิดอยู่จึงต่างด้วยตัวคีย์ที่ยกขึ้น วงเล็บ HUD ไฟชี้ตำแหน่ง และป้ายตัวหนา ไม่ใช่สีป้าย
+      คีย์ของหน้าที่เปิดอยู่ต่างด้วยไฟชี้ตำแหน่งบนราง ไอคอนสีเขียว และป้ายตัวหนา ไม่มีกรอบคีย์ (เจ้าของสั่ง 11 ก.ย. 2026)
    4) เส้นบัสของ .dock-keys วางด้วย calc จาก --cap-h ไม่ใช่เลขวิเศษ แก้ความสูงคีย์แล้วเส้นตามไปเอง
    5) ย่อบาร์ตอนเลื่อนอ่าน (.is-slim) ทำผ่านตัวแปร --slim (0 หรือ 1) ตัวเดียว ทุกค่าคูณจากมัน
       บาร์ "ย่อ" ไม่ใช่ "ซ่อน" เพราะปุ่ม LINE คือเหตุผลเดียวที่บาร์นี้มีอยู่ ห้ามพามันหายไปกลางหน้า
@@ -7317,7 +7317,7 @@ a.lh-feature-frame:hover {
 
 	/* ---------- ตัวคีย์ ----------
 	   คีย์ที่ไม่ได้เลือก ตัวคีย์จะไม่มีตัวตนเลย (ไม่มีขอบ ไม่มีพื้น ไม่มีเงา) เหลือแค่ไอคอนกับป้าย
-	   ร่องคีย์จะโผล่ตอนนิ้วแตะเท่านั้น · คีย์ของหน้าที่เปิดอยู่เป็นชิ้นเดียวในแผงที่มีวัสดุจริง
+	   ร่องคีย์จะโผล่ตอนนิ้วแตะเท่านั้น · คีย์ของหน้าที่เปิดอยู่ก็ไม่มีกรอบ ใช้ไฟบนรางกับไอคอนสีเขียวแทน
 	   (คีย์ LINE เคยยกเป็นชิ้นที่สอง เจ้าของสั่งให้เหมือนคีย์อื่น 11 ก.ย. 2026) */
 	.dock-cap {
 		position: relative;
@@ -7397,47 +7397,9 @@ a.lh-feature-frame:hover {
 		box-shadow: 0 0 6px 1px rgba(var(--ink-accent-rgb), 0.6);
 	}
 
-	/* ---------- คีย์ของหน้าที่เปิดอยู่ · ยกตัวขึ้นมามีสันข้าง 3px และติดวงเล็บ HUD แบบเดียวกับหน้าแรก ---------- */
+	/* ---------- คีย์ของหน้าที่เปิดอยู่ · ไอคอนสีเขียวกับไฟชี้ตำแหน่งบนรางเท่านั้น ไม่มีกรอบ พื้น หรือวงเล็บ (เจ้าของสั่ง 11 ก.ย. 2026) ---------- */
 	.dock-key.is-active {
 		color: var(--ink-accent);
-	}
-
-	.dock-key.is-active .dock-cap {
-		border-color: rgba(var(--ink-accent-rgb), 0.7);
-		background-color: rgba(var(--ink-accent-rgb), 0.16);
-		background-image: linear-gradient(180deg, rgba(var(--ink-accent-rgb), 0.26), rgba(var(--ink-accent-rgb), 0.08));
-		color: var(--ink-accent);
-		box-shadow: inset 0 1px 0 rgba(var(--ink-accent-rgb), 0.4), inset 0 -2px 0 rgba(0, 0, 0, 0.4), 0 3px 0 rgba(0, 0, 0, 0.6), 0 8px 16px -6px rgba(var(--ink-accent-rgb), 0.45);
-	}
-
-	.dock-key.is-active .dock-cap::before,
-	.dock-key.is-active .dock-cap::after {
-		content: "";
-		position: absolute;
-		z-index: 2;
-		width: 8px;
-		height: 8px;
-		border: 2px solid var(--hud);
-		pointer-events: none;
-	}
-
-	.dock-key.is-active .dock-cap::before {
-		top: -3px;
-		left: -3px;
-		border-right: 0;
-		border-bottom: 0;
-	}
-
-	.dock-key.is-active .dock-cap::after {
-		right: -3px;
-		bottom: -3px;
-		border-left: 0;
-		border-top: 0;
-	}
-
-	.dock-key.is-active .dock-led {
-		background-color: var(--ink-accent);
-		box-shadow: 0 0 6px 1px rgba(var(--ink-accent-rgb), 0.6);
 	}
 
 	.dock-key.is-active .dock-label {
