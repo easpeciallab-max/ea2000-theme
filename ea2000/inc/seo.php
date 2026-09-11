@@ -248,6 +248,25 @@ function ea2000_legacy_redirects() {
 }
 add_action( 'template_redirect', 'ea2000_legacy_redirects', 1 );
 
+/**
+ * ห้ามแคชหน้าเว็บของโฮสต์เก็บคำตอบที่เป็น redirect
+ *
+ * แคชของโฮสต์ (หัวข้อ x-cache-status) ใช้คีย์ที่ไม่รวมชื่อโดเมน คำขอ https://www.ea2000.co/
+ * ที่ WordPress ตอบ 301 ไป https://ea2000.co/ จึงถูกเก็บไว้แล้วส่งให้คนที่เปิด ea2000.co/ ด้วย
+ * กลายเป็นหน้าที่ชี้กลับมาหาตัวเองไม่รู้จบ (ตรวจยืนยันบนเว็บจริง 11 ก.ย. 2026 หน้าแรกเปิดไม่ขึ้น)
+ *
+ * ส่งหัวข้อห้ามแคชทั้งแบบมาตรฐานและแบบของ Nginx ทุกครั้งที่ WordPress กำลังจะ redirect
+ * ทางแก้ถาวรคือให้ Cloudflare ย้าย www ไปโดเมนหลักเอง คำขอ www จะไม่ถึงเซิร์ฟเวอร์เลย
+ */
+function ea2000_redirect_no_store( $location ) {
+	if ( $location && ! headers_sent() ) {
+		nocache_headers();
+		header( 'X-Accel-Expires: 0' );
+	}
+	return $location;
+}
+add_filter( 'wp_redirect', 'ea2000_redirect_no_store', 99 );
+
 /* --------------------------------------------------------------
  * 2) robots.txt: ชี้ sitemap ของ Yoast
  * -------------------------------------------------------------- */
