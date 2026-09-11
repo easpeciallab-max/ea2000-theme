@@ -104,7 +104,7 @@ function ea2000_consent_card() {
 	);
 	?>
 <section class="consent" id="cookie-settings" aria-labelledby="consent-title" hidden>
-	<p class="consent-kicker mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( ea2000_mod( 'consent_kicker' ) ); ?></p>
+	<p class="consent-kicker mono keep-case"><?php echo esc_html( ea2000_mod( 'consent_kicker' ) ); ?></p>
 	<h2 class="consent-title" id="consent-title" tabindex="-1"><?php echo ea2000_text( ea2000_mod( 'consent_title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 	<p class="consent-text" data-show="intro"><?php echo esc_html( ea2000_mod( 'consent_text' ) ); ?><?php if ( $privacy_url && '' !== $policy ) : ?> <a href="<?php echo esc_url( $privacy_url ); ?>"><?php echo esc_html( $policy ); ?></a><?php endif; ?></p>
 	<div class="consent-prefs" data-show="prefs">

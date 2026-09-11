@@ -179,7 +179,7 @@ $ea2000_mobile_nav[] = array(
 
 		<section class="launch" aria-labelledby="launch-title">
 			<div class="launch-main">
-				<p class="console-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( ea2000_mod( 'footer_console_label' ) ); ?></p>
+				<p class="console-label mono keep-case"><?php echo esc_html( ea2000_mod( 'footer_console_label' ) ); ?></p>
 				<h2 class="launch-title" id="launch-title"><?php echo ea2000_text( $ea2000_headline ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 				<?php if ( '' !== trim( $ea2000_sub ) ) : ?>
 				<p class="launch-sub"><?php echo esc_html( $ea2000_sub ); ?></p>

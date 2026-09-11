@@ -45,7 +45,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 
 			<?php if ( ea2000_mod( $ea2000_p . '_quick' ) ) : ?>
 				<aside class="guide-quick">
-					<p class="guide-quick-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( ea2000_mod( $ea2000_p . '_quick_title' ) ); ?></p>
+					<p class="guide-quick-label mono keep-case"><?php echo esc_html( ea2000_mod( $ea2000_p . '_quick_title' ) ); ?></p>
 					<p class="guide-quick-text"><?php echo ea2000_text( ea2000_mod( $ea2000_p . '_quick' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></p>
 				</aside>
 			<?php endif; ?>

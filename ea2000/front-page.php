@@ -212,7 +212,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 	<div class="container boot-grid">
 		<div class="boot-copy">
 			<?php if ( '' !== $ea2000_hero_badge ) : ?>
-			<p class="boot-prefix mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $ea2000_hero_badge ); ?></p>
+			<p class="boot-prefix mono keep-case"><?php echo esc_html( $ea2000_hero_badge ); ?></p>
 			<?php endif; ?>
 			<h1 class="boot-title" id="boot-title"><span class="boot-title-brand keep-case"><?php echo esc_html( ea2000_mod( 'hero_title' ) ); ?></span><?php if ( '' !== $ea2000_hero_sub ) : ?> <span class="boot-title-sub"><?php echo esc_html( $ea2000_hero_sub ); ?></span><?php endif; ?></h1>
 			<?php if ( '' !== $ea2000_hero_desc ) : ?>
@@ -305,7 +305,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 				<?php if ( '' !== $ea2000_principle ) : ?>
 				<aside class="principle">
 					<?php if ( '' !== $ea2000_principle_label ) : ?>
-					<p class="principle-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $ea2000_principle_label ); ?></p>
+					<p class="principle-label mono keep-case"><?php echo esc_html( $ea2000_principle_label ); ?></p>
 					<?php endif; ?>
 					<p class="principle-text"><?php echo esc_html( $ea2000_principle ); ?></p>
 				</aside>

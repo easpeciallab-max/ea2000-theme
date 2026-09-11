@@ -119,7 +119,7 @@ function ea2000_guide_store_cards( $prefix ) {
 	?>
 	<div class="dl-block">
 		<?php if ( $title ) : ?>
-			<p class="dl-title mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $title ); ?></p>
+			<p class="dl-title mono keep-case"><?php echo esc_html( $title ); ?></p>
 		<?php endif; ?>
 		<ul class="dl-cards" data-count="<?php echo count( $cards ); ?>">
 			<?php foreach ( $cards as $card ) : ?>

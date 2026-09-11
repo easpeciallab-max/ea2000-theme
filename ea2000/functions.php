@@ -1219,7 +1219,7 @@ function ea2000_page_hero( $kicker, $title, $subtitle = '' ) {
 	<section class="phero">
 		<div class="container phero-inner">
 			<?php if ( $kicker ) : ?>
-				<p class="phero-kicker mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $kicker ); ?></p>
+				<p class="phero-kicker mono keep-case"><?php echo esc_html( $kicker ); ?></p>
 			<?php endif; ?>
 			<h1 class="phero-title"><?php echo ea2000_text( $title ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h1>
 			<?php if ( $subtitle ) : ?>
@@ -1248,7 +1248,7 @@ function ea2000_line_cta( $title = '', $sub = '' ) {
 		<div class="container cta-console-inner">
 			<div class="cta-console-copy">
 				<?php if ( '' !== $ea2000_cta_label ) : ?>
-					<p class="console-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( $ea2000_cta_label ); ?></p>
+					<p class="console-label mono keep-case"><?php echo esc_html( $ea2000_cta_label ); ?></p>
 				<?php endif; ?>
 				<h2 class="cta-console-title"><?php echo ea2000_text( $title ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 				<p class="cta-console-sub"><?php echo esc_html( $sub ); ?></p>
