@@ -387,6 +387,7 @@ function ea2000_customize_register( $wp_customize ) {
 				'og_default_image'       => array( 'รูปสำหรับแชร์ (แนะนำ 1200×630px)', 'image' ),
 				'og_default_description' => array( 'คำโปรยเวลาแชร์หน้าหลัก/หน้าที่ไม่มีภาพ', 'textarea' ),
 				'search_console_verify'  => array( 'โค้ดยืนยัน Google Search Console (เฉพาะค่าใน content="...")', 'text' ),
+				'search_console_file'    => array( 'ชื่อไฟล์ยืนยัน Google Search Console เช่น google1234abcd.html (ห้ามลบหลังยืนยันแล้ว)', 'text' ),
 				'bing_verify'            => array( 'โค้ดยืนยัน Bing Webmaster (msvalidate.01)', 'text' ),
 			),
 		),

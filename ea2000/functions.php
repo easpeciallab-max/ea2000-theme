@@ -290,6 +290,7 @@ function ea2000_defaults() {
 		'og_default_image'       => $img_assets . 'og-share.jpg',
 		'og_default_description' => 'EA2000 · ระบบช่วยเทรดอัตโนมัติ (Expert Advisor) บน MetaTrader 5 เน้นวินัยและการบริหารความเสี่ยง',
 		'search_console_verify'  => '',
+		'search_console_file'    => '',
 		'bing_verify'            => '',
 
 		/* หน้า Link Hub (template-links.php) · ปลายทางยิงแอด สไตล์ Linktree */
@@ -1861,6 +1862,30 @@ function ea2000_verification_meta() {
 	}
 }
 add_action( 'wp_head', 'ea2000_verification_meta', 1 );
+
+/* ไฟล์ยืนยันความเป็นเจ้าของของ Google Search Console แบบ URL prefix
+   ไม่ต้องอัปโหลดไฟล์เข้ารากเว็บ ธีมตอบให้เองเมื่อมีคนเรียกชื่อไฟล์ตรงกับที่ตั้งไว้
+   ชื่อไฟล์ต้องเป็นรูปแบบ googleXXXX.html เท่านั้น กันไม่ให้ใช้ช่องนี้เสิร์ฟ path อื่น
+   ต้องคงไว้ตลอด ถ้าลบ Search Console จะถือว่าหมดสิทธิ์เจ้าของ */
+function ea2000_search_console_file() {
+	$name = trim( (string) ea2000_mod( 'search_console_file' ) );
+	if ( '' === $name || ! preg_match( '/^google[0-9a-f]{8,32}.html$/', $name ) ) {
+		return;
+	}
+
+	$uri  = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- ใช้เทียบ path อย่างเดียว
+	$path = wp_parse_url( $uri, PHP_URL_PATH );
+	if ( '/' . $name !== $path ) {
+		return;
+	}
+
+	status_header( 200 );
+	header( 'Content-Type: text/html; charset=UTF-8' );
+	header( 'X-Robots-Tag: noindex' );
+	echo 'google-site-verification: ' . esc_html( $name );
+	exit;
+}
+add_action( 'init', 'ea2000_search_console_file', 0 );
 
 /* canonical สำหรับหน้า archive (หมวด/แท็ก) ที่ WP core ไม่ออกให้ ปิดถ้ามีปลั๊ก SEO */
 function ea2000_archive_canonical() {
