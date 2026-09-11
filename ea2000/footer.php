@@ -7,6 +7,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 $ea2000_line = trim( (string) ea2000_mod( 'line_url' ) );
 $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_line; // ยังไม่กรอก LINE OA: ซ่อนทุกปุ่ม LINE
 $ea2000_go_page = get_page_by_path( 'go' );
@@ -165,7 +167,7 @@ $ea2000_mobile_nav[] = array(
 
 	<?php if ( ea2000_mod( 'show_footer_signal' ) ) : ?>
 	<svg class="signal watch" viewBox="0 0 1200 40" preserveAspectRatio="none" aria-hidden="true" focusable="false">
-		<path pathLength="1" vector-effect="non-scaling-stroke" d="M0 30 H230 l16 -22 l14 44 l16 -22 H640 l16 -22 l14 44 l16 -22 H1200"/>
+		<path vector-effect="non-scaling-stroke" d="M0 30 H230 l16 -22 l14 44 l16 -22 H640 l16 -22 l14 44 l16 -22 H1200"/>
 	</svg>
 	<?php endif; ?>
 
@@ -174,7 +176,7 @@ $ea2000_mobile_nav[] = array(
 		<section class="launch" aria-labelledby="launch-title">
 			<div class="launch-main">
 				<p class="console-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( ea2000_mod( 'footer_console_label' ) ); ?></p>
-				<h2 class="launch-title" id="launch-title"><?php echo esc_html( $ea2000_headline ); ?></h2>
+				<h2 class="launch-title" id="launch-title"><?php echo ea2000_text( $ea2000_headline ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 				<?php if ( '' !== trim( $ea2000_sub ) ) : ?>
 				<p class="launch-sub"><?php echo esc_html( $ea2000_sub ); ?></p>
 				<?php endif; ?>

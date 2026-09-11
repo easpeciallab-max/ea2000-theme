@@ -6,6 +6,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 ?>
 

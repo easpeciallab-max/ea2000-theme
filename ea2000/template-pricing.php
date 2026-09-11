@@ -5,6 +5,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( have_posts() ) {
@@ -25,7 +27,7 @@ $ea2000_mode = ea2000_mod( 'pricing_mode' );
 <?php /* การ์ดแพ็กเกจ */ ?>
 <section class="section">
 	<div class="container">
-		<div class="sec-head reveal">
+		<div class="sec-head">
 			<span class="kicker">Packages</span>
 			<h2><?php echo esc_html( ea2000_mod( 'pricing_title' ) ); ?></h2>
 			<p><?php echo esc_html( ea2000_mod( 'pricing_subtitle' ) ); ?></p>
@@ -40,7 +42,7 @@ $ea2000_mode = ea2000_mod( 'pricing_mode' );
 				}
 				$k_featured = (bool) ea2000_mod( 'pkg' . $i . '_featured' );
 				?>
-				<article class="price-card reveal <?php echo $k_featured ? 'is-featured' : ''; ?>">
+				<article class="price-card <?php echo $k_featured ? 'is-featured' : ''; ?>">
 					<?php if ( $k_featured ) : ?>
 						<span class="price-flag">แนะนำ</span>
 					<?php endif; ?>

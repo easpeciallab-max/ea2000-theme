@@ -5,6 +5,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 $ea2000_desc  = get_the_archive_description();
@@ -133,8 +135,8 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 								<a href="<?php echo esc_url( $ea2000_row[1] ); ?>">
 									<span class="guide-more-idx mono keep-case"><?php echo esc_html( str_pad( (string) ( $ea2000_idx + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
 									<span class="guide-more-body">
-										<span class="guide-more-name"><?php echo esc_html( $ea2000_row[0] ); ?></span>
-										<span class="guide-more-sub"><?php echo esc_html( $ea2000_row[2] ); ?></span>
+										<span class="guide-more-name"><?php echo ea2000_text( $ea2000_row[0] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
+										<span class="guide-more-sub"><?php echo ea2000_text( $ea2000_row[2] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 									</span>
 									<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 								</a>

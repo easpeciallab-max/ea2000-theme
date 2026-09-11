@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.8.1
+Version: 2.9.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -1885,7 +1885,7 @@ h3 {
 	background: transparent;
 	color: var(--text);
 	font-family: inherit;
-	font-size: 0.98rem;
+	font-size: 1rem; /* ต่ำกว่า 16px แล้ว iPhone จะซูมหน้าเองตอนแตะช่อง */
 	outline: 0;
 }
 
@@ -5034,7 +5034,7 @@ a.lh-feature-frame:hover {
 	font-weight: 600;
 	line-height: 1.5;
 	color: var(--text);
-	overflow-wrap: anywhere;
+	overflow-wrap: break-word;
 }
 
 .hud::after {
@@ -6261,21 +6261,23 @@ a.lh-feature-frame:hover {
 	height: 40px;
 }
 
+/* วาดด้วย clip-path บน path แทน stroke-dash: pathLength ใช้คู่กับ non-scaling-stroke ไม่ได้
+   (Chrome คิดความยาวในหน่วย viewBox แต่วาดขีดในหน่วยจอ เส้นจึงหยุดก่อนถึงขอบขวา) · path เดินจากซ้ายไปขวาทางเดียว ผลเท่ากัน
+   ตัดที่ path ไม่ใช่ที่ svg เพื่อให้ IntersectionObserver ยังเห็นกล่อง svg เต็ม (บทเรียนข้อ 16) */
 .signal path {
 	fill: none;
 	stroke: var(--ink-accent);
 	stroke-width: 2;
-	stroke-dasharray: 1;
-	stroke-dashoffset: 1;
+	clip-path: inset(0 100% 0 0);
 }
 
 @keyframes signal-draw {
 	from {
-		stroke-dashoffset: 1;
+		clip-path: inset(0 100% 0 0);
 	}
 
 	to {
-		stroke-dashoffset: 0;
+		clip-path: inset(0 0 0 0);
 	}
 }
 
@@ -6289,11 +6291,11 @@ a.lh-feature-frame:hover {
 
 @supports not (animation-timeline: view()) {
 	.signal path {
-		transition: stroke-dashoffset 1.2s linear;
+		transition: clip-path 1.2s linear;
 	}
 
 	.signal.in path {
-		stroke-dashoffset: 0;
+		clip-path: inset(0 0 0 0);
 	}
 }
 
@@ -7424,7 +7426,7 @@ a.lh-feature-frame:hover {
 
 /* ---------- ไม่มี JS และ prefers-reduced-motion · แถบท้ายเว็บอยู่สถานะจบ ---------- */
 .no-js .signal path {
-	stroke-dashoffset: 0;
+	clip-path: none;
 }
 
 .no-js .watermark {
@@ -7438,7 +7440,7 @@ a.lh-feature-frame:hover {
 
 @media (prefers-reduced-motion: reduce) {
 	.signal path {
-		stroke-dashoffset: 0;
+		clip-path: none;
 		animation: none;
 		transition: none;
 	}
@@ -8479,4 +8481,84 @@ a.lh-feature-frame:hover {
 /* ปุ่ม LINE ท้ายหน้า /go/ */
 .lh-btn-line-bottom {
 	margin-top: 22px;
+}
+
+/* ==========================================================
+   47) เก็บงานความพร้อมรอบสอง (11 ก.ย. 2026)
+   ========================================================== */
+
+/* หัวข้อไม่ทิ้งคำเดียวไว้บรรทัดท้าย · คำละตินที่มียัติภังค์ไม่ถูกตัดกลาง (span.nobr จาก ea2000_keep_words) */
+h1,
+h2,
+h3,
+.phero-title,
+.launch-title,
+.cta-console-title {
+	text-wrap: balance;
+}
+
+.nobr {
+	white-space: nowrap;
+}
+
+/* สวิตช์ช่องทางใน footer · จอสัมผัสไม่มี hover จึงแสดงสถานะเปิดไว้ ไม่ให้ดูเหมือนช่องทางถูกปิด */
+@media (hover: none) {
+	.switch::after {
+		translate: 14px 0;
+		background: var(--ink-accent);
+	}
+}
+
+/* หน้าคู่มือ · กล่องภาพรวมขั้นตอนและกล่องเช็กเคยชิดเส้นแบ่ง section 0px */
+.guide-page .guide-top + .section,
+.guide-page .guide-check-section {
+	border-top: 0;
+}
+
+/* บทติดตั้งหน้าแรก · แถวสุดท้ายของรายการมีเส้นล่างอยู่แล้ว แถวหมายเหตุไม่ต้องมีเส้นซ้ำ */
+.install-ledger + .notice-row {
+	border-top: 0;
+}
+
+/* แถบข้อมูลใน hero · ตอน hero แบ่งสองคอลัมน์ใช้ 2 x 2 ไม่ให้รายการสุดท้ายตกแถวคนเดียว */
+@media (min-width: 961px) {
+	.hud {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+/* ภาพในขั้นตอนคู่มือ · ไม่ขยายเกินขนาดจริง (ภาพ VPS Windows เคยถูกขยาย 2 เท่าจนแตก)
+   ภาพแนวตั้งสูงไม่เกินจอ (ภาพ iOS เคยสูง 1,168px) · กรอบหดตามภาพแล้วจัดกลางคอลัมน์ */
+.guide-step-media .media-frame {
+	width: fit-content;
+	margin-inline: auto;
+}
+
+.guide-step-media .media-frame picture,
+.guide-step-media .media-frame img {
+	width: auto;
+	max-width: 100%;
+	margin-inline: auto;
+}
+
+.guide-step-media .media-frame img {
+	height: auto;
+	max-height: 640px;
+}
+
+@media (max-width: 760px) {
+	.guide-step-media .media-frame img {
+		max-height: 520px;
+	}
+}
+
+/* ลิงก์เปิดภาพขนาดเต็มในแท็บใหม่ (ea2000_media_open) */
+.media-open {
+	display: block;
+	cursor: zoom-in;
+}
+
+.media-open:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
 }

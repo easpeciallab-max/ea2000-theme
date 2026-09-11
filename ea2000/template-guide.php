@@ -8,6 +8,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( have_posts() ) {
@@ -44,7 +46,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 			<?php if ( ea2000_mod( $ea2000_p . '_quick' ) ) : ?>
 				<aside class="guide-quick">
 					<p class="guide-quick-label mono keep-case"><span aria-hidden="true">// </span><?php echo esc_html( ea2000_mod( $ea2000_p . '_quick_title' ) ); ?></p>
-					<p class="guide-quick-text"><?php echo esc_html( ea2000_mod( $ea2000_p . '_quick' ) ); ?></p>
+					<p class="guide-quick-text"><?php echo ea2000_text( ea2000_mod( $ea2000_p . '_quick' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></p>
 				</aside>
 			<?php endif; ?>
 
@@ -63,6 +65,11 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 	}
 	?>
 
+	<?php
+	/* ภาพแรกของหน้าอาจอยู่ในจอแรกบนจอสูง จึงไม่ใส่ loading="lazy" ให้ภาพนั้น */
+	$ea2000_first_media = true;
+	?>
+
 	<?php if ( ! empty( $ea2000_steps ) ) : ?>
 	<section class="section guide-steps-section" id="steps">
 		<div class="container">
@@ -78,8 +85,8 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 						<div class="guide-step-body">
 							<span class="guide-step-num mono keep-case"><?php echo esc_html( str_pad( (string) $ea2000_step[0], 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<div class="guide-step-text">
-								<h2><?php echo esc_html( $ea2000_step[1] ); ?></h2>
-								<p><?php echo esc_html( $ea2000_step[2] ); ?></p>
+								<h2><?php echo ea2000_text( $ea2000_step[1] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
+								<p><?php echo ea2000_text( $ea2000_step[2] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></p>
 								<?php
 								if ( $ea2000_has_cards ) {
 									ea2000_guide_store_cards( $ea2000_p );
@@ -89,7 +96,10 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 						</div>
 						<?php if ( $ea2000_has_media ) : ?>
 							<div class="guide-step-media">
-								<?php ea2000_media_slot( $ea2000_key, 1280, 720 ); ?>
+								<?php
+								ea2000_media_slot( $ea2000_key, 1280, 720, '', $ea2000_first_media );
+								$ea2000_first_media = false;
+								?>
 							</div>
 						<?php endif; ?>
 					</li>
@@ -109,7 +119,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 					<h2 class="guide-check-title"><?php echo esc_html( ea2000_mod( $ea2000_p . '_check_title' ) ); ?></h2>
 					<ul class="mono-marks">
 						<?php foreach ( $ea2000_checks as $ea2000_item ) : ?>
-							<li><span class="mark mono keep-case" aria-hidden="true">[x]</span><span><?php echo esc_html( $ea2000_item ); ?></span></li>
+							<li><span class="mark mono keep-case" aria-hidden="true">[x]</span><span><?php echo ea2000_text( $ea2000_item ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span></li>
 						<?php endforeach; ?>
 					</ul>
 				</aside>
@@ -148,7 +158,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 						<a href="<?php echo esc_url( $ea2000_other[1] ); ?>">
 							<span class="guide-more-idx mono keep-case"><?php echo esc_html( str_pad( (string) ( $ea2000_idx + 1 ), 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<span class="guide-more-body">
-								<span class="guide-more-name"><?php echo esc_html( $ea2000_other[0] ); ?></span>
+								<span class="guide-more-name"><?php echo ea2000_text( $ea2000_other[0] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 								<?php if ( $ea2000_other[2] && ! ea2000_is_placeholder( $ea2000_other[2] ) ) : ?>
 									<span class="guide-more-sub"><?php echo esc_html( $ea2000_other[2] ); ?></span>
 								<?php endif; ?>

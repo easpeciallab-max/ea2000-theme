@@ -4,6 +4,8 @@
  *
  * @package ea2000
  */
+
+defined( 'ABSPATH' ) || exit;
 ?><!doctype html>
 <html class="no-js" <?php language_attributes(); ?>>
 <head>

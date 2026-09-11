@@ -5,6 +5,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( have_posts() ) {
@@ -22,13 +24,13 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 <section class="section">
 	<div class="container container-narrow">
 
-		<div class="riskdoc-intro reveal">
+		<div class="riskdoc-intro">
 			<?php echo ea2000_icon( 'warn' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<p><?php echo esc_html( ea2000_mod( 'riskpage_intro' ) ); ?></p>
 		</div>
 
 		<?php if ( ea2000_mod( 'riskpage_image' ) ) : ?>
-			<figure class="riskdoc-figure reveal">
+			<figure class="riskdoc-figure">
 				<img src="<?php echo esc_url( ea2000_mod( 'riskpage_image' ) ); ?>" alt="<?php echo esc_attr( ea2000_mod( 'riskpage_image_caption' ) ); ?>" loading="lazy">
 				<?php if ( ea2000_mod( 'riskpage_image_caption' ) ) : ?>
 					<figcaption><?php echo esc_html( ea2000_mod( 'riskpage_image_caption' ) ); ?></figcaption>

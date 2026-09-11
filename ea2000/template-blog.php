@@ -8,6 +8,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 $ea2000_blog_q = new WP_Query(

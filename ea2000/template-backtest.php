@@ -7,6 +7,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( have_posts() ) {
@@ -36,11 +38,11 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 	<div class="container">
 
 		<?php if ( ! ea2000_is_placeholder( ea2000_mod( 'backtest_intro' ) ) ) : ?>
-			<p class="lead reveal"><?php echo esc_html( ea2000_mod( 'backtest_intro' ) ); ?></p>
+			<p class="lead"><?php echo esc_html( ea2000_mod( 'backtest_intro' ) ); ?></p>
 		<?php endif; ?>
 
 		<?php if ( $ea2000_stats ) : ?>
-			<div class="stats-grid stats-grid--4 reveal">
+			<div class="stats-grid stats-grid--4">
 				<?php foreach ( $ea2000_stats as $ea2000_stat ) : ?>
 					<div class="stat">
 						<span class="stat-label"><?php echo esc_html( $ea2000_stat[0] ); ?></span>

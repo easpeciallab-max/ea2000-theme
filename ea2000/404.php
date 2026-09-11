@@ -5,6 +5,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 $ea2000_line = trim( (string) ea2000_mod( 'line_url' ) );
@@ -21,7 +23,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 				<p class="error-text">หน้านี้อาจถูกย้าย ลบ หรือพิมพ์ลิงก์ผิด ลองค้นหา หรือกลับไปหน้าหลักได้เลย</p>
 
 				<form class="error-search" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-					<input type="search" name="s" placeholder="ค้นหาบทความ…" aria-label="ค้นหา" spellcheck="false" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
+					<input type="search" name="s" placeholder="ค้นหาคู่มือ…" aria-label="ค้นหา" spellcheck="false" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
 					<button type="submit" aria-label="ค้นหา"><?php echo ea2000_icon( 'arrow', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 				</form>
 

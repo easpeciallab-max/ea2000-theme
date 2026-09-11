@@ -5,6 +5,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;

@@ -46,7 +46,65 @@ function ea2000_rich_inline( $text ) {
 				$html .= '<a href="' . esc_url( home_url( $part ) ) . '">' . esc_html( $label ) . '</a>';
 		}
 	}
-	return $html;
+	return ea2000_keep_words( $html, false );
+}
+
+/**
+ * กันการตัดบรรทัดกลางคำใน HTML ที่ escape แล้ว · แก้เฉพาะช่วงข้อความ ไม่แตะแท็กและ attribute
+ *
+ * - คำละตินที่มียัติภังค์ เช่น Zaurix-Server ห่อด้วย span.nobr เพราะเบราว์เซอร์ตัดบรรทัดหลังยัติภังค์ได้
+ * - $thai = true: คำไทยที่ตัวตัดคำของเบราว์เซอร์แยกเป็นสองคำจนอ่านขาด (ทีม / งาน) ใส่ word joiner (U+2060) ที่รอยต่อ
+ *   ใช้กับหัวข้อและข้อความสั้นเท่านั้น · รายการคำแก้ได้ด้วยฟิลเตอร์ ea2000_keep_words
+ *   เขียน | ตรงรอยต่อระหว่างคำ ห้ามวางคั่นพยัญชนะกับสระหรือวรรณยุกต์
+ *
+ * @param string $html HTML ที่ escape แล้ว
+ * @param bool   $thai ใส่ word joiner ให้คำไทยในรายการด้วยหรือไม่
+ * @return string
+ */
+function ea2000_keep_words( $html, $thai = true ) {
+	$html = (string) $html;
+	if ( '' === $html ) {
+		return $html;
+	}
+
+	$from = array();
+	$to   = array();
+	if ( $thai ) {
+		foreach ( (array) apply_filters( 'ea2000_keep_words', array( 'ทีม|งาน', 'ต่าง|จาก' ) ) as $word ) {
+			$word = (string) $word;
+			if ( false === strpos( $word, '|' ) ) {
+				continue;
+			}
+			$from[] = str_replace( '|', '', $word );
+			$to[]   = str_replace( '|', "\u{2060}", $word );
+		}
+	}
+
+	$parts = preg_split( '/(<[^>]*>)/', $html, -1, PREG_SPLIT_DELIM_CAPTURE );
+	if ( false === $parts ) {
+		return $html;
+	}
+	foreach ( $parts as $idx => $part ) {
+		if ( '' === $part || '<' === $part[0] ) {
+			continue;
+		}
+		if ( $from ) {
+			$part = str_replace( $from, $to, $part );
+		}
+		$wrapped       = preg_replace( '/(?<![A-Za-z0-9&#-])[A-Za-z0-9]+(?:-[A-Za-z0-9]+)+(?![A-Za-z0-9-])/', '<span class="nobr">$0</span>', $part );
+		$parts[ $idx ] = null === $wrapped ? $part : $wrapped;
+	}
+	return implode( '', $parts );
+}
+
+/**
+ * esc_html สำหรับหัวข้อและข้อความสั้น พร้อมกันตัดบรรทัดกลางคำ (ea2000_keep_words)
+ *
+ * @param string $text ข้อความดิบ
+ * @return string
+ */
+function ea2000_text( $text ) {
+	return ea2000_keep_words( esc_html( (string) $text ) );
 }
 
 /**
@@ -153,7 +211,7 @@ function ea2000_page_sections( $prefix, $max = 10, $wrap = true ) {
 	foreach ( $items as $item ) {
 		echo '<article class="doc-section reveal" id="' . esc_attr( $prefix . '-sec-' . $item[0] ) . '">';
 		if ( '' !== $item[1] ) {
-			echo '<h2>' . esc_html( $item[1] ) . '</h2>';
+			echo '<h2>' . ea2000_text( $item[1] ) . '</h2>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text
 		}
 		echo ea2000_rich_text( $item[2] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_rich_text
 		echo '</article>';
@@ -247,7 +305,7 @@ function ea2000_page_content_defaults() {
 	$d['installdoc_sec3_text']  = "- วางไฟล์ผิดโฟลเดอร์: ต้องอยู่ใน MQL5 แล้ว Experts โดยตรง ไม่ใช่ใน Indicators หรือ Scripts และไม่ควรอยู่ในโฟลเดอร์ย่อยที่ตั้งชื่อเอง\n- ยังไม่ Refresh: คลิกขวาที่หมวด Expert Advisors ใน Navigator แล้วเลือก Refresh หรือปิดเปิด MT5 ใหม่\n- วางใน MT5 คนละตัว: ถ้ามีหลายโบรกเกอร์ในเครื่อง ตรวจว่าเปิด Data Folder จาก MT5 ตัวที่ใช้อยู่จริง\n- ไฟล์เป็น .mq5 ไม่ใช่ .ex5: ไฟล์ซอร์สต้องคอมไพล์ก่อน หากได้รับไฟล์ .ex5 จากทีมงานปัญหานี้จะไม่เกิด\n- ไฟล์เสียหายจากการดาวน์โหลด: ขนาดไฟล์ผิดปกติหรือเปิดแล้วมีข้อความ error ในแท็บ Journal ให้ขอไฟล์ใหม่จากทีมงาน\n- เป็น MT4 ไม่ใช่ MT5: ไฟล์ .ex5 ใช้กับ MetaTrader 4 ไม่ได้ ต้องติดตั้ง MetaTrader 5 จากโบรกเกอร์ก่อน อ่าน[ความต่างของ MT4 กับ MT5](/mt5-login/#gmt5-sec-3)";
 
 	$d['installdoc_sec4_title'] = 'เปิดปุ่ม Algo Trading แล้ว EA ยังไม่ทำงาน ตรวจอะไรบ้าง';
-	$d['installdoc_sec4_text']  = "- ปุ่ม Algo Trading ต้องเป็นสีเขียว ถ้าเป็นสีแดงให้กดอีกครั้ง ปุ่มนี้เป็นสวิตช์รวมของทั้งโปรแกรม\n- ในหน้าต่างตั้งค่าของ EA แท็บ Common ต้องติ๊ก Allow Algo Trading ด้วย เป็นสวิตช์รายตัว\n- สัญลักษณ์มุมขวาบนของกราฟ: ถ้าเป็นเครื่องหมายห้ามหรือหน้าเศร้า แปลว่ายังไม่ได้รับอนุญาต ให้กลับไปตรวจสองข้อแรก\n- ตลาดปิดหรือไม่: ช่วงเสาร์อาทิตย์และวันหยุดของโบรกเกอร์ EA จะไม่มีอะไรให้ทำ ข้อความในแท็บ Experts จะบอกว่า Market is closed\n- ล็อกอินด้วยรหัสสำหรับดูอย่างเดียว: บัญชีที่ล็อกอินด้วย Investor password ส่งคำสั่งไม่ได้ ต้องใช้รหัสหลัก\n- คู่เงินหรือ Timeframe ไม่ตรงคู่มือ: EA บางตัวออกแบบให้ทำงานเฉพาะเงื่อนไขที่กำหนด วางบนกราฟอื่นจะไม่ทำงาน\n- ยังไม่โหลดไฟล์ Preset: ค่าเริ่มต้นที่ว่างเปล่าอาจทำให้ระบบไม่เข้าเงื่อนไข ให้กด Load ไฟล์ .set ที่ได้รับ\n- ดูแท็บ Journal และ Experts ด้านล่างเสมอ ระบบจะบอกสาเหตุเป็นข้อความ เช่น ไม่พอมาร์จิน หรือสิทธิ์ยังไม่ถูกเปิด ส่งภาพหน้าจอสองแท็บนี้ให้ทีมงานจะแก้ได้เร็วที่สุด";
+	$d['installdoc_sec4_text']  = "- ปุ่ม Algo Trading ต้องเป็นสีเขียว ถ้าเป็นสีแดงให้กดอีกครั้ง ปุ่มนี้เป็นสวิตช์รวมของทั้งโปรแกรม\n- ในหน้าต่างตั้งค่าของ EA แท็บ Common ต้องติ๊ก Allow Algo Trading ด้วย เป็นสวิตช์รายตัว\n- ไอคอนสถานะหลังชื่อ EA ที่มุมขวาบนของกราฟ: หน้าตาไอคอนต่างกันตามเวอร์ชันของ MT5 ถ้าไอคอนบอกว่ายังไม่ได้รับอนุญาตให้เทรด ให้กลับไปตรวจสองข้อแรก\n- ตลาดปิดหรือไม่: ช่วงเสาร์อาทิตย์และวันหยุดของโบรกเกอร์ EA จะไม่มีอะไรให้ทำ ข้อความในแท็บ Experts จะบอกว่า Market is closed\n- ล็อกอินด้วยรหัสสำหรับดูอย่างเดียว: บัญชีที่ล็อกอินด้วย Investor password ส่งคำสั่งไม่ได้ ต้องใช้รหัสหลัก\n- คู่เงินหรือ Timeframe ไม่ตรงคู่มือ: EA บางตัวออกแบบให้ทำงานเฉพาะเงื่อนไขที่กำหนด วางบนกราฟอื่นจะไม่ทำงาน\n- ยังไม่โหลดไฟล์ Preset: ค่าเริ่มต้นที่ว่างเปล่าอาจทำให้ระบบไม่เข้าเงื่อนไข ให้กด Load ไฟล์ .set ที่ได้รับ\n- ดูแท็บ Journal และ Experts ด้านล่างเสมอ ระบบจะบอกสาเหตุเป็นข้อความ เช่น ไม่พอมาร์จิน หรือสิทธิ์ยังไม่ถูกเปิด ส่งภาพหน้าจอสองแท็บนี้ให้ทีมงานจะแก้ได้เร็วที่สุด";
 
 	$d['installdoc_sec5_title'] = 'ติดตั้ง EA บนมือถือได้ไหม';
 	$d['installdoc_sec5_text']  = "ตอบตรง ๆ คือไม่ได้ แอป MetaTrader 5 บน iOS และ Android ไม่รองรับ Expert Advisor ทุกตัว ไม่ใช่เฉพาะ EA2000 มือถือใช้ดูกราฟ ดูออเดอร์ และเปิดปิดออเดอร์ด้วยมือได้เท่านั้น\n\nEA จะทำงานเฉพาะบน MT5 เวอร์ชันคอมพิวเตอร์ที่เปิดอยู่ ถ้าปิดเครื่องหรือปิดโปรแกรม EA ก็หยุด ทางออกของคนที่ไม่อยากเปิดคอมพิวเตอร์ทิ้งไว้คือใช้ VPS ซึ่งเป็นคอมพิวเตอร์เสมือนที่เปิดตลอด แล้วใช้มือถือ[ล็อกอินบัญชีเดียวกัน](/mt5-login/)เพื่อดูผลได้จากทุกที่ วิธีเลือกและเชื่อมต่อ VPS อยู่ในหัวข้อถัดไป";
@@ -256,10 +314,10 @@ function ea2000_page_content_defaults() {
 	$d['installdoc_sec6_text']  = "ติดตั้ง EA2000 บน VPS ทำเหมือนบนคอมพิวเตอร์ตามหน้านี้ทุกขั้น ต่างกันแค่ต้องเชื่อมต่อเข้าไปที่หน้าจอของ VPS ก่อน แล้ววางไฟล์และลาก EA ขึ้นกราฟจากในนั้น เมื่อตั้งเสร็จแล้ว ปิดหน้าต่างการเชื่อมต่อได้เลย EA บน VPS ยังทำงานต่อ\n\nวิธีเลือกสเปก วิธีเชื่อมต่อ และวิธีตั้งให้ MT5 เปิดเองหลังเครื่องรีสตาร์ต แยกไว้ในคู่มือตามอุปกรณ์ที่คุณใช้เข้าเครื่อง\n\n- [เชื่อมต่อ VPS จากคอมพิวเตอร์ Windows](/vps-windows/)\n- [เข้า VPS จากมือถือ Android](/vps-android/)\n- [เข้า VPS จาก iPhone หรือ iPad](/vps-ios/)\n\nแพ็กเกจ VIP ทีมงานช่วยติดตั้งและตั้งค่า MT5 บน VPS ให้ ส่วนแพ็กเกจอื่นสอบถามแนวทางได้ทาง LINE ดูสิทธิ์ของแต่ละแพ็กเกจที่หน้า[แพ็กเกจและราคา](/pricing/)";
 
 	$d['installdoc_sec7_title'] = 'วิธีตรวจว่า EA2000 ทำงานแล้วจริง';
-	$d['installdoc_sec7_text']  = "- มุมขวาบนของกราฟมีชื่อ EA2000 พร้อมสัญลักษณ์ที่แสดงว่ากำลังทำงาน ไม่ใช่เครื่องหมายห้าม\n- แผง Dashboard ของ EA2000 แสดงบนกราฟ พร้อมข้อมูลทุน ระดับความเสี่ยง และสถานะระบบ\n- แท็บ Experts ด้านล่างมีข้อความจากระบบเมื่อเริ่มทำงาน โดยไม่มีบรรทัด error สีแดง\n- แท็บ Journal ไม่มีข้อความปฏิเสธคำสั่ง หากมี ให้ส่งภาพหน้าจอให้ทีมงาน\n- ปล่อยให้ระบบทำงานบนบัญชีเดโมหรือทุนน้อยสักระยะก่อนตามแนวทาง [Forward Test](/forward-test/) แล้วค่อยเพิ่มทุนตามกรอบที่วางไว้ การไม่มีออเดอร์ทันทีไม่ใช่ความผิดปกติ ระบบรอเงื่อนไขตามกฎที่ตั้งไว้";
+	$d['installdoc_sec7_text']  = "- มุมขวาบนของกราฟมีชื่อ EA2000 และไอคอนสถานะไม่ได้บอกว่ายังไม่ได้รับอนุญาตให้เทรด\n- แผง Dashboard ของ EA2000 แสดงบนกราฟ พร้อมข้อมูลทุน ระดับความเสี่ยง และสถานะระบบ\n- แท็บ Experts ด้านล่างมีข้อความจากระบบเมื่อเริ่มทำงาน โดยไม่มีบรรทัด error สีแดง\n- แท็บ Journal ไม่มีข้อความปฏิเสธคำสั่ง หากมี ให้ส่งภาพหน้าจอให้ทีมงาน\n- ปล่อยให้ระบบทำงานบนบัญชีเดโมหรือทุนน้อยสักระยะก่อนตามแนวทาง [Forward Test](/forward-test/) แล้วค่อยเพิ่มทุนตามกรอบที่วางไว้ การไม่มีออเดอร์ทันทีไม่ใช่ความผิดปกติ ระบบรอเงื่อนไขตามกฎที่ตั้งไว้";
 
 	$d['installdoc_sec8_title'] = 'ปัญหาที่พบบ่อยและวิธีแก้';
-	$d['installdoc_sec8_text']  = "อาการ | สาเหตุที่พบบ่อย | วิธีแก้\nไม่เห็น EA ใน Navigator | วางไฟล์ผิดโฟลเดอร์ หรือยังไม่ Refresh | ย้ายไฟล์ไป MQL5 แล้ว Experts และคลิกขวา Refresh\nมุมกราฟเป็นเครื่องหมายห้าม | ยังไม่เปิด Algo Trading หรือไม่ได้ติ๊ก Allow Algo Trading | เปิดสวิตช์ทั้งสองจุด แล้วลาก EA ขึ้นกราฟใหม่\nแท็บ Experts บอก Not enough money | ทุนหรือมาร์จินไม่พอสำหรับขนาดออเดอร์ที่ตั้ง | ลดขนาดออเดอร์ตาม Preset ระดับความเสี่ยงต่ำ หรือเพิ่มทุนตามกรอบที่วางไว้\nEA หยุดทำงานหลังปิดเครื่อง | EA ทำงานเฉพาะตอน MT5 เปิดอยู่ | ใช้ VPS หรือเปิดเครื่องค้างไว้ในช่วงที่ต้องการให้ระบบทำงาน\nDashboard ไม่แสดง | โหลด Preset ไม่ครบ หรือกราฟเล็กเกินไป | โหลดไฟล์ .set ใหม่ และขยายหน้าต่างกราฟ\nข้อความ Invalid account | สิทธิ์ยังไม่เปิดให้หมายเลขบัญชีนี้ | ส่งหมายเลขบัญชีให้ทีมงานตรวจสอบสิทธิ์ทาง LINE";
+	$d['installdoc_sec8_text']  = "อาการ | สาเหตุที่พบบ่อย | วิธีแก้\nไม่เห็น EA ใน Navigator | วางไฟล์ผิดโฟลเดอร์ หรือยังไม่ Refresh | ย้ายไฟล์ไป MQL5 แล้ว Experts และคลิกขวา Refresh\nไอคอนสถานะบอกว่ายังไม่ได้รับอนุญาตให้เทรด | ยังไม่เปิด Algo Trading หรือไม่ได้ติ๊ก Allow Algo Trading | เปิดสวิตช์ทั้งสองจุด แล้วลาก EA ขึ้นกราฟใหม่\nแท็บ Experts บอก Not enough money | ทุนหรือมาร์จินไม่พอสำหรับขนาดออเดอร์ที่ตั้ง | ลดขนาดออเดอร์ตาม Preset ระดับความเสี่ยงต่ำ หรือเพิ่มทุนตามกรอบที่วางไว้\nEA หยุดทำงานหลังปิดเครื่อง | EA ทำงานเฉพาะตอน MT5 เปิดอยู่ | ใช้ VPS หรือเปิดเครื่องค้างไว้ในช่วงที่ต้องการให้ระบบทำงาน\nDashboard ไม่แสดง | โหลด Preset ไม่ครบ หรือกราฟเล็กเกินไป | โหลดไฟล์ .set ใหม่ และขยายหน้าต่างกราฟ\nแท็บ Experts แจ้งว่ายังไม่เปิดสิทธิ์ใช้งาน | สิทธิ์ยังไม่เปิดให้หมายเลขบัญชีนี้ | ส่งหมายเลขบัญชีให้ทีมงานตรวจสอบสิทธิ์ทาง LINE";
 
 	/* ---------- /risk-disclosure/ ---------- */
 	$d['riskdoc_sec1_title'] = 'ความเสี่ยงช่วงข่าวและช่วงที่ Spread กว้าง';
@@ -302,14 +360,15 @@ function ea2000_page_content_defaults() {
  * ภาพประกอบที่มีตัวหนังสือย่อจากความกว้าง 1600px ลงเหลือราว 340px บนมือถือจนอ่านไม่ออก
  * จึงให้ใส่ภาพที่จัดหน้าใหม่สำหรับมือถือแยกได้ ขนาดของ source ใส่ไว้กันหน้ากระโดดตอนโหลด
  */
-function ea2000_media_picture( $key, $src, $alt, $width, $height ) {
+function ea2000_media_picture( $key, $src, $alt, $width, $height, $eager = false ) {
 	$main   = ea2000_media_info( $src, $width, $height );
 	$srcset = '' !== $main['srcset'] ? sprintf( ' srcset="%s" sizes="(max-width: 760px) 100vw, 1120px"', esc_attr( $main['srcset'] ) ) : '';
 	$img    = sprintf(
-		'<img src="%s"%s alt="%s" loading="lazy" decoding="async" width="%s" height="%s">',
+		'<img src="%s"%s alt="%s" loading="%s" decoding="async" width="%s" height="%s">',
 		esc_url( $src ),
 		$srcset,
 		esc_attr( $alt ),
+		$eager ? 'eager' : 'lazy',
 		esc_attr( (string) $main['width'] ),
 		esc_attr( (string) $main['height'] )
 	);
@@ -326,6 +385,23 @@ function ea2000_media_picture( $key, $src, $alt, $width, $height ) {
 		esc_attr( (string) $small['width'] ),
 		esc_attr( (string) $small['height'] ),
 		$img
+	);
+}
+
+/**
+ * ห่อรูปด้วยลิงก์เปิดไฟล์ขนาดเต็มในแท็บใหม่
+ *
+ * ภาพหน้าจอที่มีตัวหนังสือเล็กถูกย่อลงมากบนมือถือ ผู้อ่านจึงต้องกดดูภาพเต็มได้ทุกช่อง
+ *
+ * @param string $src  URL ของไฟล์ภาพ
+ * @param string $html รูปที่ escape แล้ว (img หรือ picture)
+ * @return string
+ */
+function ea2000_media_open( $src, $html ) {
+	return sprintf(
+		'<a class="media-open" href="%s" target="_blank" rel="noopener">%s<span class="sr-only">เปิดภาพขนาดเต็มในแท็บใหม่</span></a>',
+		esc_url( $src ),
+		$html
 	);
 }
 
@@ -378,8 +454,9 @@ function ea2000_media_info( $url, $width, $height ) {
  * @param int    $width  ความกว้างจริงของภาพ
  * @param int    $height ความสูงจริงของภาพ
  * @param string $caption คำบรรยายใต้ภาพ (เว้นว่าง = ไม่แสดง)
+ * @param bool   $eager   true = ภาพแรกของหน้า ไม่ใช้ loading="lazy"
  */
-function ea2000_media_slot( $key, $width = 1280, $height = 800, $caption = '' ) {
+function ea2000_media_slot( $key, $width = 1280, $height = 800, $caption = '', $eager = false ) {
 	$src  = trim( (string) ea2000_mod( $key . '_img' ) );
 	$alt  = (string) ea2000_mod( $key . '_img_alt' );
 	$note = trim( (string) ea2000_mod( $key . '_img_note' ) );
@@ -403,7 +480,7 @@ function ea2000_media_slot( $key, $width = 1280, $height = 800, $caption = '' ) 
 		printf(
 			'<figure class="hud-frame media-frame watch wipe">%s%s%s</figure>',
 			$corners, // phpcs:ignore WordPress.Security.EscapeOutput
-			ea2000_media_picture( $key, $src, $alt, $width, $height ), // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
+			ea2000_media_open( $src, ea2000_media_picture( $key, $src, $alt, $width, $height, $eager ) ), // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside
 			'' !== $caption ? '<figcaption class="fig mono keep-case">' . esc_html( $caption ) . '</figcaption>' : ''
 		);
 		return;

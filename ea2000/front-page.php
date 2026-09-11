@@ -13,6 +13,8 @@
  * @package ea2000
  */
 
+defined( 'ABSPATH' ) || exit;
+
 get_header();
 
 if ( ea2000_has_elementor_content() && ea2000_uses_elementor_page_template() ) :
@@ -78,7 +80,7 @@ if ( ! function_exists( 'ea2000_front_media' ) ) {
 			?>
 			<figure class="<?php echo esc_attr( $classes ); ?>">
 				<?php ea2000_hud_corners(); ?>
-				<?php echo ea2000_media_picture( $key, $src, $alt, $width, $height ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ?>
+				<?php echo ea2000_media_open( $src, ea2000_media_picture( $key, $src, $alt, $width, $height ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ?>
 				<?php if ( '' !== $caption ) : ?>
 				<figcaption class="fig mono keep-case"><?php echo esc_html( $caption ); ?></figcaption>
 				<?php endif; ?>
