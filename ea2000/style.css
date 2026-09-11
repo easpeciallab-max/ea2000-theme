@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.9.0
+Version: 2.9.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -4258,19 +4258,32 @@ a.lh-feature-frame:hover {
 	color: var(--header-accent);
 }
 
-/* ปุ่มเปิดเมนูมือถือ · พื้นเขียวสดเต็มปุ่ม มุมเหลี่ยม ขีดเป็นสีเข้มเพื่อให้ตัดกันชัด
-   #08150E บน #8CEC4E ได้อัตราส่วนความต่างราว 13:1 */
+/* ปุ่มเปิดเมนูมือถือ · ไม่มีพื้นและไม่มีกรอบ เหลือขีดสีขาว 3 เส้นที่หนาขึ้น (เจ้าของสั่ง 11 ก.ย. 2026)
+   ขีด --header-text บนแถบหัวเว็บสีเข้มได้ความต่างราว 17:1 · พื้นที่กดยัง 44x44 เท่าเดิม
+   ขีดหนา 3px เว้น 5px ตอนเปิดเมนูจึงเลื่อน 8px (3 + 5) ให้ขีดบนกับขีดล่างไขว้กันตรงกลางพอดี */
 .nav-toggle {
-	border-color: var(--ink-accent);
-	background: var(--ink-accent);
+	border-color: transparent;
+	background: transparent;
 }
 
 .nav-toggle span {
-	background: var(--ink-deep);
+	width: 24px;
+	height: 3px;
+	background: var(--header-text);
 }
 
-.nav-toggle:hover {
-	filter: brightness(1.08);
+.nav-open .nav-toggle span:nth-child(1) {
+	transform: translateY(8px) rotate(45deg);
+}
+
+.nav-open .nav-toggle span:nth-child(3) {
+	transform: translateY(-8px) rotate(-45deg);
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.nav-toggle:hover span {
+		background: var(--header-accent);
+	}
 }
 
 .nav-toggle:active {
@@ -6884,10 +6897,10 @@ a.lh-feature-frame:hover {
    ข้อตกลงที่ต้องรักษาเวลาแก้ต่อ
    1) ตัวเลขของบาร์อยู่ในตัวแปรชุดเดียวที่ html ในเบรกพอยต์นี้ ห้ามเขียนเลขซ้ำในกฎอื่น
       โดยเฉพาะ --dock-pad ที่ .dock-lamp ใช้เป็น inset ซ้ายขวา ถ้าสองที่ไม่เท่ากันไฟจะเยื้องจากกลางช่อง
-   2) ระยะยกของคีย์ LINE (--lift) คำนวณจาก --dock-pad-top / --dock-punch / --dock-ring
-      ไม่ใช่เลขที่เดามา แก้ padding ของบาร์แล้วคีย์ยังโผล่พ้นรางเท่าเดิมเอง
-   3) คีย์ LINE สูงกว่าคีย์อื่น แต่ชดเชยด้วย margin-bottom ติดลบที่คิดจาก --cap-h
-      ป้ายทุกใบจึงอยู่บรรทัดเดียวกันเอง ไม่ต้องมี margin ชดเชยรายตัว
+   2) คีย์ LINE หน้าตาเหมือนคีย์อื่นทุกอย่าง ไม่ยก ไม่มีพื้นเขียว ไม่มีไฟกะพริบ (เจ้าของสั่ง 11 ก.ย. 2026)
+      คลาส .is-action ยังอยู่เพื่อให้ main.js ไม่นับคีย์นี้เป็นหน้าปัจจุบัน · ห้ามใส่วัสดุหรือยกคีย์นี้กลับโดยไม่ถามเจ้าของ
+   3) ป้ายของทุกคีย์เป็นสีเขียว --ink-accent (เจ้าของสั่ง 11 ก.ย. 2026)
+      คีย์ของหน้าที่เปิดอยู่จึงต่างด้วยตัวคีย์ที่ยกขึ้น วงเล็บ HUD ไฟชี้ตำแหน่ง และป้ายตัวหนา ไม่ใช่สีป้าย
    4) เส้นบัสของ .dock-keys วางด้วย calc จาก --cap-h ไม่ใช่เลขวิเศษ แก้ความสูงคีย์แล้วเส้นตามไปเอง
    5) ย่อบาร์ตอนเลื่อนอ่าน (.is-slim) ทำผ่านตัวแปร --slim (0 หรือ 1) ตัวเดียว ทุกค่าคูณจากมัน
       บาร์ "ย่อ" ไม่ใช่ "ซ่อน" เพราะปุ่ม LINE คือเหตุผลเดียวที่บาร์นี้มีอยู่ ห้ามพามันหายไปกลางหน้า
@@ -6895,7 +6908,7 @@ a.lh-feature-frame:hover {
       บล็อกนี้จึงประกาศ --dock-ease / --dock-ease-press เอง และเหลือ --ease-mech ไว้กับการเปลี่ยนสีเท่านั้น
    7) z-index 120 · header ใช้ 130 ลิ้นชักเมนูจึงยังทับบาร์นี้ได้ ห้ามเพิ่มเกินนี้
    8) ไม่มีแอนิเมชันตอนโหลดหน้า เว็บนี้เปลี่ยนหน้าเต็มทุกครั้ง บาร์ที่เด้งเข้ามาใหม่ทุกหน้าคือความรำคาญ
-      สิ่งเดียวที่ขยับเองคือไฟสถานะบนคีย์ LINE ซึ่งกะพริบ 3 ครั้งแล้วหยุด (ไม่ใช่ infinite) */
+      ไม่มีอะไรในบาร์ขยับเองเลย ทุกการเคลื่อนไหวเกิดจากการแตะหรือการเลื่อนหน้า */
 .mobile-app-nav {
 	--slim: 0;
 	display: none;
@@ -6912,14 +6925,11 @@ a.lh-feature-frame:hover {
 		--dock-pad-top-base: 15px;
 		--dock-pad-bottom-base: 9px;
 		--cap-h-base: 38px;
-		--cap-h-line: 46px;
 		--dock-gap: 6px;
 		--dock-label-h: 16px;
 		/* --dock-key-min ตั้งให้เท่ากับ cap + gap + label พอดี แถวคีย์จึงสูงคงที่ไม่ว่าเบราว์เซอร์จะวัดบรรทัดได้เท่าไร
 		   ความสูงบาร์จึงคิดล่วงหน้าได้ตรง และ .dock-spacer เว้นที่ได้พอดีเป๊ะ ไม่เหลือแถบขาวโผล่เหนือบาร์ */
 		--dock-key-min: 60px;
-		--dock-ring: 4px; /* ปลอกสีพื้นบาร์รอบคีย์ LINE ที่ทำให้มันดูเจาะรางออกมา */
-		--dock-punch: 9px; /* คีย์ LINE โผล่พ้นขอบบนของบาร์เท่านี้ */
 		--dock-h: calc(var(--dock-pad-top-base) + var(--dock-key-min) + var(--dock-pad-bottom-base) + 1px);
 		/* ธีมใช้ steps(4, end) เป็น ease หลัก · บาร์นี้เคลื่อนที่จริงจึงต้องมี ease ของตัวเอง */
 		--dock-ease: cubic-bezier(0.2, 0.72, 0.24, 1);
@@ -7095,8 +7105,8 @@ a.lh-feature-frame:hover {
 
 	/* ---------- ตัวคีย์ ----------
 	   คีย์ที่ไม่ได้เลือก ตัวคีย์จะไม่มีตัวตนเลย (ไม่มีขอบ ไม่มีพื้น ไม่มีเงา) เหลือแค่ไอคอนกับป้าย
-	   ร่องคีย์จะโผล่ตอนนิ้วแตะเท่านั้น · คีย์ที่เลือกกับคีย์ LINE เป็นของสองชิ้นเดียวในแผงที่มีวัสดุจริง
-	   นี่คือการแก้ต้นเหตุของบาร์เดิมที่เป็นชิปเท่ากันห้าอันเรียงกัน */
+	   ร่องคีย์จะโผล่ตอนนิ้วแตะเท่านั้น · คีย์ของหน้าที่เปิดอยู่เป็นชิ้นเดียวในแผงที่มีวัสดุจริง
+	   (คีย์ LINE เคยยกเป็นชิ้นที่สอง เจ้าของสั่งให้เหมือนคีย์อื่น 11 ก.ย. 2026) */
 	.dock-cap {
 		position: relative;
 		display: grid;
@@ -7108,7 +7118,7 @@ a.lh-feature-frame:hover {
 		border-radius: var(--key-radius);
 		background-color: transparent;
 		box-shadow: none;
-		transform: translateY(calc(var(--lift, 0px) + var(--press, 0px)));
+		transform: translateY(var(--press, 0px));
 		transition: height 0.16s var(--dock-ease), transform 0.12s var(--dock-ease-press), box-shadow 0.12s var(--dock-ease-press), border-color 0.15s var(--ease-mech), background-color 0.15s var(--ease-mech), color 0.15s var(--ease-mech);
 	}
 
@@ -7146,6 +7156,7 @@ a.lh-feature-frame:hover {
 		font-weight: 600;
 		letter-spacing: 0.02em;
 		line-height: 1.4;
+		color: var(--ink-accent); /* ป้ายทุกคีย์สีเขียว ได้ความต่างราว 13:1 บน --ink-deep */
 		text-overflow: ellipsis;
 		white-space: nowrap;
 		transition: max-height 0.16s var(--dock-ease), margin-top 0.16s var(--dock-ease), opacity 0.12s linear, color 0.15s var(--ease-mech);
@@ -7219,51 +7230,6 @@ a.lh-feature-frame:hover {
 
 	.dock-key.is-active .dock-label {
 		font-weight: 700;
-		color: var(--ink-text);
-	}
-
-	/* ---------- คีย์ LINE · ยกพ้นหน้าปัดจนเจาะรางบน มีสันเขียวเข้ม 4px และปลอกสีพื้นบาร์รอบตัว ----------
-	   --lift คิดจากระยะจริง ไม่ใช่เลขเดา · margin-bottom ติดลบทำให้ที่ในสายเนื้อหาเท่าคีย์อื่น ป้ายจึงตรงบรรทัดเดียวกัน */
-	.dock-key.is-action {
-		--lift: calc(var(--dock-ring) - var(--dock-pad-top) - var(--dock-punch));
-		color: var(--ink-accent);
-	}
-
-	.dock-key.is-action .dock-cap {
-		max-width: 54px;
-		height: var(--cap-h-line);
-		margin-bottom: calc(var(--cap-h) - var(--cap-h-line));
-		border-color: var(--accent-2);
-		background-color: var(--ink-accent);
-		background-image: none;
-		color: var(--ink-deep);
-		box-shadow: inset 0 2px 0 var(--accent-2), inset 0 -3px 0 rgba(0, 0, 0, 0.22), 0 4px 0 var(--primary-deep), 0 0 0 var(--dock-ring) var(--ink-deep), 0 12px 20px -6px rgba(0, 0, 0, 0.7);
-	}
-
-	.dock-key.is-action .dock-cap .icon {
-		width: 1.4rem;
-		height: 1.4rem;
-	}
-
-	.dock-key.is-action .dock-led {
-		background-color: rgba(0, 0, 0, 0.35);
-		box-shadow: none;
-		animation: dock-live 1.8s ease-in-out 3;
-	}
-
-	.dock-key.is-action .dock-label {
-		font-weight: 700;
-		color: var(--ink-accent);
-	}
-
-	.dock-key.is-action:active,
-	.dock-key.is-action.is-press {
-		--press: 4px;
-	}
-
-	.dock-key.is-action:active .dock-cap,
-	.dock-key.is-action.is-press .dock-cap {
-		box-shadow: inset 0 2px 0 var(--accent-2), inset 0 -1px 0 rgba(0, 0, 0, 0.2), 0 0 0 var(--primary-deep), 0 0 0 var(--dock-ring) var(--ink-deep), 0 4px 10px -4px rgba(0, 0, 0, 0.7);
 	}
 
 	/* ---------- โฟกัสคีย์บอร์ด ---------- */
@@ -7287,11 +7253,6 @@ a.lh-feature-frame:hover {
 			border-color: rgba(var(--ink-accent-rgb), 0.45);
 			color: var(--ink-accent);
 		}
-
-		.dock-key.is-action:hover .dock-cap {
-			border-color: var(--accent-2);
-			color: var(--ink-deep);
-		}
 	}
 
 	@keyframes dock-scan {
@@ -7301,17 +7262,6 @@ a.lh-feature-frame:hover {
 
 		to {
 			transform: translateX(260%);
-		}
-	}
-
-	@keyframes dock-live {
-		0%,
-		100% {
-			opacity: 1;
-		}
-
-		50% {
-			opacity: 0.3;
 		}
 	}
 }
@@ -7338,11 +7288,6 @@ a.lh-feature-frame:hover {
 		opacity: 0.45;
 		animation: none;
 		transform: none;
-	}
-
-	.dock-key.is-action .dock-led {
-		opacity: 1;
-		animation: none;
 	}
 }
 
