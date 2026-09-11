@@ -46,7 +46,7 @@ $lh_show_mt5_download  = $lh_has_url( $lh_mt5_download_url ) && '' !== $lh_mt5_d
 $lh_show_openchat      = $lh_has_url( $lh_openchat_url ) && '' !== $lh_openchat_label;
 
 /* ไอคอนประกอบปุ่มตามลำดับ (ตกแต่ง · เปลี่ยนความหมายปุ่มได้โดยไม่ผูกกับไอคอน) */
-$lh_btn_icons = array( 1 => 'chart', 2 => 'tag', 3 => 'download', 4 => 'layout', 5 => 'arrow', 6 => 'arrow' );
+$lh_btn_icons = array( 1 => 'guide', 2 => 'tag', 3 => 'download', 4 => 'layout', 5 => 'arrow', 6 => 'arrow' );
 $lh_guide_icons = array( 1 => 'download', 2 => 'windows', 3 => 'android', 4 => 'apple', 5 => 'macos' );
 
 $lh_socials = array();
