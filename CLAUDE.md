@@ -520,3 +520,8 @@
 4. ลิงก์โปรไฟล์ Facebook, YouTube, TikTok ของแบรนด์ (กรอกที่ Customizer แล้ว sameAs ขึ้นเอง)
 5. การวัดผล: Site Kit ติดตั้งแต่ยังไม่เชื่อม ไม่มี GA4 ในหน้าเว็บเลย · ถ้าใช้ GA4 ของธีม (`ga_measurement_id` + `show_cookie_consent`) ต้องแก้ให้แถบยินยอมคุกกี้ขึ้นบน /go/ ด้วย เพราะ `template-links.php` ไม่โหลด footer.php
 - ไม่ได้ทำโดยตั้งใจ: redirect URL ตัวพิมพ์ใหญ่ (canonical ครอบแล้ว) · llms.txt (ปิดไว้ ไม่มีผลกับ Google)
+
+## 36) บาร์ล่างมือถือและรูปแชร์ลิงก์ของเจ้าของ (11 ก.ย. 2026 · v2.7.2)
+- **บาร์ล่างมือถือ เจ้าของกำหนดลิงก์เอง**: หน้าแรก `/` · การทดสอบ `/backtest/` (เดิม /forward-test/) · ทัก LINE `https://lin.ee/ye11pwm6` · แพ็กเกจ `/pricing/` · วิธีติดตั้ง `/how-to-install/` · ไอคอนปุ่มการทดสอบเปลี่ยนจากกราฟพุ่งขึ้นเป็นขวดทดลอง (`flask` ไอคอนใหม่ใน `ea2000_icon()`) และปุ่มวิธีติดตั้งจากลูกศรดาวน์โหลดเป็น `guide` · เมนูหัวเว็บ "การทดสอบ" (item 56) ยังชี้ /forward-test/ เพราะเจ้าของสั่งเฉพาะบาร์ล่าง
+- **รูปแชร์ลิงก์ของทั้งเว็บ = รูปที่เจ้าของทำเอง** `D:\EA VIDEO\EA2000\ea2000-og-image.png` (1731x909 · สร้างด้วย AI มี C2PA) แปลงเป็น JPEG 1200x630 147 KB อัปโหลดเป็น media **173** `ea2000-share-card-1200x630-1.jpg` (WordPress เติม -1 เองเพราะชื่อไฟล์ลงท้ายด้วยขนาด) · ตั้งทั้ง Yoast `og_default_image` / `og_default_image_id` และ theme mod `og_default_image` (ใช้เป็น image ของ SoftwareApplication) · ตรวจแล้ว og:image ขึ้นทุกหน้า 1200x630 image/jpeg · **ข้อ 35 รายการรอเจ้าของข้อ 1 ปิดแล้ว**
+- **ไม่ใส่ Featured image ให้เพจ**: รูปแชร์ของ Yoast ครอบทุกหน้าอยู่แล้ว ใส่ซ้ำไม่ได้อะไรเพิ่ม และ `page.php` แสดง Featured image เป็นรูปใหญ่หัวเนื้อหา (about, privacy-policy, terms-of-use, data-deletion) · ถ้าอยากให้หน้าไหนมีรูปแชร์ของตัวเอง ให้ใช้ Social image ในกล่อง Yoast ของหน้านั้นแทน · Featured image ใช้กับบทความในอนาคต
