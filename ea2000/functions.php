@@ -56,13 +56,8 @@ function ea2000_assets() {
 	$style_version = file_exists( $style_path ) ? filemtime( $style_path ) : EA2000_VERSION;
 	$script_version = file_exists( $script_path ) ? filemtime( $script_path ) : EA2000_VERSION;
 
-	wp_enqueue_style(
-		'ea2000-fonts',
-		'https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=Bai+Jamjuree:wght@400;500;600;700&display=swap',
-		array(),
-		null
-	);
-	wp_enqueue_style( 'ea2000-style', get_stylesheet_uri(), array( 'ea2000-fonts' ), $style_version );
+	/* ฟอนต์อยู่ในธีมเอง (@font-face ต้น style.css) ไม่โหลดจาก Google Fonts แล้ว */
+	wp_enqueue_style( 'ea2000-style', get_stylesheet_uri(), array(), $style_version );
 	wp_enqueue_script( 'ea2000-main', get_template_directory_uri() . '/assets/js/main.js', array(), $script_version, true );
 
 	/* หน้าแรก v3 (Control Room) เท่านั้น · home.js ใช้ window.ea2000 จาก main.js จึงต้องพึ่ง ea2000-main */
@@ -1873,18 +1868,18 @@ function ea2000_has_seo_plugin() {
 	return defined( 'WPSEO_VERSION' ) || class_exists( 'RankMath' ) || defined( 'SEOPRESS_VERSION' );
 }
 
-/* preconnect ฟอนต์ Google ลด RTT ให้โหลดเร็วขึ้นบนมือถือ */
-function ea2000_resource_hints( $hints, $relation ) {
-	if ( 'preconnect' === $relation ) {
-		$hints[] = 'https://fonts.googleapis.com';
-		$hints[] = array(
-			'href'        => 'https://fonts.gstatic.com',
-			'crossorigin' => 'anonymous',
-		);
+/* preload ฟอนต์ 2 ไฟล์ที่ทุกหน้าใช้ในจอแรก (หัวข้อ Chakra Petch 700 และเนื้อความ Bai Jamjuree 400 ชุดอักษรไทย)
+   ไฟล์อยู่ในธีมเอง จึงไม่ต้อง preconnect ไปโดเมนอื่นอีก */
+function ea2000_preload_fonts() {
+	if ( is_admin() ) {
+		return;
 	}
-	return $hints;
+	$base = get_template_directory_uri() . '/assets/fonts/';
+	foreach ( array( 'chakra-petch-700-thai.woff2', 'bai-jamjuree-400-thai.woff2' ) as $file ) {
+		printf( '<link rel="preload" href="%s" as="font" type="font/woff2" crossorigin>' . "\n", esc_url( $base . $file ) );
+	}
 }
-add_filter( 'wp_resource_hints', 'ea2000_resource_hints', 10, 2 );
+add_action( 'wp_head', 'ea2000_preload_fonts', 2 );
 
 /* meta ยืนยันความเป็นเจ้าของเว็บ (Google Search Console / Bing) แสดงเมื่อกรอกเท่านั้น และปิดถ้ามีปลั๊ก SEO / Site Kit จัดการเอง */
 function ea2000_verification_meta() {
