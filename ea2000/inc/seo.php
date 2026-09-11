@@ -766,11 +766,37 @@ function ea2000_seo_options_permission() {
  *
  * @return WP_REST_Response
  */
-function ea2000_seo_options_get() {
+function ea2000_seo_options_get( $request = null ) {
 	$titles = get_option( 'wpseo_titles' );
 	$titles = is_array( $titles ) ? $titles : array();
 	$social = get_option( 'wpseo_social' );
 	$social = is_array( $social ) ? $social : array();
+
+	/* ?dump=1 · อ่านค่า Yoast ทั้งกลุ่มแบบอ่านอย่างเดียว ใช้ตรวจการตั้งค่าทั้งหมด
+	   ค่าที่เป็นรหัสหรือโทเค็นของบริการภายนอกจะไม่ถูกส่งออกไป บอกแค่ว่ามีค่าหรือไม่ */
+	if ( $request instanceof WP_REST_Request && $request->get_param( 'dump' ) ) {
+		$groups = array();
+		foreach ( array( 'wpseo', 'wpseo_titles', 'wpseo_social', 'wpseo_llmstxt', 'wpseo_ms' ) as $name ) {
+			$value = get_option( $name, null );
+			if ( ! is_array( $value ) ) {
+				continue;
+			}
+			foreach ( $value as $k => $v ) {
+				if ( preg_match( '/token|secret|password|oauth|license|api_key|apikey|_code$|verify$|tracking_id|site_id/i', (string) $k ) ) {
+					$value[ $k ] = ( '' === $v || null === $v || array() === $v ) ? '' : '[มีค่า ซ่อนไว้]';
+				}
+			}
+			$groups[ $name ] = $value;
+		}
+		return new WP_REST_Response(
+			array(
+				'yoast_version' => defined( 'WPSEO_VERSION' ) ? WPSEO_VERSION : null,
+				'groups'        => $groups,
+			),
+			200
+		);
+	}
+
 	$socialkeys = array_flip( ea2000_seo_social_keys() );
 	$out    = array();
 
