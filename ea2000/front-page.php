@@ -64,10 +64,12 @@ if ( ! function_exists( 'ea2000_front_media' ) ) {
 			$note = $alt;
 		}
 		$caption = trim( (string) $caption );
-		/* ถ้าบล็อกไม่ได้ส่งคำบรรยายมา ให้ใช้ค่าจาก setting ของช่องนั้น
-		   ใช้กำกับว่าตัวเลขในภาพเป็นตัวอย่าง ไม่ใช่ผลการเทรดจริง */
-		if ( '' === $caption ) {
-			$caption = trim( (string) ea2000_mod( $key . '_img_caption' ) );
+		/* คำบรรยายจาก setting ของช่องนั้น ต่อท้ายเลขภาพที่บล็อกส่งมา
+		   ใช้กำกับว่าตัวเลขในภาพเป็นตัวอย่าง ไม่ใช่ผลการเทรดจริง จึงต้องแสดงเสมอเมื่อมีค่า
+		   (เดิมใช้เฉพาะตอนบล็อกไม่ส่งคำบรรยาย ทุกบล็อกส่งเลขภาพมา ข้อความกำกับจึงไม่เคยขึ้น) */
+		$ea2000_setting_caption = trim( (string) ea2000_mod( $key . '_img_caption' ) );
+		if ( '' !== $src && '' !== $ea2000_setting_caption ) {
+			$caption = '' === $caption ? $ea2000_setting_caption : $caption . ' · ' . $ea2000_setting_caption;
 		}
 		$extra   = trim( (string) $extra_class );
 		$classes = ( '' !== $src ? 'hud-frame media-frame watch wipe' : 'hud-frame img-slot watch wipe' ) . ( '' !== $extra ? ' ' . $extra : '' );
@@ -76,7 +78,7 @@ if ( ! function_exists( 'ea2000_front_media' ) ) {
 			?>
 			<figure class="<?php echo esc_attr( $classes ); ?>">
 				<?php ea2000_hud_corners(); ?>
-				<img src="<?php echo esc_url( $src ); ?>" alt="<?php echo esc_attr( $alt ); ?>" loading="lazy" decoding="async" width="<?php echo esc_attr( (string) (int) $width ); ?>" height="<?php echo esc_attr( (string) (int) $height ); ?>">
+				<?php echo ea2000_media_picture( $key, $src, $alt, $width, $height ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ?>
 				<?php if ( '' !== $caption ) : ?>
 				<figcaption class="fig mono keep-case"><?php echo esc_html( $caption ); ?></figcaption>
 				<?php endif; ?>

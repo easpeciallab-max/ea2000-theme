@@ -39,7 +39,7 @@ $ea2000_line = in_array( $ea2000_line, array( '', '#' ), true ) ? '' : $ea2000_l
 				</div>
 
 				<nav class="error-links" aria-label="ลิงก์ด่วน">
-					<a href="<?php echo esc_url( home_url( '/forward-test/' ) ); ?>">ผลทดสอบ</a>
+					<a href="<?php echo esc_url( home_url( '/forward-test/' ) ); ?>">การทดสอบ</a>
 					<a href="<?php echo esc_url( home_url( '/pricing/' ) ); ?>">แพ็กเกจ</a>
 					<a href="<?php echo esc_url( home_url( '/how-to-install/' ) ); ?>">วิธีติดตั้ง</a>
 					<a href="<?php echo esc_url( home_url( '/risk-disclosure/' ) ); ?>">คำเตือนความเสี่ยง</a>

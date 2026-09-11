@@ -278,7 +278,7 @@ function ea2000_defaults() {
 		'show_mobile_nav'         => true,
 		'mobile_nav_home_label'   => 'หน้าแรก',
 		'mobile_nav_home_url'     => '/',
-		'mobile_nav_test_label'   => 'ผลทดสอบ',
+		'mobile_nav_test_label'   => 'การทดสอบ',
 		'mobile_nav_test_url'     => '/forward-test/',
 		'mobile_nav_price_label'   => 'แพ็กเกจ',
 		'mobile_nav_price_url'     => '/pricing/',
@@ -318,7 +318,7 @@ function ea2000_defaults() {
 		'links_feature2_url'     => '',
 		'links_feature2_caption' => '',
 		'links_feature2_placeholder' => '1200 × 630',
-		'links_btn1_label' => 'ดูผล Forward Test',
+		'links_btn1_label' => 'Forward Test คืออะไร อ่านผลอย่างไร',
 		'links_btn1_url'   => '/forward-test/',
 		'links_btn2_label' => 'แพ็กเกจ & ราคา',
 		'links_btn2_url'   => '/pricing/',
@@ -395,7 +395,7 @@ function ea2000_defaults() {
 		/* datasheet · บรรทัดละ "ป้าย|ข้อความ" (บรรทัดที่ไม่มี | จะใช้เลขลำดับเป็นป้าย) */
 		'what_points'   => "แพลตฟอร์ม|ทำงานบน MetaTrader 5 โดยตรง ติดตั้งครั้งเดียวแล้วรันต่อเนื่องบนคอมพิวเตอร์หรือ VPS\nวินัย|ทำตามกฎเดิมทุกครั้ง ไม่ให้ความกลัวหรือความโลภมาแทรกการตัดสินใจ\nการควบคุม|ผู้ใช้กำหนดทุน ขนาดออเดอร์ และระดับความเสี่ยงเอง พร้อม Dashboard บนกราฟให้ตรวจสถานะได้ตลอด",
 		'what_principle_label' => 'หลักการของเรา',
-		'what_principle'       => 'เราไม่แสดงตัวเลขที่ยังตรวจสอบไม่ได้ และไม่รับประกันผลกำไร',
+		'what_principle'       => 'เราไม่อ้างผลเทรดที่ยังตรวจสอบไม่ได้ และไม่รับประกันผลกำไร',
 		'what_img'      => '',
 		'what_img_alt'  => 'หน้าจอ MetaTrader 5 ขณะรัน EA2000',
 		'what_img_note' => 'รูปที่ต้องใส่: ภาพหน้าจอ MT5 ขณะ EA2000 ทำงาน เห็นกราฟและแผง Dashboard ไม่ต้องเห็นตัวเลขบัญชี · แนะนำ 1280x800 px',
@@ -502,20 +502,24 @@ function ea2000_defaults() {
 		'tests_kicker'      => 'การทดสอบ',
 		'tests_tab_bt_label' => 'ทดสอบย้อนหลัง',
 		'tests_tab_fw_label' => 'ทดสอบเดินหน้า',
-		'tests_title'       => 'ผลทดสอบ Backtest และ Forward Test ของ EA2000',
-		'tests_intro'       => 'การทดสอบ EA MT5 มี 2 แบบ: Backtest คือรันระบบกับข้อมูลราคาในอดีต ส่วน Forward Test คือรันกับตลาดจริงแบบเรียลไทม์บนบัญชีจริงหรือเดโม ตัวเลขจะแสดงเมื่อทีมงานมีข้อมูลจริงเท่านั้น ไม่มีการใส่ตัวเลขสมมติ',
+		'tests_title'       => 'วิธีทดสอบ EA2000 ด้วย Backtest และ Forward Test',
+		'tests_intro'       => 'การทดสอบ EA MT5 มี 2 แบบ: Backtest คือรันระบบกับข้อมูลราคาในอดีต ส่วน Forward Test คือรันกับตลาดจริงแบบเรียลไทม์บนบัญชีจริงหรือเดโม ตอนนี้ EA2000 ยังไม่มีผลทดสอบที่เผยแพร่ ภาพในบล็อกนี้เป็นภาพประกอบวิธีทดสอบและวิธีอ่านผล ไม่ใช่ผลการทดสอบ',
 		'tests_bt_title'    => 'Backtest',
 		'tests_bt_text'     => 'Backtest คือการรัน EA2000 ใน Strategy Tester ของ MT5 กับข้อมูลราคาย้อนหลัง เพื่อดูพฤติกรรมของระบบภายใต้เงื่อนไขที่กำหนด สิ่งที่ควรอ่านคือ Profit Factor, Max Drawdown และจำนวนเทรด ข้อจำกัดคือผลขึ้นกับคุณภาพข้อมูล Spread และ Slippage ที่ใช้ทดสอบ จึงมักดูดีกว่าของจริง',
 		'tests_bt_btn'      => 'ดูรายละเอียด Backtest',
 		'tests_bt_img'      => '',
 		'tests_bt_img_alt'  => 'กราฟผล Backtest ของ EA2000 จาก MT5 Strategy Tester',
-		'tests_bt_img_note' => 'รูปที่ต้องใส่: ภาพรายงาน Backtest จาก MT5 Strategy Tester ใส่เมื่อมีผลจริงเท่านั้น · แนะนำ 1280x720 px',
+		'tests_bt_img_note' => 'รูปที่ต้องใส่: ภาพประกอบวิธี Backtest หรือภาพรายงานจริงจาก MT5 Strategy Tester เมื่อมีผลจริง · แนะนำ 1600x900 px',
+		'tests_bt_img_caption' => '',
+		'tests_bt_img_mobile' => '',
 		'tests_fw_title'    => 'Forward Test',
 		'tests_fw_text'     => 'Forward Test คือการรัน EA2000 บนบัญชีจริงหรือเดโมกับตลาดปัจจุบัน จึงสะท้อน Spread, Commission และ Slippage ของโบรกเกอร์จริง ควรดูช่วงเวลาที่ทดสอบ ทุนเริ่มต้น และ Max Drawdown ควบคู่กับผลตอบแทน ลิงก์จากบริการติดตามผลภายนอกตรวจสอบได้ดีกว่าภาพหน้าจอ',
 		'tests_fw_btn'      => 'ดูรายละเอียด Forward Test',
 		'tests_fw_img'      => '',
 		'tests_fw_img_alt'  => 'กราฟผล Forward Test ของ EA2000 บนบัญชีจริงหรือเดโม',
-		'tests_fw_img_note' => 'รูปที่ต้องใส่: ภาพบัญชี Forward Test จริงพร้อมลิงก์ตรวจสอบ ใส่เมื่อมีข้อมูลจริงเท่านั้น · แนะนำ 1280x720 px',
+		'tests_fw_img_note' => 'รูปที่ต้องใส่: ภาพประกอบวิธีอ่านรายงาน หรือภาพบัญชี Forward Test จริงพร้อมลิงก์ตรวจสอบเมื่อมีข้อมูลจริง · แนะนำ 1600x900 px',
+		'tests_fw_img_caption' => '',
+		'tests_fw_img_mobile' => '',
 		'tests_note'        => 'ตัวเลขผลทดสอบจะแสดงเมื่อทีมงานกรอกข้อมูลจริงเท่านั้น ผลในอดีตไม่รับประกันผลในอนาคต',
 
 		/* ติดตั้งใน 3 ขั้น · บล็อก 7 (install_*) · install_intro ใช้ร่วมกับหน้า /how-to-install/ (ประกาศไว้ในชุดหน้าย่อยด้านล่าง) */
@@ -734,8 +738,8 @@ function ea2000_defaults() {
 			'card5_url'        => '/risk-disclosure/',
 
 			/* หน้า Backtest */
-			'backtest_sub'        => 'ผลการทดสอบย้อนหลัง (Historical Backtest)',
-			'backtest_intro'      => 'Backtest คือการนำกลยุทธ์ของ EA มาทดสอบกับข้อมูลราคาในอดีต เพื่อดูพฤติกรรมของระบบภายใต้เงื่อนไขที่กำหนด ทีมงานจะระบุพารามิเตอร์การทดสอบไว้อย่างชัดเจนเพื่อความโปร่งใส',
+			'backtest_sub'        => 'วิธีทดสอบย้อนหลังและอ่านรายงาน (Historical Backtest)',
+			'backtest_intro'      => 'Backtest คือการนำ EA มาทดสอบกับข้อมูลราคาในอดีต เพื่อดูพฤติกรรมของระบบภายใต้เงื่อนไขที่กำหนด ตอนนี้ยังไม่มีรายงาน Backtest ของ EA2000 เมื่อมีรายงานจริง ทีมงานจะระบุสินทรัพย์ ช่วงเวลา ทุนเริ่มต้น และค่าธรรมเนียมที่ใช้ทดสอบไว้ครบ',
 			'bt_stat1_label'      => 'ช่วงเวลาทดสอบ',
 			'bt_stat1_value'      => 'ระบุช่วงเวลา',
 			'bt_stat2_label'      => 'คู่เงิน / สินทรัพย์',
@@ -753,6 +757,9 @@ function ea2000_defaults() {
 			'bt_stat8_label'      => 'จำนวนเทรดทั้งหมด',
 			'bt_stat8_value'      => 'ระบุจำนวน',
 			'backtest_img'        => '',
+			'backtest_img_mobile' => '',
+			'backtest_cta_title' => 'มีคำถามเรื่องการทดสอบ EA2000?',
+			'backtest_cta_text' => 'สอบถามวิธีใช้ Strategy Tester และการทดสอบบนบัญชีเดโมได้ทาง LINE',
 			'backtest_img_caption'=> 'กราฟ Equity / รายงานผล Backtest จาก MT5',
 			'backtest_img_alt'    => 'รายงานผล Backtest จาก Strategy Tester ของ MetaTrader 5 พร้อมกราฟ Balance และ Equity',
 			'backtest_img_note'   => '',
@@ -760,8 +767,8 @@ function ea2000_defaults() {
 			'backtest_disclaimer' => 'ผลการทดสอบย้อนหลังใช้เพื่อการศึกษาเท่านั้น ไม่ได้รับประกันผลลัพธ์ในอนาคต และไม่ใช่คำแนะนำในการลงทุน',
 
 			/* หน้า Forward Test */
-			'forward_sub'        => 'ผลการทดสอบบนบัญชีจริง / เดโม (Forward Test)',
-			'forward_intro'      => 'Forward Test คือการรันระบบกับสภาวะตลาดจริงแบบเรียลไทม์ สะท้อนสภาพการเทรดจริงได้ดีกว่าการทดสอบย้อนหลัง ข้อมูลด้านล่างจะอัปเดตตามรอบการทดสอบ',
+			'forward_sub'        => 'วิธีทดสอบบนบัญชีเดโมหรือบัญชีจริงและอ่านผล (Forward Test)',
+			'forward_intro'      => 'Forward Test คือการรันระบบกับสภาวะตลาดจริงแบบเรียลไทม์ สะท้อนสภาพการเทรดจริงได้ดีกว่าการทดสอบย้อนหลัง ตอนนี้ EA2000 ยังไม่มีบัญชี Forward Test หน้านี้อธิบายวิธีทดสอบและวิธีอ่านรายงานด้วยตัวเอง',
 			'fw_stat1_label'     => 'ช่วงเวลาทดสอบ',
 			'fw_stat1_value'     => 'ระบุช่วงเวลา',
 			'fw_stat2_label'     => 'ประเภทบัญชี',
@@ -775,6 +782,9 @@ function ea2000_defaults() {
 			'fw_stat6_label'     => 'Max Drawdown',
 			'fw_stat6_value'     => 'ระบุ %',
 			'forward_img'        => '',
+			'forward_img_mobile' => '',
+			'forward_cta_title' => 'อยากรัน Forward Test บนบัญชีเดโมเอง?',
+			'forward_cta_text' => 'สอบถามวิธีตั้งค่าและวิธีติดตามผลบนบัญชีของคุณเองได้ทาง LINE',
 			'forward_img_caption'=> 'ภาพผลการทดสอบจากบัญชี MT5 หรือบริการติดตามผลที่ตรวจสอบได้',
 			'forward_img_alt'    => 'ผลการทดสอบบนบัญชีจริงหรือเดโม แสดงกราฟการเติบโตของทุนและช่วงขาดทุนสูงสุด',
 			'forward_img_note'   => '',
@@ -1009,7 +1019,7 @@ function ea2000_has_line_url() {
 function ea2000_fallback_menu() {
 	echo '<ul class="nav-list">';
 	echo '<li><a href="' . esc_url( home_url( '/' ) ) . '">หน้าแรก</a></li>';
-	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/forward-test/' ) ) . '">ผลทดสอบ</a>';
+	echo '<li class="menu-item-has-children"><a href="' . esc_url( home_url( '/forward-test/' ) ) . '">การทดสอบ</a>';
 	echo '<ul class="sub-menu">';
 	echo '<li><a href="' . esc_url( home_url( '/backtest/' ) ) . '">Backtest</a></li>';
 	echo '<li><a href="' . esc_url( home_url( '/forward-test/' ) ) . '">Forward Test</a></li>';
@@ -2269,7 +2279,7 @@ function ea2000_mods_sanitize( $key, $value, $default ) {
 	if ( is_bool( $default ) ) {
 		return in_array( $value, array( true, 1, '1', 'true', 'on' ), true );
 	}
-	if ( preg_match( '/(_url|_img|_image|_logo|_wordmark)$/', $key ) ) {
+	if ( preg_match( '/(_url|_img|_img_mobile|_image|_logo|_wordmark)$/', $key ) ) {
 		return esc_url_raw( (string) $value );
 	}
 	return sanitize_textarea_field( (string) $value );

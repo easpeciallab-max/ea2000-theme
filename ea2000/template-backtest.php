@@ -70,7 +70,7 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 <?php ea2000_page_sections( 'backtest', 6 ); ?>
 
 <?php if ( $ea2000_has_line ) : ?>
-	<?php ea2000_line_cta( 'อยากดูผลทดสอบชุดอื่น?', 'สอบถามรายละเอียดผลการทดสอบและเงื่อนไขเพิ่มเติมได้ทาง LINE' ); ?>
+	<?php ea2000_line_cta( ea2000_mod( 'backtest_cta_title' ), ea2000_mod( 'backtest_cta_text' ) ); ?>
 <?php endif; ?>
 
 </main>

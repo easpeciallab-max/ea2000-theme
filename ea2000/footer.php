@@ -59,7 +59,7 @@ foreach ( array( 'primary', 'footer' ) as $ea2000_index_location ) {
 if ( empty( $ea2000_index ) ) {
 	$ea2000_index = array(
 		array( 'หน้าแรก', home_url( '/' ) ),
-		array( 'ผลทดสอบ', home_url( '/forward-test/' ) ),
+		array( 'การทดสอบ', home_url( '/forward-test/' ) ),
 		array( 'แพ็กเกจ', home_url( '/pricing/' ) ),
 		array( 'วิธีติดตั้ง', home_url( '/how-to-install/' ) ),
 	);

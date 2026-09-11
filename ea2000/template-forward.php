@@ -74,7 +74,7 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 <?php ea2000_page_sections( 'forward', 6 ); ?>
 
 <?php if ( $ea2000_has_line ) : ?>
-	<?php ea2000_line_cta( 'ติดตามผลแบบเรียลไทม์?', 'สอบถามผลการทดสอบล่าสุดและช่องทางติดตามได้ทาง LINE' ); ?>
+	<?php ea2000_line_cta( ea2000_mod( 'forward_cta_title' ), ea2000_mod( 'forward_cta_text' ) ); ?>
 <?php endif; ?>
 
 </main>
