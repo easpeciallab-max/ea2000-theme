@@ -135,7 +135,7 @@ $ea2000_mobile_nav = array(
 	array(
 		'label' => ea2000_mod( 'mobile_nav_test_label' ),
 		'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_test_url' ) ),
-		'icon'  => 'chart',
+		'icon'  => 'flask',
 	),
 );
 if ( $ea2000_line ) {
@@ -156,7 +156,7 @@ $ea2000_mobile_nav[] = array(
 $ea2000_mobile_nav[] = array(
 	'label' => ea2000_mod( 'mobile_nav_install_label' ),
 	'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_install_url' ) ),
-	'icon'  => 'download',
+	'icon'  => 'guide',
 );
 ?>
 
