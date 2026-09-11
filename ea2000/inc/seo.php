@@ -281,15 +281,20 @@ add_filter( 'wp_redirect', 'ea2000_redirect_no_store', 99 );
  * ถ้า Yoast ถูกปิด ea2000_robots_txt() ใน functions.php จะเติม /wp-sitemap.xml ของคอร์ให้แทน
  * ถ้าไม่เช็กตรงนี้ robots.txt จะได้สองบรรทัดและบรรทัด sitemap_index.xml จะเป็น 404
  *
- * หมายเหตุการใช้งานจริง: robots.txt ของ ea2000.co ตอนนี้เสิร์ฟจาก Cloudflare
- * ไม่ใช่ไฟล์เสมือนของ WordPress ฟิลเตอร์นี้จึงเป็นแค่ตัวสำรอง · การเติมบรรทัด Sitemap
- * ตัวจริงอยู่ที่แผนข้อ 0.9 (เจ้าของเติมที่ Cloudflare)
+ * หมายเหตุการใช้งานจริง: Cloudflare ต่อบล็อกที่ตัวเองจัดการไว้ด้านบนของ robots.txt ที่ WordPress สร้าง
+ * ไม่ได้เสิร์ฟไฟล์แทน WordPress · เนื้อหาส่วนล่างยังมาจากฟิลเตอร์ robots_txt ตามปกติ
  */
 function ea2000_robots_txt_yoast_sitemap( $output, $public ) {
 	if ( '1' !== (string) $public ) {
 		return $output;
 	}
 	if ( ! defined( 'WPSEO_VERSION' ) ) {
+		return $output;
+	}
+
+	/* Yoast ที่เปิด sitemap จะต่อบล็อก "# START YOAST BLOCK" พร้อมบรรทัด Sitemap เองทีหลังฟิลเตอร์นี้
+	   ถ้าเติมตรงนี้อีก robots.txt จะมีบรรทัด Sitemap ซ้ำสองครั้ง (ตรวจพบ 11 ก.ย. 2026) */
+	if ( class_exists( 'WPSEO_Options' ) && WPSEO_Options::get( 'enable_xml_sitemap' ) ) {
 		return $output;
 	}
 
@@ -696,6 +701,28 @@ function ea2000_seo_option_whitelist() {
 		'disable-date'         => 'bool',
 		'disable-post_format'  => 'bool',
 		'disable-attachment'   => 'bool',
+		'title-tax-category'   => 'text',
+		'title-tax-post_tag'   => 'text',
+		'social-title-tax-category' => 'text',
+		'social-title-tax-post_tag' => 'text',
+
+		/* กลุ่ม wpseo · Crawl optimization และ Site features ที่ตรวจแล้ว 11 ก.ย. 2026
+		   ไม่ใส่ search_cleanup_emoji โดยตั้งใจ: Yoast มองสระและวรรณยุกต์ไทยเป็นอีโมจิ ค้นหาภาษาไทยจะพัง
+		   ไม่ใส่ clean_permalinks / clean_campaign_tracking_urls: ตัดรหัสคลิกโฆษณาทิ้ง */
+		'remove_shortlinks'            => 'bool',
+		'remove_rest_api_links'        => 'bool',
+		'remove_oembed_links'          => 'bool',
+		'remove_generator'             => 'bool',
+		'remove_feed_global_comments'  => 'bool',
+		'remove_feed_post_comments'    => 'bool',
+		'remove_feed_search'           => 'bool',
+		'remove_atom_rdf_feeds'        => 'bool',
+		'remove_feed_categories'       => 'bool',
+		'remove_feed_tags'             => 'bool',
+		'search_cleanup'               => 'bool',
+		'search_cleanup_patterns'      => 'bool',
+		'redirect_search_pretty_urls'  => 'bool',
+		'enable_enhanced_slack_sharing' => 'bool',
 
 		/* กลุ่ม wpseo_social · ภาพที่ใช้ตอนแชร์ลิงก์ ถ้าไม่ตั้งจะไม่มี og:image เลยทั้งเว็บ */
 		'og_default_image'      => 'text',
@@ -719,10 +746,25 @@ function ea2000_seo_social_keys() {
 		'og_default_image_id',
 		'og_frontpage_image',
 		'og_frontpage_image_id',
-		'company_logo',
-		'company_logo_id',
 		'twitter_card_type',
 	);
+}
+
+/**
+ * คีย์ที่เก็บอยู่ในกลุ่ม wpseo (Site features, Crawl optimization)
+ *
+ * company_logo และ company_logo_id อยู่ใน wpseo_titles ตามที่ Yoast เก็บจริง จึงไม่อยู่ในรายการใดที่นี่
+ *
+ * @return array
+ */
+function ea2000_seo_wpseo_keys() {
+	$keys = array();
+	foreach ( ea2000_seo_option_whitelist() as $key => $type ) {
+		if ( 0 === strpos( $key, 'remove_' ) || 0 === strpos( $key, 'search_cleanup' ) || in_array( $key, array( 'redirect_search_pretty_urls', 'enable_enhanced_slack_sharing' ), true ) ) {
+			$keys[] = $key;
+		}
+	}
+	return $keys;
 }
 
 /**
@@ -797,11 +839,14 @@ function ea2000_seo_options_get( $request = null ) {
 		);
 	}
 
+	$wpseo = get_option( 'wpseo' );
+	$wpseo = is_array( $wpseo ) ? $wpseo : array();
 	$socialkeys = array_flip( ea2000_seo_social_keys() );
+	$wpseokeys  = array_flip( ea2000_seo_wpseo_keys() );
 	$out    = array();
 
 	foreach ( ea2000_seo_option_whitelist() as $key => $type ) {
-		$bag         = isset( $socialkeys[ $key ] ) ? $social : $titles;
+		$bag         = isset( $socialkeys[ $key ] ) ? $social : ( isset( $wpseokeys[ $key ] ) ? $wpseo : $titles );
 		$out[ $key ] = isset( $bag[ $key ] ) ? $bag[ $key ] : null;
 	}
 
@@ -836,8 +881,11 @@ function ea2000_seo_options_post( $request ) {
 	$titles   = is_array( $titles ) ? $titles : array();
 	$social   = get_option( 'wpseo_social' );
 	$social   = is_array( $social ) ? $social : array();
+	$wpseo    = get_option( 'wpseo' );
+	$wpseo    = is_array( $wpseo ) ? $wpseo : array();
 	$direct   = false;
 	$direct_social = false;
+	$direct_wpseo  = false;
 
 	foreach ( $body as $key => $value ) {
 		if ( ! isset( $allowed[ $key ] ) ) {
@@ -849,6 +897,10 @@ function ea2000_seo_options_post( $request ) {
 			$clean = (bool) $value;
 		} elseif ( 'int' === $allowed[ $key ] ) {
 			$clean = (int) $value;
+		} elseif ( class_exists( 'WPSEO_Utils' ) && method_exists( 'WPSEO_Utils', 'sanitize_text_field' ) ) {
+			/* sanitize_text_field ของคอร์ลบ % ที่ตามด้วยเลขฐานสิบหกสองตัว ทำให้ %%date%% กลายเป็น %te%%
+			   ตัวของ Yoast ทำแบบเดียวกันแต่ไม่แตะตัวแปร %%...%% (ต้นเหตุหัวเรื่องหน้ารวมตามวันที่เสีย) */
+			$clean = WPSEO_Utils::sanitize_text_field( wp_unslash( (string) $value ) );
 		} else {
 			$clean = sanitize_text_field( wp_unslash( (string) $value ) );
 		}
@@ -858,6 +910,9 @@ function ea2000_seo_options_post( $request ) {
 		} elseif ( in_array( $key, ea2000_seo_social_keys(), true ) ) {
 			$social[ $key ] = $clean;
 			$direct_social  = true;
+		} elseif ( in_array( $key, ea2000_seo_wpseo_keys(), true ) ) {
+			$wpseo[ $key ] = $clean;
+			$direct_wpseo  = true;
 		} else {
 			$titles[ $key ] = $clean;
 			$direct         = true;
@@ -874,6 +929,10 @@ function ea2000_seo_options_post( $request ) {
 		update_option( 'wpseo_social', $social );
 	}
 
+	if ( $direct_wpseo ) {
+		update_option( 'wpseo', $wpseo );
+	}
+
 	/* Yoast แคชขนาดและ URL ของโลโก้ไว้ใน company_logo_meta ถ้าไม่อัปเดตตาม
 	   JSON-LD จะยังพ่นค่าเดิมของไฟล์เก่าต่อไปแม้ตั้ง company_logo แล้ว */
 	if ( isset( $applied['company_logo_id'] ) && $applied['company_logo_id'] > 0 ) {
@@ -882,10 +941,10 @@ function ea2000_seo_options_post( $request ) {
 			if ( class_exists( 'WPSEO_Options' ) && method_exists( 'WPSEO_Options', 'set' ) ) {
 				WPSEO_Options::set( 'company_logo_meta', $ea2000_logo_meta );
 			} else {
-				$social_now                        = get_option( 'wpseo_social' );
-				$social_now                        = is_array( $social_now ) ? $social_now : array();
-				$social_now['company_logo_meta'] = $ea2000_logo_meta;
-				update_option( 'wpseo_social', $social_now );
+				$titles_now                      = get_option( 'wpseo_titles' );
+				$titles_now                      = is_array( $titles_now ) ? $titles_now : array();
+				$titles_now['company_logo_meta'] = $ea2000_logo_meta;
+				update_option( 'wpseo_titles', $titles_now );
 			}
 			$applied['company_logo_meta'] = $ea2000_logo_meta;
 		}
@@ -922,3 +981,106 @@ function ea2000_register_seo_options_route() {
 	);
 }
 add_action( 'rest_api_init', 'ea2000_register_seo_options_route' );
+
+/* --------------------------------------------------------------
+ * 6) ปรับผลของ WordPress และ Yoast ตามผลตรวจ 11 ก.ย. 2026
+ * -------------------------------------------------------------- */
+
+/**
+ * ไม่ส่งชื่อผู้ใช้ผู้ดูแลออกไปกับ oEmbed
+ *
+ * ธีมปิดรายชื่อผู้ใช้ใน REST และ Yoast ปิดหน้าผู้เขียนไว้แล้ว แต่ /wp-json/oembed/1.0/embed
+ * ยังตอบ author_name และ author_url ที่มี slug ของบัญชีผู้ดูแลทุกหน้า · ฟิลเตอร์เดียวครอบทั้ง JSON และ XML
+ *
+ * @param array $data ข้อมูลที่จะตอบ
+ * @return array
+ */
+function ea2000_oembed_hide_author( $data ) {
+	if ( is_array( $data ) ) {
+		unset( $data['author_name'], $data['author_url'] );
+	}
+	return $data;
+}
+add_filter( 'oembed_response_data', 'ea2000_oembed_hide_author', 20 );
+
+/**
+ * หน้าเดี่ยวที่ต่อท้าย /page/N/ ให้ 301 กลับหน้าจริง
+ *
+ * หน้าแรกแบบเพจคงที่และทุกเพจเปิดด้วย /page/2/, /page/999/ ได้สถานะ 200 เนื้อหาเดิม
+ * ทำให้มี URL ซ้ำไม่จำกัดจำนวน · ยกเว้นหน้ารวมบทความ (is_home) ที่ต้องแบ่งหน้าได้เมื่อมีบทความ
+ * และเพจที่แบ่งหน้าจริงด้วย <!--nextpage-->
+ */
+function ea2000_redirect_paged_singular() {
+	if ( is_admin() || is_home() || ! is_singular() ) {
+		return;
+	}
+
+	$paged = max( (int) get_query_var( 'paged' ), (int) get_query_var( 'page' ) );
+	if ( $paged < 2 ) {
+		return;
+	}
+
+	$post_id = (int) get_queried_object_id();
+	$post    = $post_id ? get_post( $post_id ) : null;
+	if ( ! $post || false !== strpos( (string) $post->post_content, '<!--nextpage-->' ) ) {
+		return;
+	}
+
+	$url   = is_front_page() ? home_url( '/' ) : get_permalink( $post );
+	$query = ea2000_current_request_query();
+	if ( '' !== $query ) {
+		$url .= ( false === strpos( $url, '?' ) ? '?' : '&' ) . $query;
+	}
+
+	wp_safe_redirect( esc_url_raw( $url ), 301 );
+	exit;
+}
+add_action( 'template_redirect', 'ea2000_redirect_paged_singular', 2 );
+
+/**
+ * หน้ารวมหมวดหมู่หรือแท็กที่ยังไม่มีบทความ ให้ noindex
+ *
+ * /category/other/ เปิดได้ 200 เป็น index ทั้งที่ว่างเปล่าและเนื้อหาเหมือน /articles/ ที่ตั้งใจซ่อนไว้
+ * ตั้งตามจำนวนบทความจริง หมวดที่มีบทความแล้วจะกลับเป็น index เองโดยไม่ต้องจำไปแก้
+ *
+ * @param string $robots ค่า robots ที่ Yoast จะพิมพ์
+ * @return string
+ */
+function ea2000_noindex_empty_terms( $robots ) {
+	if ( ! ( is_category() || is_tag() || is_tax() ) ) {
+		return $robots;
+	}
+	$term = get_queried_object();
+	if ( $term instanceof WP_Term && 0 === (int) $term->count ) {
+		return 'noindex, follow';
+	}
+	return $robots;
+}
+add_filter( 'wpseo_robots', 'ea2000_noindex_empty_terms' );
+
+/**
+ * ลิงก์โปรไฟล์ของแบรนด์จาก Customizer เข้า sameAs ของ Organization ที่ Yoast ออก
+ *
+ * Yoast ไม่อ่านช่องโซเชียลของธีมเอง เจ้าของจึงกรอกที่ Customizer ข้อ 1 ที่เดียวพอ
+ * ไม่ใช้ลิงก์เพิ่มเพื่อน LINE เพราะหน้านั้นไม่ได้ระบุว่าเป็นบริษัทใด
+ *
+ * @param array $data node Organization
+ * @return array
+ */
+function ea2000_yoast_org_same_as( $data ) {
+	if ( ! is_array( $data ) || ! function_exists( 'ea2000_mod' ) ) {
+		return $data;
+	}
+	$same = isset( $data['sameAs'] ) && is_array( $data['sameAs'] ) ? $data['sameAs'] : array();
+	foreach ( array( 'facebook_url', 'instagram_url', 'tiktok_url', 'youtube_url' ) as $key ) {
+		$url = trim( (string) ea2000_mod( $key ) );
+		if ( '' !== $url && '#' !== $url && preg_match( '#^https?://#i', $url ) ) {
+			$same[] = esc_url_raw( $url );
+		}
+	}
+	if ( ! empty( $same ) ) {
+		$data['sameAs'] = array_values( array_unique( $same ) );
+	}
+	return $data;
+}
+add_filter( 'wpseo_schema_organization', 'ea2000_yoast_org_same_as' );

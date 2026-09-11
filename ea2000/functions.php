@@ -1637,7 +1637,8 @@ function ea2000_organization_node() {
 	);
 
 	$ea2000_same = array();
-	foreach ( array( 'facebook_url', 'instagram_url', 'tiktok_url', 'youtube_url', 'line_url' ) as $ea2000_same_key ) {
+	/* ไม่รวมลิงก์เพิ่มเพื่อน LINE: หน้านั้นไม่ได้ระบุว่าเป็นบริษัทใด จึงไม่ใช่โปรไฟล์ของแบรนด์ */
+	foreach ( array( 'facebook_url', 'instagram_url', 'tiktok_url', 'youtube_url' ) as $ea2000_same_key ) {
 		$ea2000_same_url = trim( (string) ea2000_mod( $ea2000_same_key ) );
 		if ( '' === $ea2000_same_url || '#' === $ea2000_same_url || ! preg_match( '#^https?://#i', $ea2000_same_url ) ) {
 			continue;
@@ -1652,6 +1653,23 @@ function ea2000_organization_node() {
 }
 
 /**
+ * Yoast จะออก node Organization พร้อมโลโก้ของตัวเองหรือไม่
+ *
+ * @return bool
+ */
+function ea2000_yoast_prints_organization() {
+	if ( ! class_exists( 'WPSEO_Options' ) ) {
+		return false;
+	}
+	if ( false === WPSEO_Options::get( 'enable_schema', true ) ) {
+		return false;
+	}
+	return 'company' === WPSEO_Options::get( 'company_or_person' )
+		&& '' !== trim( (string) WPSEO_Options::get( 'company_name' ) )
+		&& (int) WPSEO_Options::get( 'company_logo_id' ) > 0;
+}
+
+/**
  * publisher ของ node สินค้า
  *
  * อ้าง @id เฉย ๆ ได้เฉพาะตอนธีมเป็นคนออก Organization node เอง · เมื่อมีปลั๊ก SEO
@@ -1663,6 +1681,14 @@ function ea2000_organization_node() {
  * @return array
  */
 function ea2000_publisher_ref() {
+	/* Yoast ออก Organization ของตัวเองแน่นอน = อ้าง @id เฉย ๆ ให้เหลือโลโก้ชุดเดียวในกราฟ
+	   (เดิมฝัง node เต็มที่ใช้โลโก้แนวนอน ขณะที่ Yoast ใช้ตรากลม หน้าแรกกับหน้าแพ็กเกจจึงมีโลโก้สองแบบ) */
+	if ( ea2000_yoast_prints_organization() ) {
+		return array(
+			'@id' => home_url( '/' ) . '#organization',
+		);
+	}
+
 	if ( ea2000_has_seo_plugin() ) {
 		return ea2000_organization_node();
 	}
@@ -1684,11 +1710,10 @@ function ea2000_is_product_page() {
 /**
  * SoftwareApplication node ของ EA2000 (ออกทั้งตอนมีและไม่มีปลั๊ก SEO)
  *
- * ข้อควรรู้เรื่อง rich result: Google ให้ผลพิเศษกับ SoftwareApplication ก็ต่อเมื่อมี name
- * บวกอย่างน้อยหนึ่งใน offers / aggregateRating / review · เว็บนี้จะไม่มี aggregateRating
- * และ review จนกว่าจะมีรีวิวจริง (ห้ามแต่งขึ้นมา) ดังนั้น node นี้จะได้ rich result
- * เฉพาะตอนโหมดราคาและเจ้าของยืนยันราคาแล้วเท่านั้น · ในโหมด contact node ยังถูกต้อง
- * ตาม schema.org แต่ไม่เข้าเงื่อนไข rich result ซึ่งยอมรับได้ เพราะยังช่วยระบุตัวตนแบรนด์
+ * ข้อควรรู้เรื่อง rich result (แก้ 11 ก.ย. 2026): Google ให้ผลพิเศษของ Software App ต้องมี name, offers
+ * และต้องมี aggregateRating หรือ review อย่างใดอย่างหนึ่งด้วย · เว็บนี้จะไม่มีสองอย่างหลัง
+ * จนกว่าจะมีรีวิวจริง (ห้ามแต่งขึ้นมา) node นี้จึงยังไม่ได้ rich result แม้เปิด pricing_confirmed แล้ว
+ * แต่ยังถูกต้องตาม schema.org และช่วยระบุตัวตนแบรนด์
  * (ชื่อ EA2000 ชนกับหูฟัง SIMGOT EA2000 และ Energy Absolute)
  *
  * @return array
