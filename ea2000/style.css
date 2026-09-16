@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.10.4
+Version: 2.11.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -8681,4 +8681,264 @@ h3,
 .media-open:focus-visible {
 	outline: 2px solid var(--primary);
 	outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   48) หน้า Link Hub แบบขั้นตอน (16 ก.ย. 2026)
+   ลำดับ: ติดต่อทีม → เริ่มใช้งานเป็นขั้นตอนมีเลข → ข้อมูลก่อนตัดสินใจ → คำเตือนและเอกสาร
+   ใช้โทเคนสีของ EA2000 บนการ์ดพื้นขาว
+   ========================================================== */
+.lh-group {
+	margin: 22px 0 0;
+	padding-top: 18px;
+	border-top: 1px solid var(--border);
+}
+
+.lh-group > .lh-btn:last-child {
+	margin-bottom: 0;
+}
+
+/* กลุ่มติดต่อทีม (LINE / OpenChat) อยู่บนสุด ใต้ชื่อแบรนด์ */
+.lh-group--help {
+	margin: 0 0 22px;
+	padding: 0 0 20px;
+	border-top: 0;
+	border-bottom: 1px solid var(--border);
+}
+
+.lh-journey {
+	text-align: left;
+}
+
+.lh-steps-title {
+	margin: 0 0 16px;
+	font-family: var(--font-display);
+	font-size: 1rem;
+	font-weight: 700;
+	color: var(--text);
+	text-align: center;
+	text-wrap: balance;
+}
+
+.lh-steps {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.lh-step {
+	position: relative;
+	padding: 0 0 20px 44px;
+}
+
+/* เส้นเชื่อมระหว่างขั้น */
+.lh-step::before {
+	content: "";
+	position: absolute;
+	left: 15px;
+	top: 38px;
+	bottom: 6px;
+	width: 2px;
+	border-radius: 2px;
+	background: var(--border);
+}
+
+.lh-step:last-child {
+	padding-bottom: 4px;
+}
+
+.lh-step:last-child::before {
+	display: none;
+}
+
+.lh-step-num {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 32px;
+	height: 32px;
+	border-radius: 50%;
+	display: grid;
+	place-items: center;
+	background: var(--primary);
+	color: var(--on-primary);
+	font-family: var(--font-display);
+	font-size: 0.92rem;
+	font-weight: 700;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.lh-step-head {
+	min-height: 32px;
+	margin: 0 0 10px;
+}
+
+.lh-step-title {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 6px 8px;
+	margin: 0;
+	padding-top: 5px;
+	font-family: var(--font-display);
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.3;
+	color: var(--text);
+}
+
+.lh-step-badge {
+	padding: 2px 8px;
+	border-radius: 999px;
+	border: 1px solid rgba(var(--primary-rgb), 0.4);
+	background: rgba(var(--accent-2-rgb), 0.45);
+	color: var(--primary-deep);
+	font-size: 0.64rem;
+	font-weight: 700;
+	line-height: 1.4;
+}
+
+.lh-step-desc {
+	margin: 3px 0 0;
+	font-size: 0.78rem;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
+/* หมายเหตุเปิดเผยความเป็นพันธมิตร · อยู่ก่อนปุ่มในขั้นเดียวกัน */
+.lh-step-note {
+	margin: 6px 0 0;
+	padding: 6px 9px;
+	border-radius: 10px;
+	background: var(--surface);
+	font-size: 0.7rem;
+	line-height: 1.5;
+	color: var(--muted);
+}
+
+.lh-step-body > * {
+	margin-top: 0;
+	margin-bottom: 8px;
+}
+
+.lh-step-body > :last-child {
+	margin-bottom: 0;
+}
+
+.lh-step-body > .lh-mini-btn {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.lh-step-body .lh-btn-signup {
+	margin: 0 0 8px;
+}
+
+.lh-step-body .lh-feature {
+	margin: 0 0 8px;
+}
+
+/* แอป MT5 · 3 หรือ 4 ปุ่มเรียงแถวเดียว */
+.lh-mt5-grid--3 {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.lh-mt5-grid--4 {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.lh-mt5-grid .lh-vps-item {
+	min-height: 72px;
+}
+
+/* ปุ่มทุกแบบบนการ์ดสูงเท่ากัน 56px · ข้อความยาวขึ้นบรรทัดสองได้ภายในความสูงเดิม */
+.lh-card .lh-btn,
+.lh-card .lh-btn-signup,
+.lh-card .lh-mini-btn {
+	height: 56px;
+	min-height: 56px;
+	padding-top: 0;
+	padding-bottom: 0;
+	box-sizing: border-box;
+}
+
+.lh-card .lh-btn .lh-lbl,
+.lh-card .lh-mini-btn .lh-lbl {
+	line-height: 1.2;
+}
+
+.lh-mini-btn .lh-lbl {
+	flex: 0 1 auto;
+	text-align: center;
+}
+
+/* ปุ่ม LINE ภายในขั้นตอน (ขอลิงก์เปิดบัญชี, ขอรับไฟล์) */
+.lh-btn-line-step {
+	margin: 0 0 8px;
+	box-shadow: none;
+}
+
+/* ปุ่มของหน้าที่ยังไม่สร้าง · จาง กดไม่ได้ พร้อมป้าย เร็ว ๆ นี้ */
+.lh-card .is-pending,
+.lh-vps-item-pending {
+	cursor: default;
+	border-style: dashed;
+	background: var(--surface);
+	box-shadow: none;
+	opacity: 1;
+}
+
+.lh-card .is-pending .lh-ic,
+.lh-card .is-pending .lh-lbl,
+.lh-vps-item-pending .lh-vps-ic,
+.lh-vps-item-pending .lh-vps-lbl {
+	opacity: 0.6;
+}
+
+.lh-card .is-pending:hover {
+	border-color: var(--border);
+	background: var(--surface);
+	color: var(--text);
+}
+
+.lh-pending-tag {
+	flex: 0 0 auto;
+	padding: 2px 8px;
+	border-radius: 999px;
+	background: var(--card-bg);
+	border: 1px solid var(--border);
+	color: var(--muted);
+	font-family: var(--font-body);
+	font-size: 0.64rem;
+	font-weight: 600;
+	line-height: 1.4;
+	white-space: nowrap;
+}
+
+.lh-vps-item-pending .lh-pending-tag {
+	font-size: 0.6rem;
+	padding: 1px 7px;
+}
+
+/* ลิงก์เอกสารท้ายการ์ด */
+.lh-legal {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 4px 14px;
+	margin: 12px 0 0;
+	font-size: 0.72rem;
+	line-height: 1.6;
+}
+
+.lh-legal a {
+	color: var(--muted);
+	text-decoration: underline;
+	text-underline-offset: 3px;
+}
+
+.lh-legal a:hover {
+	color: var(--primary-deep);
 }
