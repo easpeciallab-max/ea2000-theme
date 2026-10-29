@@ -673,6 +673,7 @@ function ea2000_customize_register( $wp_customize ) {
 			'gmt5'  => '26) หน้าคู่มือ · ติดตั้ง MT5 และล็อกอิน',
 			'gacct' => '27) หน้าคู่มือ · เปิดบัญชี MT5',
 			'gvmac' => '28) หน้าคู่มือ · VPS บน macOS',
+			'gdep' => '29) หน้าคู่มือ · ฝากเงินเข้าบัญชี',
 		);
 		foreach ( $ea2000_guides as $ea2000_gp => $ea2000_gtitle ) {
 			$sections[ 'ea2000_guide_' . $ea2000_gp ] = array(
@@ -683,6 +684,62 @@ function ea2000_customize_register( $wp_customize ) {
 		}
 	}
 
+	$sections['ea2000_tools'] = array(
+		'title'       => '30) หน้าเครื่องมือคำนวณ',
+		'description' => 'หน้า /tools/ · สร้างเพจใหม่แล้วเลือกเทมเพลต "EA2000 · หน้าเครื่องมือคำนวณ" · การคำนวณทำในเบราว์เซอร์ ไม่ส่งค่าออกไปที่ใด',
+		'fields'      => array(
+			'tools_kicker'    => array( 'ป้ายเหนือหัวข้อ', 'text' ),
+			'tools_sub'       => array( 'คำโปรยใต้หัวข้อ', 'textarea' ),
+			'tools_lot_title' => array( 'เครื่องมือ 1 · หัวข้อ', 'text' ),
+			'tools_lot_intro' => array( 'เครื่องมือ 1 · คำอธิบาย', 'textarea' ),
+			'tools_lot_f1'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 1', 'text' ),
+			'tools_lot_f2'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 2', 'text' ),
+			'tools_lot_f3'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 3', 'text' ),
+			'tools_lot_f4'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 4', 'text' ),
+			'tools_lot_out'   => array( 'เครื่องมือ 1 · ป้ายผลลัพธ์', 'text' ),
+			'tools_lot_money' => array( 'เครื่องมือ 1 · บรรทัดใต้ผลลัพธ์ (ใช้ %s แทนจำนวนเงิน)', 'text' ),
+			'tools_lot_note'  => array( 'เครื่องมือ 1 · หมายเหตุ', 'textarea' ),
+			'tools_dd_title'  => array( 'เครื่องมือ 2 · หัวข้อ', 'text' ),
+			'tools_dd_intro'  => array( 'เครื่องมือ 2 · คำอธิบาย', 'textarea' ),
+			'tools_dd_col1'   => array( 'เครื่องมือ 2 · หัวคอลัมน์ซ้าย', 'text' ),
+			'tools_dd_col2'   => array( 'เครื่องมือ 2 · หัวคอลัมน์ขวา', 'text' ),
+			'tools_dd_note'   => array( 'เครื่องมือ 2 · หมายเหตุ', 'textarea' ),
+			'tools_cta_title' => array( 'แถบ LINE ท้ายหน้า · หัวข้อ', 'text' ),
+			'tools_cta_text'  => array( 'แถบ LINE ท้ายหน้า · คำอธิบาย', 'textarea' ),
+		),
+	);
+
+	$sections['ea2000_product'] = array(
+		'title'       => '31) หน้าสินค้า',
+		'description' => 'หน้า /ea2000/ · สร้างเพจใหม่แล้วเลือกเทมเพลต "EA2000 · หน้าสินค้า"',
+		'fields'      => array(
+			'prod_kicker'      => array( 'ป้ายเหนือหัวข้อ', 'text' ),
+			'prod_sub'         => array( 'คำโปรยใต้หัวข้อ', 'textarea' ),
+			'prod_version'     => array( 'ป้ายเวอร์ชัน (เว้นว่าง = ซ่อน)', 'text' ),
+			'prod_img'         => array( 'ภาพสินค้า', 'image' ),
+			'prod_img_alt'     => array( 'ภาพสินค้า · ข้อความแทนภาพ', 'text' ),
+			'prod_img_note'    => array( 'ภาพสินค้า · ข้อความในกรอบเส้นประเมื่อยังไม่ใส่รูป', 'text' ),
+			'prod_spec_title'  => array( 'ตารางสเปก · หัวข้อ', 'text' ),
+			'prod_spec'        => array( 'ตารางสเปก (บรรทัดละ 1 แถว รูปแบบ หัวข้อ | ค่า)', 'textarea' ),
+			'prod_btn1'        => array( 'ปุ่มหลัก · ข้อความ', 'text' ),
+			'prod_btn2'        => array( 'ปุ่มรอง · ข้อความ', 'text' ),
+			'prod_gets_title'  => array( 'สิ่งที่ได้รับ · หัวข้อ', 'text' ),
+			'prod_get1_title'  => array( 'สิ่งที่ได้รับ 1 · หัวข้อ', 'text' ),
+			'prod_get1_desc'   => array( 'สิ่งที่ได้รับ 1 · คำอธิบาย', 'textarea' ),
+			'prod_get1_icon'   => array( 'สิ่งที่ได้รับ 1 · ไอคอน', 'text' ),
+			'prod_get2_title'  => array( 'สิ่งที่ได้รับ 2 · หัวข้อ', 'text' ),
+			'prod_get2_desc'   => array( 'สิ่งที่ได้รับ 2 · คำอธิบาย', 'textarea' ),
+			'prod_get2_icon'   => array( 'สิ่งที่ได้รับ 2 · ไอคอน', 'text' ),
+			'prod_get3_title'  => array( 'สิ่งที่ได้รับ 3 · หัวข้อ', 'text' ),
+			'prod_get3_desc'   => array( 'สิ่งที่ได้รับ 3 · คำอธิบาย', 'textarea' ),
+			'prod_get3_icon'   => array( 'สิ่งที่ได้รับ 3 · ไอคอน', 'text' ),
+			'prod_limit_title' => array( 'กล่องข้อจำกัด · หัวข้อ', 'text' ),
+			'prod_limit_text'  => array( 'กล่องข้อจำกัด · ข้อความ', 'textarea' ),
+			'prod_cta_title'   => array( 'แถบ LINE ท้ายหน้า · หัวข้อ', 'text' ),
+			'prod_cta_text'    => array( 'แถบ LINE ท้ายหน้า · คำอธิบาย', 'textarea' ),
+		),
+	);
+
 	/* เนื้อหาหัวข้อของหน้าย่อย (inc/page-content.php) */
 	if ( function_exists( 'ea2000_page_section_fields' ) ) {
 		$ea2000_docs = array(
@@ -692,6 +749,8 @@ function ea2000_customize_register( $wp_customize ) {
 			'ea2000_install'       => array( 'installdoc', 8 ),
 			'ea2000_riskpage'      => array( 'riskdoc', 6 ),
 			'ea2000_links'         => array( 'linksdoc', 4 ),
+			'ea2000_tools'         => array( 'toolsdoc', 4 ),
+			'ea2000_product'       => array( 'proddoc', 4 ),
 		);
 		foreach ( $ea2000_docs as $ea2000_sec => $ea2000_doc ) {
 			if ( isset( $sections[ $ea2000_sec ] ) ) {

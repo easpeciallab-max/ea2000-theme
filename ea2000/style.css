@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวการ์ดแบบกระจกฝ้า ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 3.0.0
+Version: 3.1.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -9174,4 +9174,161 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 }
 @media (prefers-reduced-motion: reduce) {
 	.hero-bg { opacity: 0.2; }
+}
+
+/* ==========================================================
+   50) หน้าเครื่องมือคำนวณ (/tools/) และหน้าสินค้า (/ea2000/)
+   ใช้ผิวกระจกชุดเดียวกับข้อ 49 ไม่มีสีใหม่
+   ========================================================== */
+
+/* ---------- เครื่องมือคำนวณ ---------- */
+.tools-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 18px;
+	align-items: start;
+}
+.tool-card {
+	border: 1px solid var(--border);
+	border-top-color: var(--edge-lit);
+	border-radius: var(--radius-lg);
+	background: var(--glass-film);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	box-shadow: var(--shadow);
+	padding: 28px;
+}
+.tool-step {
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: .8rem;
+	letter-spacing: .12em;
+	color: var(--muted);
+	margin: 0 0 10px;
+}
+.tool-title { font-size: 1.2rem; margin: 0 0 10px; }
+.tool-lead { color: var(--muted); font-size: .89rem; line-height: 1.7; margin: 0 0 22px; }
+
+.tool-form { display: grid; gap: 14px; margin-bottom: 18px; }
+.tool-field { display: block; }
+.tool-label {
+	display: block;
+	font-size: .79rem;
+	color: var(--muted);
+	margin-bottom: 7px;
+}
+.tool-field input {
+	width: 100%;
+	height: 48px;
+	padding: 0 14px;
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--text);
+	font-family: var(--font-display);
+	font-size: 1rem;
+	font-variant-numeric: tabular-nums;
+}
+.tool-field input:focus-visible {
+	outline: 2px solid var(--primary);
+	outline-offset: 2px;
+	border-color: var(--primary);
+}
+
+.tool-out {
+	display: block;
+	border: 1px solid var(--primary);
+	border-radius: var(--radius);
+	background: rgba(158, 240, 26, 0.08);
+	padding: 18px 20px;
+}
+.tool-out-label { display: block; font-size: .78rem; color: var(--muted); }
+.tool-out-value {
+	display: block;
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 2rem;
+	line-height: 1.15;
+	color: var(--primary);
+	font-variant-numeric: tabular-nums;
+	margin-top: 4px;
+}
+.tool-out-sub { display: block; font-size: .8rem; color: var(--muted); margin-top: 6px; }
+.tool-out.is-zero .tool-out-value { color: var(--warn); }
+
+.tool-note { font-size: .78rem; color: var(--muted); line-height: 1.65; margin: 14px 0 0; }
+.tool-card .doc-table-wrap { margin-top: 4px; }
+
+/* ---------- หน้าสินค้า ---------- */
+.prod-top {
+	display: grid;
+	grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+	gap: 34px;
+	align-items: start;
+	margin-bottom: 56px;
+}
+.prod-version {
+	display: inline-block;
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: .78rem;
+	letter-spacing: .1em;
+	color: var(--primary);
+	border: 1px solid var(--border-primary);
+	border-radius: 999px;
+	padding: 6px 13px;
+	margin: 0 0 14px;
+}
+.prod-spec h2 { font-size: 1.35rem; margin: 0 0 16px; }
+.prod-actions { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 22px; }
+
+.prod-gets { margin-bottom: 56px; }
+.prod-gets-title { font-size: 1.35rem; margin: 0 0 20px; }
+.prod-get-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.prod-get {
+	border: 1px solid var(--border);
+	border-top-color: var(--edge-lit);
+	border-radius: var(--radius-lg);
+	background: var(--glass-film);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	box-shadow: var(--shadow);
+	padding: 24px;
+}
+.prod-get-ic {
+	display: grid;
+	place-items: center;
+	width: 42px;
+	height: 42px;
+	border-radius: var(--radius);
+	border: 1px solid var(--border);
+	background: rgba(255, 255, 255, 0.07);
+	color: var(--text);
+	margin-bottom: 16px;
+}
+.prod-get-ic svg { width: 20px; height: 20px; }
+.prod-get h3 { font-size: 1rem; margin: 0 0 8px; }
+.prod-get p { font-size: .86rem; color: var(--muted); line-height: 1.68; margin: 0; }
+
+.prod-limit {
+	border: 1px solid var(--border);
+	border-left: 3px solid var(--warn);
+	border-radius: var(--radius-lg);
+	background: var(--glass-film);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	padding: 24px 26px;
+	margin-top: 40px;
+}
+.prod-limit h2 { font-size: 1rem; color: var(--warn); margin: 0 0 9px; }
+.prod-limit p { font-size: .86rem; color: var(--muted); line-height: 1.7; margin: 0; }
+
+@media (max-width: 960px) {
+	.tools-grid { grid-template-columns: 1fr; }
+	.prod-top { grid-template-columns: 1fr; gap: 26px; }
+	.prod-get-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 600px) {
+	.tool-card { padding: 20px; }
+	.prod-actions .btn { width: 100%; justify-content: center; }
 }
