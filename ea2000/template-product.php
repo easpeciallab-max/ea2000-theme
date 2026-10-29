@@ -47,7 +47,7 @@ for ( $ea2000_i = 1; $ea2000_i <= 3; $ea2000_i++ ) {
 	<div class="container">
 
 		<div class="prod-top">
-			<?php ea2000_media_slot( 'prod_img', 1000, 1000 ); ?>
+			<?php ea2000_media_slot( 'prod', 1000, 1000 ); ?>
 
 			<div class="prod-spec">
 				<?php if ( '' !== trim( (string) ea2000_mod( 'prod_version' ) ) ) : ?>
