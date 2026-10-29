@@ -109,15 +109,21 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 
 				<?php
 				$ea2000_hub = array();
+				/* เรียงตามลำดับที่คนทำจริง ตั้งแต่ยังไม่มีบัญชีจนระบบทำงานเอง
+				   เพิ่มคู่มือใหม่ให้เติมที่นี่ด้วย ไม่งั้นหน้านี้จะไม่ขึ้น */
 				foreach ( array(
-					'how-to-install'   => 'ติดตั้ง EA2000 บน MT5 ทีละขั้น',
-					'backtest'         => 'ทดสอบย้อนหลังและอ่านผลให้เป็น',
-					'forward-test'     => 'Forward Test ต่างจาก Backtest อย่างไร',
+					'ea2000'           => 'EA2000 คืออะไร ใช้กับอะไรได้บ้าง',
 					'open-mt5-account' => 'สมัครบัญชี Zaurix เพื่อรับสิทธิ์ใช้ EA2000',
 					'mt5-login'        => 'ติดตั้ง MT5 และล็อกอินเข้าบัญชี',
+					'deposit'          => 'ฝากเงินเข้าบัญชีเทรดทีละขั้น',
+					'how-to-install'   => 'ติดตั้ง EA2000 บน MT5 ทีละขั้น',
 					'vps-windows'      => 'เชื่อมต่อ VPS จากคอมพิวเตอร์ Windows',
+					'vps-macos'        => 'เข้าดู VPS จากเครื่อง Mac',
 					'vps-android'      => 'เข้าดู VPS จากมือถือ Android',
 					'vps-ios'          => 'เข้าดู VPS จาก iPhone หรือ iPad',
+					'backtest'         => 'ทดสอบย้อนหลังและอ่านผลให้เป็น',
+					'forward-test'     => 'Forward Test ต่างจาก Backtest อย่างไร',
+					'tools'            => 'คำนวณขนาดออเดอร์จากเงินที่ยอมเสีย',
 					'risk-disclosure'  => 'ความเสี่ยงที่ต้องรู้ก่อนเริ่ม',
 				) as $ea2000_hub_slug => $ea2000_hub_desc ) {
 					$ea2000_hub_page = get_page_by_path( $ea2000_hub_slug );
