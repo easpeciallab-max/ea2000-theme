@@ -697,7 +697,7 @@ function ea2000_customize_register( $wp_customize ) {
 			'tools_lot_f3'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 3', 'text' ),
 			'tools_lot_f4'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 4', 'text' ),
 			'tools_lot_out'   => array( 'เครื่องมือ 1 · ป้ายผลลัพธ์', 'text' ),
-			'tools_lot_money' => array( 'เครื่องมือ 1 · บรรทัดใต้ผลลัพธ์ (ใช้ %s แทนจำนวนเงิน)', 'text' ),
+			'tools_lot_money' => array( 'เครื่องมือ 1 · บรรทัดใต้ผลลัพธ์ (ใช้ {amount} แทนจำนวนเงิน · ห้ามใช้ %s)', 'text' ),
 			'tools_lot_note'  => array( 'เครื่องมือ 1 · หมายเหตุ', 'textarea' ),
 			'tools_dd_title'  => array( 'เครื่องมือ 2 · หัวข้อ', 'text' ),
 			'tools_dd_intro'  => array( 'เครื่องมือ 2 · คำอธิบาย', 'textarea' ),

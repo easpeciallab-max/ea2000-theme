@@ -49,7 +49,7 @@
 
 		el.result.textContent = ok ? fmt(lots, 2) + ' lot' : '-';
 		el.money.textContent = ok
-			? money.replace('%s', fmt(riskMoney, 2))
+			? money.replace('{amount}', fmt(riskMoney, 2))
 			: '';
 		el.out.classList.toggle('is-zero', ok && lots < 0.01);
 	}
