@@ -328,7 +328,7 @@ function ea2000_defaults() {
 		'links_step3_note'          => '',
 		'links_step3_badge'         => '',
 		'links_deposit_label'       => 'เข้า Portal Zaurix',
-		'links_deposit_url'         => 'https://portal.zaurix.com/',
+		'links_deposit_url'         => 'https://portal.zaurix.com?ref=211281', // ใช้ลิงก์ที่มี ref เดียวกับปุ่มสมัคร ไม่งั้นเสียการอ้างอิงพันธมิตร
 		'links_deposit_guide_label' => 'คู่มือฝากเงิน',
 		'links_deposit_guide_url'   => '',
 		'links_step4_title'         => 'รับไฟล์ EA2000',
