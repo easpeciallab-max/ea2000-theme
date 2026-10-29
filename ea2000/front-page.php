@@ -209,6 +209,8 @@ $ea2000_hud_items  = ea2000_hero_hud_items();
 $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 ?>
 <section class="boot" id="hero" data-chapter="00" aria-labelledby="boot-title">
+	<?php /* ฉากหลังแท่งเทียน · assets/js/candles.js วาดลงใน canvas ตรงนี้ ถ้าไม่มี JS ก็ว่างเปล่า ไม่กระทบเนื้อหา */ ?>
+	<div class="hero-bg" aria-hidden="true"></div>
 	<div class="container boot-grid">
 		<div class="boot-copy">
 			<?php if ( '' !== $ea2000_hero_badge ) : ?>

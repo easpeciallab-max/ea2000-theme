@@ -3,8 +3,8 @@ Theme Name: EA2000
 Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
-Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนสว่าง มินิมอล ทันสมัย ใช้สีเขียวนีออนและสีเงินจากโลโก้ ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 2.12.0
+Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวการ์ดแบบกระจกฝ้า ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
+Version: 3.0.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -211,61 +211,61 @@ Tags: one-column, custom-logo, custom-menu, landing-page
    ========================================================== */
 :root {
 	/* พื้นหลัง · โทนสว่าง (ขาว / เทาอมเขียวอ่อน) สลับกันทีละ section */
-	--bg: #FFFFFF;
-	--surface: #F6F8F7;
-	--surface-2: #EEF2EF;
-	--surface-3: #E3E9E5;
-	--bg-rgb: 255, 255, 255;
+	--bg: #070707;
+	--surface: #0C0D0C;
+	--surface-2: #101110;
+	--surface-3: #151615;
+	--bg-rgb: 7, 7, 7;
 
 	/* สีแบรนด์ EA2000 จากโลโก้ · เขียวนีออน + เงิน · ค่า rgb ใช้กับ rgba(var(--primary-rgb), a) */
-	--primary: #1A7F11;
-	--primary-deep: #166B0F;
-	--accent: #7CE43A;
-	--accent-2: #C9F5A6;
-	--steel: #8A9199;
-	--steel-2: #C9CED3;
-	--steel-text: #60686E;
-	--primary-rgb: 26, 127, 17;
-	--accent-rgb: 124, 228, 58;
-	--accent-2-rgb: 201, 245, 166;
+	--primary: #9EF01A;
+	--primary-deep: #EDEDED;
+	--accent: #9EF01A;
+	--accent-2: rgba(255, 255, 255, 0.09);
+	--steel: #6A6A6A;
+	--steel-2: #3A3A3A;
+	--steel-text: #9A9A9A;
+	--primary-rgb: 158, 240, 26;
+	--accent-rgb: 158, 240, 26;
+	--accent-2-rgb: 255, 255, 255;
 
 	/* สีตัวอักษรบนพื้นสีแบรนด์ */
-	--on-primary: #FFFFFF;
-	--on-accent: #0B1210;
+	--on-primary: #0A1202;
+	--on-accent: #0A1202;
 
 	/* ตัวอักษร · เข้มบนพื้นสว่าง (ข้อความอ่านคอนทราสต์อย่างน้อย 4.5:1) */
-	--text: #0B1210;
-	--muted: #5B6660;
-	--muted-2: #66716B;
+	--text: #EDEDED;
+	--muted: #9A9A9A;
+	--muted-2: #8C8C8C;
 
 	/* สีสถานะ · ปรับเข้มให้อ่านออกบนพื้นขาว */
-	--ok: #15804A;
-	--ok-rgb: 21, 128, 74;
-	--bad: #D93B3B;
-	--bad-rgb: 217, 59, 59;
-	--warn: #B07400;
-	--warn-rgb: 176, 116, 0;
-	--warn-bg: #FFF7E6;
-	--warn-text: #8A5A00;
-	--warn-border: #D99C2B;
+	--ok: #2FD16A;
+	--ok-rgb: 47, 209, 106;
+	--bad: #FF5A4E;
+	--bad-rgb: 255, 90, 78;
+	--warn: #F0B429;
+	--warn-rgb: 240, 180, 41;
+	--warn-bg: rgba(240, 180, 41, 0.08);
+	--warn-text: #F0B429;
+	--warn-border: rgba(240, 180, 41, 0.45);
 	--line-green: #06C755;
 	--line-green-dark: #05A648;
 
 	/* เส้นขอบ พื้นการ์ด และเงา · ไม่มี glow */
-	--border: rgba(11, 18, 16, 0.10);
-	--border-soft: rgba(11, 18, 16, 0.06);
-	--border-primary: rgba(var(--primary-rgb), 0.28);
-	--card-bg: #FFFFFF;
-	--shadow: 0 8px 24px rgba(11, 18, 16, 0.06);
-	--shadow-lg: 0 18px 48px rgba(11, 18, 16, 0.10);
+	--border: rgba(255, 255, 255, 0.12);
+	--border-soft: rgba(255, 255, 255, 0.07);
+	--border-primary: rgba(158, 240, 26, 0.45);
+	--card-bg: rgba(255, 255, 255, 0.055);
+	--shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07), 0 14px 28px -16px rgba(0, 0, 0, 0.9);
+	--shadow-lg: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 26px 52px -26px rgba(0, 0, 0, 0.95);
 
-	--grad-primary: linear-gradient(118deg, var(--accent), var(--primary) 60%, var(--primary-deep));
-	--grad-text: linear-gradient(110deg, var(--primary-deep), var(--primary) 60%, #2F9A1E);
+	--grad-primary: none;
+	--grad-text: none;
 
 	--font-display: "Chakra Petch", "Noto Sans Thai", sans-serif;
 	--font-body: "Bai Jamjuree", "Noto Sans Thai", sans-serif;
 
-	--radius: 12px;
+	--radius: 14px;
 	--radius-lg: 18px;
 	--header-h: 72px;
 
@@ -274,30 +274,27 @@ Tags: one-column, custom-logo, custom-menu, landing-page
 	   และบาร์ล่างมือถือเท่านั้น · เนื้อหาในหน้ายังสว่างเหมือนเดิม
 	   ---------------------------------------------------------- */
 	/* สเกลพื้น */
-	--ink: #08150E;          /* พื้นหลักของแถบบนและแถบล่าง */
-	--ink-deep: #05100A;     /* ลึกกว่า: header ตอนเลื่อน, บาร์ล่างมือถือ */
-	--ink-raise: #0F2016;    /* แผงยกระดับ: dropdown, การ์ดใน footer */
-	--ink-chip: #16301F;     /* ชิป/ปุ่มกลม: ตัวสลับภาษา, ปุ่มเมนู, social */
+	--ink: rgba(13, 13, 13, 0.72);          /* พื้นหลักของแถบบนและแถบล่าง */
+	--ink-deep: rgba(10, 10, 10, 0.82);     /* ลึกกว่า: header ตอนเลื่อน, บาร์ล่างมือถือ */
+	--ink-raise: rgba(13, 13, 13, 0.88);    /* แผงยกระดับ: dropdown, การ์ดใน footer */
+	--ink-chip: rgba(255, 255, 255, 0.07);     /* ชิป/ปุ่มกลม: ตัวสลับภาษา, ปุ่มเมนู, social */
 	/* สำรอง ยังไม่มีกฎไหนเรียกใช้: คู่ rgba() ของ --ink เผื่อพื้นโปร่งโทนมืดในอนาคต
 	   พื้นโปร่งทุกจุดตอนนี้ใช้ --ink-accent-rgb ไม่ใช่ค่านี้ */
-	--ink-rgb: 8, 21, 14;
+	--ink-rgb: 13, 13, 13;
 
 	/* ตัวอักษรบนพื้นมืด */
-	--ink-text: #F2F7F3;     /* ข้อความหลัก */
-	--ink-muted: #AEBEB2;    /* ข้อความรอง, ลิงก์เมนูตอนพัก */
-	--ink-dim: #8B9C90;      /* ข้อความจาง (copyright) */
+	--ink-text: #EDEDED;     /* ข้อความหลัก */
+	--ink-muted: #9A9A9A;    /* ข้อความรอง, ลิงก์เมนูตอนพัก */
+	--ink-dim: #6A6A6A;      /* ข้อความจาง (copyright) */
 
 	/* สีเน้นบนพื้นมืด · สว่างกว่า --accent เล็กน้อยเพื่อให้เด้งบนพื้นดำ */
-	--ink-accent: #8CEC4E;
-	--ink-accent-rgb: 140, 236, 78;
+	--ink-accent: #EDEDED;
+	--ink-accent-rgb: 237, 237, 237;
 
 	/* เส้นขอบบนพื้นมืด (ขาวโปร่ง เพราะเส้นเข้มมองไม่เห็น)
 	   --ink-border-soft / --ink-border: เส้นคั่นและกล่องที่ไม่ใช่ปุ่ม (ตกแต่ง ไม่ต้องถึง 3:1)
-	   --ink-border-strong: ขอบของชิปที่กดได้ (ปุ่มเมนู ตัวสลับภาษา social ไอคอนบาร์ล่าง)
-	   ค่า 0.34 ผสมบน --ink-chip #16301F ได้ #617467 = 3.74:1 บน --ink · ผ่าน 1.4.11
-	   ต่ำกว่านี้ (0.20 → #304838 = 1.88:1) ชิปจะดูแบนจนไม่รู้ว่ากดได้ */
-	--ink-border-soft: rgba(242, 247, 243, 0.07);
-	--ink-border: rgba(242, 247, 243, 0.12);
+	   --ink-border-strong: rgba(255, 255, 255, 0.26);
+	--ink-border: rgba(255, 255, 255, 0.12);
 	--ink-border-strong: rgba(242, 247, 243, 0.34);
 
 	/* หมายเหตุค่า 0.34: ขอบด้านนอกของชิปได้ 3.74:1 บน --ink ซึ่งเป็นด้านที่ 1.4.11 กำหนด
@@ -307,7 +304,7 @@ Tags: one-column, custom-logo, custom-menu, landing-page
 
 	/* วงแหวนรอบโลโก้กลม · ผสมลงบน --ink โดยตรง ไม่ได้ผสมบน --ink-chip เหมือนขอบชิป
 	   0.34 บน --ink ได้แค่ 2.95:1 จึงต้องใช้ 0.40 (3.60:1) · ใช้ทั้งแถบหัวเว็บและแถบท้ายเว็บ */
-	--ink-ring-logo: rgba(242, 247, 243, 0.40);
+	--ink-ring-logo: rgba(255, 255, 255, 0.30);
 
 	/* alias เชิงความหมาย · CSS ของแถบหัวเว็บ (ข้อ 39) เรียกใช้ชื่อกลุ่มนี้
 	   แถบท้ายเว็บ v2 (ข้อ 41) ใช้ --ink-* ตรง ๆ จึงไม่มี alias --footer-* อีก */
@@ -8941,4 +8938,240 @@ h3,
 
 .lh-legal a:hover {
 	color: var(--primary-deep);
+}
+
+
+/* ==========================================================
+   49) รีดีไซน์ 2569 · ดำ + เขียวมะนาว #9EF01A · กระจกฝ้า
+   -----------------------------------------------------------
+   ค่าสีทั้งหมดเปลี่ยนที่ :root แล้ว บล็อกนี้ทำสามอย่าง
+   1. ให้ผิวการ์ดทุกชนิดเป็นกระจกฝ้าค่าเดียวกัน เบลอ 26px
+   2. ดึงสีเขียวออกจากจุดที่ควรเป็นสีกลาง (เหลือเขียวเฉพาะปุ่มหลัก
+      ป้ายแนะนำ ขีดใต้เมนูหน้าปัจจุบัน และสัญญาณสถานะ)
+   3. คืนสีธรรมชาติให้ของที่มีสีของตัวเอง ปุ่ม LINE เขียว LINE
+      แท่งเทียนเขียวแดง ไอคอนแบรนด์สีจริง คำเตือนเหลืองอำพัน
+   ลบทั้งบล็อกนี้แล้วเว็บจะกลับไปใช้โครงสีเดิม (แต่ :root เปลี่ยนไปแล้ว)
+   ========================================================== */
+
+:root {
+	--frost: blur(26px);
+	--glass-film: rgba(255, 255, 255, 0.055);
+	--glass-bar: rgba(13, 13, 13, 0.72);
+	--glass-pop: rgba(13, 13, 13, 0.88);
+	--edge-lit: rgba(255, 255, 255, 0.26);
+	--lime: #9EF01A;
+	--lime-deep: #7FC414;
+	--up: #2FD16A;
+	--down: #FF5A4E;
+}
+
+/* 49.1 ผิวกระจก · ค่าเดียวกันทุกจุด */
+.card,
+.about-panel,
+.shot,
+.step,
+.stat,
+.perf-figure,
+.fit-card,
+.price-card,
+.price-teaser-card,
+.post-card,
+.compare-wrap,
+.guide-step,
+.req-box,
+.riskdoc-figure,
+.riskdoc-block,
+.social-link,
+.lh-card,
+.lh-btn,
+.lh-mini-btn,
+.lh-feature-frame,
+.lh-vps-item,
+.media-frame,
+.lh-pending-tag,
+.tier-panel,
+.module,
+.guide-more-item,
+.toc,
+.doc-table-wrap,
+.table-scroll,
+.guide-check,
+.img-slot,
+.dl-card,
+.faq-item,
+.q,
+.cta-console,
+.lh-group,
+.lh-steps,
+.price-teaser-card.is-featured,
+.btn-ghost,
+.chip,
+.kicker,
+.article-cat,
+.guide-num,
+.riskdoc-num {
+	background: var(--glass-film);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+	border-top-color: var(--edge-lit);
+}
+
+/* ของที่ซ้อนอยู่ในกระจกแล้วไม่ต้องฝ้าซ้ำ */
+.card .card,
+.guide-step .guide-check,
+.lh-card .lh-btn,
+.lh-card .lh-mini-btn,
+.price-card .chip,
+.step .chip {
+	-webkit-backdrop-filter: none;
+	backdrop-filter: none;
+}
+
+/* 49.2 แถบติดขอบจอและเมนูที่ลอยทับเนื้อหา */
+.site-header,
+.site-footer,
+.mobile-app-nav {
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+}
+.nav-list .sub-menu,
+.language-switcher-menu,
+.site-nav,
+.consent {
+	background: var(--glass-pop);
+	-webkit-backdrop-filter: var(--frost);
+	backdrop-filter: var(--frost);
+}
+
+/* 49.3 ถอดเขียวออกจากข้อความและไอคอนที่ควรเป็นสีกลาง */
+a:hover,
+.nav-list > li::after,
+.price-feats .icon,
+.post-card:hover .post-card-more,
+.entry-content a:hover,
+.toc-title .icon,
+.social-link:hover,
+.lh-ic,
+.lh-mini-btn .lh-ic,
+.lh-vps-ic,
+.lh-vps-item-pending:hover .lh-vps-ic,
+.ch-n,
+.textlink:focus-visible,
+.img-slot-icon,
+.rail-n,
+.rail a[aria-current="true"],
+.boot-prefix,
+.principle-label,
+.diag-resolved .diag-idx,
+.diag-resolved-label,
+.ledger-idx,
+.mono-marks .mark,
+.module-id,
+.tab-idx {
+	color: var(--text);
+}
+
+/* 49.4 ที่ยังต้องเป็นเขียว · ปุ่มหลัก ป้ายแนะนำ หน้าปัจจุบัน สถานะ */
+.btn-fire,
+.lh-btn-signup,
+.lh-step-num,
+.price-flag,
+.sec-head h2::after,
+.entry-content h2::before,
+.doc-section h2::before,
+.riskdoc-block h2::before,
+.entry-content > h2::before,
+.reading-progress span,
+.nav-list > li.current-menu-item > a::after {
+	background: var(--lime);
+	color: var(--on-primary);
+}
+.btn-fire:hover,
+.lh-btn-signup:hover {
+	background: var(--lime-deep);
+	border-color: var(--lime-deep);
+}
+.dock-label,
+.dock-key.is-active .dock-cap {
+	color: var(--lime);
+}
+
+/* 49.5 สีธรรมชาติ */
+.keycap,
+.lh-btn-openchat,
+.btn-line,
+.line-fab,
+.float-line,
+.key-line {
+	background: var(--line-green);
+	border-color: var(--line-green);
+	color: #042714;
+}
+.keycap:hover,
+.lh-btn-openchat:hover,
+.btn-line:hover,
+.key-line:focus-visible {
+	background: var(--line-green-dark);
+	border-color: var(--line-green-dark);
+	color: #042714;
+}
+.led-ok,
+.status-dot {
+	background: var(--up);
+}
+::selection {
+	background: rgba(158, 240, 26, 0.26);
+	color: var(--text);
+}
+
+/* 49.6 เก็บรายละเอียดของโทนมืด */
+body {
+	background: var(--bg);
+	color: var(--text);
+}
+.section-alt {
+	background: var(--surface);
+}
+img:not([src$=".svg"]) {
+	background: transparent;
+}
+hr,
+.divider {
+	border-color: var(--border);
+}
+input, select, textarea {
+	background: rgba(255, 255, 255, 0.05);
+	color: var(--text);
+	border-color: var(--border);
+}
+input::placeholder, textarea::placeholder { color: var(--muted); }
+
+/* ภาพหน้าจอที่ถ่ายมาจากโปรแกรมพื้นขาว ยังเป็นพื้นขาวตามเดิม
+   แค่ลดความจ้าลงนิดให้เข้ากับหน้ามืด และคืนค่าเต็มเมื่อชี้เมาส์ */
+.media-frame img,
+.guide-step-media img,
+.img-slot img {
+	filter: brightness(0.94);
+	transition: filter 160ms linear;
+}
+.media-frame:hover img,
+.guide-step-media:hover img { filter: none; }
+
+/* 49.7 ฉากหลังแท่งเทียนของหน้าแรก */
+.hero-bg {
+	position: absolute;
+	inset: 0 0 0 auto;
+	right: 0;
+	width: 54%;
+	opacity: 0.3;
+	pointer-events: none;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 34%);
+	        mask-image: linear-gradient(90deg, transparent 0, #000 34%);
+}
+.hero-bg canvas { width: 100%; height: 100%; display: block; }
+@media (max-width: 960px) {
+	.hero-bg { width: 100%; opacity: 0.16; -webkit-mask-image: none; mask-image: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+	.hero-bg { opacity: 0.2; }
 }

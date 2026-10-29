@@ -64,6 +64,12 @@ function ea2000_assets() {
 	if ( is_front_page() ) {
 		$home_path = get_template_directory() . '/assets/js/home.js';
 		wp_enqueue_script( 'ea2000-home', get_template_directory_uri() . '/assets/js/home.js', array( 'ea2000-main' ), file_exists( $home_path ) ? filemtime( $home_path ) : EA2000_VERSION, true );
+
+		/* ฉากหลังแท่งเทียน · ไม่พึ่ง main.js ทำงานเองได้ */
+		$candles_path = get_template_directory() . '/assets/js/candles.js';
+		if ( file_exists( $candles_path ) ) {
+			wp_enqueue_script( 'ea2000-candles', get_template_directory_uri() . '/assets/js/candles.js', array(), filemtime( $candles_path ), true );
+		}
 	}
 
 	wp_localize_script(
