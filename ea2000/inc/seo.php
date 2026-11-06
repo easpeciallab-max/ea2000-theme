@@ -1084,3 +1084,66 @@ function ea2000_yoast_org_same_as( $data ) {
 	return $data;
 }
 add_filter( 'wpseo_schema_organization', 'ea2000_yoast_org_same_as' );
+
+/* --------------------------------------------------------------
+ * ea2000/v1/permalink
+ *
+ * โครง URL ของโพสต์ตั้งผ่าน wp/v2/settings ไม่ได้ เพราะคอร์ไม่ได้ลงทะเบียน
+ * permalink_structure ไว้กับ REST และการเปลี่ยนค่าต้อง flush rewrite rules ด้วย
+ * ไม่งั้นลิงก์เดิมจะ 404 จนกว่าจะมีคนเข้า Settings > Permalinks
+ *
+ * รับเฉพาะโครงใน whitelist เพื่อไม่ให้ตั้งค่าที่ทำให้เพจ 21 หน้าชนกับโพสต์
+ * ต้องมีสิทธิ์ manage_options
+ * -------------------------------------------------------------- */
+function ea2000_permalink_whitelist() {
+	return array(
+		'/articles/%postname%/',
+		'/%postname%/',
+		'/%category%/%postname%/',
+	);
+}
+
+function ea2000_register_permalink_route() {
+	register_rest_route(
+		'ea2000/v1',
+		'/permalink',
+		array(
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+				'callback'            => function () {
+					return array(
+						'structure' => get_option( 'permalink_structure' ),
+						'allowed'   => ea2000_permalink_whitelist(),
+					);
+				},
+			),
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'permission_callback' => function () {
+					return current_user_can( 'manage_options' );
+				},
+				'callback'            => function ( WP_REST_Request $request ) {
+					$want = (string) $request->get_param( 'structure' );
+					if ( ! in_array( $want, ea2000_permalink_whitelist(), true ) ) {
+						return new WP_Error(
+							'ea2000_bad_structure',
+							'โครง URL นี้ไม่อยู่ในรายการที่อนุญาต',
+							array( 'status' => 400, 'allowed' => ea2000_permalink_whitelist() )
+						);
+					}
+					global $wp_rewrite;
+					$wp_rewrite->set_permalink_structure( $want );
+					$wp_rewrite->flush_rules( true );
+					return array(
+						'structure' => get_option( 'permalink_structure' ),
+						'flushed'   => true,
+					);
+				},
+			),
+		)
+	);
+}
+add_action( 'rest_api_init', 'ea2000_register_permalink_route' );
