@@ -70,7 +70,7 @@ function ea2000_keep_words( $html, $thai = true ) {
 	$from = array();
 	$to   = array();
 	if ( $thai ) {
-		foreach ( (array) apply_filters( 'ea2000_keep_words', array( 'ทีม|งาน', 'ต่าง|จาก', 'แปล|ว่า', 'ออเด|อร์', 'ก|รอก', 'ที|ละ', 'ติด|ตั้ง', 'ตั้ง|ค่า' ) ) as $word ) {
+		foreach ( (array) apply_filters( 'ea2000_keep_words', array( 'ทีม|งาน', 'ต่าง|จาก', 'แปล|ว่า', 'ออเด|อร์', 'ก|รอก', 'ที|ละ', 'ติด|ตั้ง' ) ) as $word ) {
 			$word = (string) $word;
 			if ( false === strpos( $word, '|' ) ) {
 				continue;
