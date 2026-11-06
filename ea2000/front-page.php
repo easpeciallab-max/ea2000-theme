@@ -232,7 +232,11 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 			<?php if ( '' !== $ea2000_hero_note ) : ?>
 			<p class="boot-note"><?php echo ea2000_icon( 'warn', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><?php echo esc_html( $ea2000_hero_note ); ?></p>
 			<?php endif; ?>
-			<?php if ( ! empty( $ea2000_hud_items ) ) : ?>
+		</div>
+		<?php /* คอลัมน์ขวาของส่วนเปิด: แผงสเปกของระบบ · เป็นข้อเท็จจริงของโปรแกรม ไม่ใช่ตัวเลขผลการเทรด
+		   (กล่องสินค้าถูกถอดออกจากส่วนเปิดตามแบบที่เจ้าของเลือก · setting hero_image ยังอยู่ ถ้าจะเอากลับมาเพิ่ม figure ตรงนี้) */ ?>
+		<?php if ( ! empty( $ea2000_hud_items ) ) : ?>
+		<div class="boot-spec">
 			<dl class="hud mono keep-case" data-hud>
 				<?php foreach ( $ea2000_hud_items as $ea2000_hud ) : ?>
 				<div class="hud-item"><dt><?php echo esc_html( $ea2000_hud['label'] ); ?></dt><dd class="hud-val" data-text="<?php echo esc_attr( $ea2000_hud['value'] ); ?>"><?php echo esc_html( $ea2000_hud['value'] ); ?></dd></div>
@@ -241,19 +245,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 			<?php if ( '' !== $ea2000_hud_note ) : ?>
 			<p class="sr-only"><?php echo esc_html( $ea2000_hud_note ); ?></p>
 			<?php endif; ?>
-			<?php endif; ?>
 		</div>
-		<?php if ( '' !== $ea2000_hero_img ) : ?>
-		<figure class="boot-visual hud-frame" data-hud-frame>
-			<?php ea2000_hud_corners(); ?>
-			<img src="<?php echo esc_url( $ea2000_hero_img ); ?>" alt="<?php echo esc_attr( $ea2000_hero_alt ); ?>" width="1000" height="1000" loading="eager" decoding="async">
-		</figure>
-		<?php else : /* ยังไม่มีภาพกล่องสินค้า: ช่องว่างพร้อมคำสั่ง (ห้ามใช้โลโก้กลมแทน) */ ?>
-		<figure class="boot-visual hud-frame img-slot" data-hud-frame aria-label="<?php echo esc_attr( $ea2000_hero_alt ); ?>">
-			<?php ea2000_hud_corners(); ?>
-			<span class="img-slot-icon"><?php echo ea2000_icon( 'image', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-			<span class="img-slot-note"><?php echo esc_html( ea2000_mod( 'hero_img_note' ) ); ?></span>
-		</figure>
 		<?php endif; ?>
 	</div>
 </section>

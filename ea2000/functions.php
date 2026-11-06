@@ -115,7 +115,9 @@ function ea2000_preload_hero() {
 
 	printf( '<link rel="preload" as="image" href="%s" media="(min-width: 961px)" fetchpriority="high">' . "\n", esc_url( $src ) );
 }
-add_action( 'wp_head', 'ea2000_preload_hero', 1 );
+/* ไม่ hook แล้ว · ส่วนเปิดของหน้าแรกไม่มีภาพกล่องสินค้าตั้งแต่หน้าตาใหม่รอบ 2 (แบบ C)
+   ถ้าเอาภาพกลับเข้าส่วนเปิดเมื่อไร ให้เปิดบรรทัดนี้คืน */
+// add_action( 'wp_head', 'ea2000_preload_hero', 1 );
 
 /**
  * รายการ HUD ใต้ hero (hero_hud_items) · บรรทัดละ "ป้าย|ค่า"

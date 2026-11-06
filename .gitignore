@@ -26,3 +26,7 @@ vendor/
 
 # ค่าลับทั้งหมด (LINE, ราคา, token) อยู่ใน WordPress Customizer ไม่อยู่ในโค้ด
 *.env
+
+# ภาพร่างหน้าตา เก็บไว้ดูในเครื่อง ไม่ขึ้น GitHub
+design-mockups/
+design-mockups-v2/
