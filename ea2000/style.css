@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวการ์ดแบบกระจกฝ้า ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 3.1.5
+Version: 3.2.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -9332,3 +9332,81 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 	.tool-card { padding: 20px; }
 	.prod-actions .btn { width: 100%; justify-content: center; }
 }
+
+/* ==========================================================
+   51) ลดความเป็นเทมเพลตเทคนิค (6 พ.ย. 2569)
+   -----------------------------------------------------------
+   เจ้าของบอกว่าเว็บ "ดูเป็นเอไอ" แล้วชี้ที่ รางเลขบทด้านซ้าย
+   ตัวนับ 01 / 09 หัวบท และป้ายตัวเล็กแบบ monospace
+   บล็อกนี้ถอดเครื่องแต่งกายแนวคอนโซลออก โดยไม่แตะเนื้อหา
+   ตัวเลขที่เป็นลำดับขั้นตอนจริงยังอยู่ (ขั้นตอนทำงาน คู่มือ /go/)
+   ตัวเลขที่เป็นแค่ของประดับบนรายการที่ไม่ใช่ลำดับถูกถอดออก
+   ลบทั้งบล็อกนี้แล้วหน้าตาเดิมกลับมา
+   ========================================================== */
+
+/* 51.1 ฟอนต์ monospace คือต้นเหตุหลักของความรู้สึก "หน้าจอระบบ"
+   ให้ป้ายและตัวเลขใช้ฟอนต์เดียวกับหัวข้อแทน เหลือ tabular-nums ไว้ให้ตัวเลขเรียงตรง */
+.mono {
+	font-family: var(--font-display);
+	letter-spacing: .02em;
+}
+
+/* 51.2 รางเลขบทด้านซ้าย และตัวนับ 01 / 09 ที่หัวบท */
+.rail,
+.rail-bar,
+.ch-n,
+.ch-sep,
+.ch-total {
+	display: none !important;
+}
+.ch-index {
+	letter-spacing: .08em;
+}
+.ch-index .ch-label {
+	margin-left: 0;
+	padding-left: 0;
+	border-left: 0;
+}
+
+/* 51.3 เทอร์มินัลจำลอง · เล่าซ้ำกับรายการขั้นตอนที่อยู่ข้าง ๆ อยู่แล้ว */
+.term,
+.term-bar,
+.term-out {
+	display: none !important;
+}
+
+/* 51.4 ฟุตเตอร์ · ตัวอักษร EA2000 ยักษ์จาง ๆ กินความสูง 405px เป็นช่องว่างเปล่า
+   นาฬิกาเดินจริงและบรรทัด prompt แบบ ea2000@line:~$ ก็เป็นของประดับ */
+.watermark,
+.prompt,
+.status-clock {
+	display: none !important;
+}
+
+/* 51.5 ตัวเลขประดับบนรายการที่ไม่ใช่ลำดับขั้นตอน
+   (คำถามที่พบบ่อย · โมดูลคุณสมบัติ · แท็บ · ปัญหา · คู่มือที่เกี่ยวข้อง · ดัชนีหน้าในฟุตเตอร์) */
+.q-idx,
+.module-id,
+.tab-idx,
+.diag-idx,
+.guide-more-idx,
+.index-list .idx,
+.readout-list li .mono {
+	display: none !important;
+}
+.guide-more-item a { gap: 14px; }
+
+/* 51.6 ลูกเล่นเส้นสแกนและวงเล็บมุมแบบ HUD */
+.scan,
+.hud-c,
+.signal {
+	display: none !important;
+}
+.hud-frame { padding: 0; }
+
+/* 51.7 ขีดฆ่าข้อความเมื่อเลื่อนถึง · ดูเป็นลูกเล่นมากกว่าสาระ */
+.diag .strike,
+.strike {
+	text-decoration: none;
+}
+.diag .strike::after { display: none; }
