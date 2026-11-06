@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.0.2
+Version: 4.1.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -10264,16 +10264,25 @@ hr,
 }
 
 /* ============================================================
-   53) หน้าแรกแบบ C "แผงเต็มจอ" (6 พ.ย. 2569)
+   53) หน้าแรกแบบ C "แผงเต็มจอ" (6 พ.ย. 2569 · เขียนใหม่ 6 พ.ย. รอบบ่าย)
    เจ้าของเลือกจากสามแบบในภาพร่าง design-mockups-v2/home-concepts.html
+
    โครง: ส่วนเปิดแบ่งครึ่งจอ ซ้ายข้อความ ขวาแผงสเปก
          ทุกบทเป็นแถบเต็มความกว้าง ซ้ายหัวเรื่องค้างไว้ ขวาเนื้อหา สลับพื้นเข้มอ่อน
-   เนื้อหาและ setting ทุกตัวเหมือนเดิม เปลี่ยนเฉพาะการจัดวาง
-   ถอดบล็อกนี้ทิ้งแล้วหน้าแรกกลับไปเป็นโครงเดิม (section 40)
+
+   กติกาเรื่องเส้น (รอบแรกทำผิด จนเส้นซ้อนกันและเนื้อหาชิดเส้น)
+   1. ระยะห่างแนวตั้งของแถบอยู่ที่ .container ไม่ใช่ที่ลูก
+      ถ้าใส่ padding ให้ลูกที่มีกรอบ กรอบจะไปอยู่ขอบนอกสุดชนกับเส้นของแถบพอดี
+   2. ช่องว่างระหว่างสองคอลัมน์ใช้ column-gap ไม่ใช่ padding-left ของลูก
+      ด้วยเหตุผลเดียวกัน
+   3. ของที่อยู่ในแถบห้ามมีเส้นคาดบนหรือล่างที่ตรงกับเส้นของแถบ
+      (.ch-head, .hud, .modules, .qlog, .diag, .ledger)
    ============================================================ */
 
 .home-v3 {
 	--band-x: 56px;
+	--band-y: 96px;
+	--band-gap: 56px;
 	--split: 38%;
 }
 
@@ -10293,7 +10302,7 @@ hr,
 }
 .home-v3 .boot-copy {
 	grid-column: auto;
-	padding: 120px 64px 120px 0;
+	padding: 120px var(--band-gap) 120px 0;
 }
 .home-v3 .boot-spec {
 	border-left: 1px solid var(--line);
@@ -10333,7 +10342,8 @@ hr,
 	color: var(--muted-2);
 	font-size: 0.93rem;
 }
-/* แผงสเปก · สี่ช่องเต็มความสูง คั่นด้วยเส้นบาง */
+/* แผงสเปก · สี่ช่องเต็มความสูง คั่นด้วยเส้นบาง
+   เส้นบนกับล่างของ .hud ถูกถอด เพราะเส้นของแถบทำหน้าที่นั้นแล้ว */
 .home-v3 .boot-spec .hud {
 	flex: 1;
 	display: flex;
@@ -10342,6 +10352,8 @@ hr,
 	margin: 0;
 	padding: 0;
 	border-top: 0;
+	border-bottom: 0;
+	background: transparent;
 }
 .home-v3 .boot-spec .hud-item {
 	flex: 1;
@@ -10349,7 +10361,8 @@ hr,
 	flex-direction: column;
 	justify-content: center;
 	gap: 10px;
-	padding: 28px 0 28px 56px;
+	padding: 28px var(--band-gap);
+	border: 0;
 	border-bottom: 1px solid var(--line);
 }
 .home-v3 .boot-spec .hud-item:last-child {
@@ -10380,32 +10393,29 @@ hr,
 	width: 100%;
 	max-width: none;
 	margin: 0;
-	padding: 0 var(--band-x);
+	/* ระยะห่างทั้งหมดอยู่ที่นี่ ลูกจึงไม่มีกรอบไปชนเส้นของแถบ */
+	padding: var(--band-y) var(--band-x);
 	display: grid;
 	grid-template-columns: minmax(0, var(--split)) minmax(0, 1fr);
-	gap: 0;
+	column-gap: var(--band-gap);
+	row-gap: 0;
 	align-items: start;
 }
 .home-v3 .ch > .container > .ch-head {
 	grid-column: 1;
 	grid-row: 1 / -1;
 	position: sticky;
-	top: 96px;
+	top: var(--band-y);
 	align-self: start;
 	max-width: none;
 	margin: 0;
-	padding: 96px 56px 96px 0;
+	padding: 0 var(--band-gap) 0 0;
+	border-top: 0;
 	border-right: 1px solid var(--line);
 }
 .home-v3 .ch > .container > *:not(.ch-head) {
 	grid-column: 2;
-	padding-left: 56px;
-}
-.home-v3 .ch > .container > *:not(.ch-head):first-of-type {
-	padding-top: 96px;
-}
-.home-v3 .ch > .container > *:not(.ch-head):last-child {
-	padding-bottom: 96px;
+	padding-left: 0;
 }
 /* anchor สำรองไม่ใช่เนื้อหา ไม่ต้องกินที่ในกริด */
 .home-v3 .ch > .container > .sec-anchor {
@@ -10434,19 +10444,83 @@ hr,
 	background: inherit;
 }
 
-/* ---------- 53.3 เก็บรายละเอียด ---------- */
-/* กล่องสินค้าเดิมของส่วนเปิดถูกถอดออกจากเทมเพลตแล้ว เผื่อไว้ถ้ามีมาร์กอัปเก่าค้าง */
-.home-v3 .boot-visual {
-	display: none;
+/* ---------- 53.3 ถอดเส้นที่ซ้ำกับเส้นของแถบ ----------
+   section 52 ให้เส้นคาดบนกับหัวข้อและรายการหลายชนิด
+   ในโครงเดิมมันอยู่กลางแถบจึงไม่ชน แต่ในโครงนี้มันอยู่ติดขอบแถบพอดี */
+.home-v3 .ch .ch-head,
+.home-v3 .ch .sec-head,
+.home-v3 .ch .diag,
+.home-v3 .ch .ledger,
+.home-v3 .ch .qlog,
+.home-v3 .ch .modules,
+.home-v3 .ch .film,
+.home-v3 .ch .tier-panels,
+.home-v3 .ch .tabs {
+	border-top: 0;
 }
-.home-v3 .ch-actions,
-.home-v3 .ch-foot {
-	margin-top: 26px;
+.home-v3 .ch .modules,
+.home-v3 .ch .qlog,
+.home-v3 .ch .diag,
+.home-v3 .ch .ledger {
+	border-bottom: 0;
+}
+/* แผงแพ็กเกจ · กล่องนอกไม่ต้องมีกรอบ เพราะการ์ดข้างในมีอยู่แล้ว */
+.home-v3 .tier-panels {
+	border: 0;
+	background: transparent;
 }
 
+/* ---------- 53.4 ฉากหลังแท่งเทียนในส่วนเปิด ----------
+   โครงใหม่แบ่งครึ่งจอ แท่งเทียนจึงต้องอยู่หลังคอลัมน์ขวาพอดี
+   และจางลงกว่าเดิม เพราะตอนนี้มีตัวหนังสือทับอยู่จริง ไม่ใช่พื้นที่ว่างแบบโครงเก่า */
+.home-v3 .boot .hero-bg {
+	inset: 0 0 0 auto;
+	right: 0;
+	width: 44%;
+	opacity: 0.2;
+	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+	        mask-image: linear-gradient(90deg, transparent 0, #000 30%);
+}
+@media (prefers-reduced-motion: reduce) {
+	.home-v3 .boot .hero-bg {
+		opacity: 0.14;
+	}
+}
+
+/* ---------- 53.5 บทความเสี่ยง · เป็นแถบลายทาง ไม่ใช่กล่องในแถบ ----------
+   .ch-risk เป็นทั้ง .ch และ .hazard พร้อมกัน เส้นของสองอย่างจึงซ้อนกัน
+   ให้เหลือเส้นของแถบอย่างเดียว แล้วใช้แท่งขาวด้านซ้ายของกล่องในเป็นสัญญาณ */
+.home-v3 .ch-risk {
+	border-image: none;
+	border-top: 0;
+	border-left: 0;
+	border-right: 0;
+	background: var(--surface);
+}
+.home-v3 .ch-risk > .hazard-inner {
+	border: 0;
+	border-left: 3px solid #ffffff;
+	padding-left: calc(var(--band-x) - 3px);
+}
+
+/* ---------- 53.6 เมนูบนเดสก์ท็อปไม่ใช่แผง ----------
+   section 52 ให้พื้นกับกรอบแก่ .site-nav เพราะในโหมดมือถือมันคือลิ้นชัก
+   ตั้งแต่ 961px ขึ้นไปมันเป็นแค่แถวลิงก์ในแถบหัวเว็บ */
+@media (min-width: 961px) {
+	.site-nav {
+		background: transparent !important;
+		border: 0 !important;
+		-webkit-backdrop-filter: none !important;
+		        backdrop-filter: none !important;
+	}
+}
+
+/* ---------- 53.7 จอแคบ ---------- */
 @media (max-width: 1100px) {
 	.home-v3 {
 		--band-x: 32px;
+		--band-y: 72px;
+		--band-gap: 0px;
 	}
 	.home-v3 .boot > .container.boot-grid,
 	.home-v3 .ch > .container {
@@ -10467,17 +10541,19 @@ hr,
 		grid-row: auto;
 		position: static;
 		border-right: 0;
-		padding: 72px 0 0;
+		padding: 0 0 34px;
 	}
 	.home-v3 .ch > .container > *:not(.ch-head) {
 		grid-column: 1;
-		padding-left: 0;
 	}
-	.home-v3 .ch > .container > *:not(.ch-head):first-of-type {
-		padding-top: 34px;
+	.home-v3 .boot .hero-bg {
+		width: 100%;
+		opacity: 0.1;
+		-webkit-mask-image: none;
+		        mask-image: none;
 	}
-	.home-v3 .ch > .container > *:not(.ch-head):last-child {
-		padding-bottom: 72px;
+	.home-v3 .ch-risk > .hazard-inner {
+		padding-left: calc(var(--band-x) - 3px);
 	}
 }
 
@@ -10489,43 +10565,5 @@ hr,
 	.home-v3 .boot-actions .textlink {
 		width: 100%;
 		justify-content: center;
-	}
-}
-
-/* ---------- 53.4 ฉากหลังแท่งเทียนในส่วนเปิด ----------
-   โครงใหม่แบ่งครึ่งจอ แท่งเทียนจึงต้องอยู่หลังคอลัมน์ขวาพอดี
-   และจางลงกว่าเดิม เพราะตอนนี้มีตัวหนังสือทับอยู่จริง ไม่ใช่พื้นที่ว่างแบบโครงเก่า */
-.home-v3 .boot .hero-bg {
-	inset: 0 0 0 auto;
-	right: 0;
-	width: 44%;
-	opacity: 0.2;
-	-webkit-mask-image: linear-gradient(90deg, transparent 0, #000 30%);
-	        mask-image: linear-gradient(90deg, transparent 0, #000 30%);
-}
-@media (max-width: 1100px) {
-	.home-v3 .boot .hero-bg {
-		width: 100%;
-		opacity: 0.1;
-		-webkit-mask-image: none;
-		        mask-image: none;
-	}
-}
-@media (prefers-reduced-motion: reduce) {
-	.home-v3 .boot .hero-bg {
-		opacity: 0.14;
-	}
-}
-
-/* ---------- 53.5 แก้เมนูบนเดสก์ท็อปที่กลายเป็นกล่อง ----------
-   section 52 ให้พื้นกับกรอบแก่ .site-nav เพราะในโหมดมือถือมันคือลิ้นชัก
-   แต่ตั้งแต่ 961px ขึ้นไป .site-nav เป็นแค่แถวลิงก์ในแถบหัวเว็บ
-   พื้น #101010 กับกรอบ 1px จึงวาดเป็นกล่องคร่อมเมนู */
-@media (min-width: 961px) {
-	.site-nav {
-		background: transparent !important;
-		border: 0 !important;
-		-webkit-backdrop-filter: none !important;
-		        backdrop-filter: none !important;
 	}
 }
