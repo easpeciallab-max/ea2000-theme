@@ -69,7 +69,7 @@ $ea2000_dd_rows = array( 5, 10, 20, 30, 40, 50, 60, 70 );
 			<!-- เครื่องมือที่ 2 · ขาดทุนแล้วต้องได้คืนเท่าไร -->
 			<section class="tool-card" aria-labelledby="dd-title">
 				<p class="tool-step">02</p>
-				<h2 class="tool-title" id="dd-title"><?php echo esc_html( ea2000_mod( 'tools_dd_title' ) ); ?></h2>
+				<h2 class="tool-title" id="dd-title"><?php echo ea2000_text( ea2000_mod( 'tools_dd_title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 				<p class="tool-lead"><?php echo esc_html( ea2000_mod( 'tools_dd_intro' ) ); ?></p>
 
 				<div class="doc-table-wrap">

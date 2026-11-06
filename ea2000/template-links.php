@@ -153,7 +153,7 @@ if ( $lh_has_url( $lh_mod( 'links_signup_url' ) ) && '' !== $lh_mod( 'links_sign
 	?>
 	<a class="lh-btn lh-btn-signup" href="<?php echo esc_url( ea2000_link_url( $lh_mod( 'links_signup_url' ) ) ); ?>" target="_blank" rel="noopener">
 		<span class="lh-ic lh-account-ic"><?php echo ea2000_icon( 'account' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-		<span class="lh-signup-copy"><span class="lh-lbl"><?php echo esc_html( $lh_mod( 'links_signup_label' ) ); ?></span></span>
+		<span class="lh-signup-copy"><span class="lh-lbl"><?php echo ea2000_text( $lh_mod( 'links_signup_label' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span></span>
 		<span class="lh-ar" aria-hidden="true">&rsaquo;</span>
 	</a>
 	<?php
@@ -332,14 +332,14 @@ foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_sl
 				<?php if ( $lh_show_line ) : ?>
 					<a class="lh-btn lh-btn-line" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
 						<span class="lh-ic"><?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-						<span class="lh-lbl"><?php echo esc_html( $lh_line_label ); ?></span>
+						<span class="lh-lbl"><?php echo ea2000_text( $lh_line_label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 					</a>
 				<?php endif; ?>
 
 				<?php if ( $lh_show_openchat ) : ?>
 					<a class="lh-btn lh-btn-openchat" href="<?php echo esc_url( $lh_openchat_url ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
 						<span class="lh-ic"><?php echo ea2000_icon( 'users' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-						<span class="lh-lbl"><?php echo esc_html( $lh_openchat_label ); ?></span>
+						<span class="lh-lbl"><?php echo ea2000_text( $lh_openchat_label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 					</a>
 				<?php endif; ?>
 			</section>
