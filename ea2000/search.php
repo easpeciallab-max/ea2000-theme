@@ -10,6 +10,7 @@ defined( 'ABSPATH' ) || exit;
 get_header();
 
 $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
+$ea2000_q     = trim( (string) get_search_query() );
 ?>
 
 <main id="main">
@@ -23,14 +24,14 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 				<span class="breadcrumb-current">ค้นหา</span>
 			</nav>
 
-			<h1>ผลการค้นหา: “<?php echo esc_html( get_search_query() ); ?>”</h1>
+			<h1><?php echo '' !== $ea2000_q ? 'ผลการค้นหา: “' . esc_html( $ea2000_q ) . '”' : 'ค้นหาในเว็บไซต์'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above ?></h1>
 
 			<?php if ( $ea2000_found ) : ?>
 				<p class="archive-count"><?php echo esc_html( 'พบ ' . number_format_i18n( $ea2000_found ) . ' ผลลัพธ์' ); ?></p>
 			<?php endif; ?>
 
 			<form class="error-search search-hero-form" role="search" method="get" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-				<input type="search" name="s" placeholder="ค้นหาอีกครั้ง…" aria-label="ค้นหา" spellcheck="false" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
+				<input type="search" name="s" required placeholder="ค้นหาอีกครั้ง…" aria-label="ค้นหา" spellcheck="false" autocomplete="off" value="<?php echo esc_attr( get_search_query() ); ?>">
 				<button type="submit" aria-label="ค้นหา"><?php echo ea2000_icon( 'arrow', 'icon' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></button>
 			</form>
 
@@ -76,7 +77,7 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 
 			<?php else : ?>
 
-				<p class="no-posts">ไม่พบบทความที่ตรงกับ “<?php echo esc_html( get_search_query() ); ?>” ลองค้นด้วยคำอื่นดูครับ</p>
+				<p class="no-posts"><?php echo '' !== $ea2000_q ? 'ไม่พบบทความที่ตรงกับ “' . esc_html( $ea2000_q ) . '” ลองค้นด้วยคำอื่นดูครับ' : 'พิมพ์คำที่ต้องการค้นหาในช่องด้านบนได้เลยครับ'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped above ?></p>
 
 			<?php endif; ?>
 

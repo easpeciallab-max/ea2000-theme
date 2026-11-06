@@ -347,7 +347,7 @@ foreach ( $ea2000_mobile_nav as $ea2000_slot => $ea2000_item ) {
 	$ea2000_dock_path = '/' . trim( is_string( $ea2000_dock_path ) ? $ea2000_dock_path : '', '/' );
 
 	$ea2000_dock_hit = '/' === $ea2000_dock_path
-		? '/' === $ea2000_dock_here
+		? is_front_page() /* $wp->request ว่างสำหรับ route ที่ไม่มี path เช่น /?s=... จึงเคยเท่ากับ '/' */
 		: ( $ea2000_dock_here === $ea2000_dock_path || 0 === strpos( $ea2000_dock_here, $ea2000_dock_path . '/' ) );
 
 	if ( $ea2000_dock_hit && strlen( $ea2000_dock_path ) > $ea2000_dock_score ) {

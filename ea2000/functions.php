@@ -2200,7 +2200,18 @@ function ea2000_post_card() {
 		<div class="post-card-body">
 			<span class="post-meta"><?php echo esc_html( get_the_date() ); ?></span>
 			<h3><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h3>
-			<p><?php echo esc_html( wp_trim_words( get_the_excerpt(), 22 ) ); ?></p>
+			<?php
+			/* wp_trim_words นับคำด้วยช่องว่าง ภาษาไทยจึงถูกตัดกลางคำ
+			   ส่งข้อความเต็มไป แล้วให้ .post-card-body p (style.css 61.11) ตัดที่สองบรรทัด
+			   160 เป็นเพดานกันข้อความยาวผิดปกติเท่านั้น */
+			$ea2000_card_ex = html_entity_decode( wp_strip_all_tags( get_the_excerpt() ), ENT_QUOTES, 'UTF-8' );
+			$ea2000_card_ex = trim( preg_replace( '/\s*\[\x{2026}\]\s*$/u', '', $ea2000_card_ex ) );
+			if ( '' !== $ea2000_card_ex ) :
+				?>
+				<p><?php echo esc_html( wp_trim_words( $ea2000_card_ex, 160, "\xE2\x80\xA6" ) ); ?></p>
+				<?php
+			endif;
+			?>
 			<span class="post-card-more">อ่านต่อ <?php echo ea2000_icon( 'arrow', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 		</div>
 	</article>
@@ -2246,7 +2257,9 @@ function ea2000_load_more() {
 
 	// บังคับค่าที่ปลอดภัย ไม่ให้ฝั่ง client กำหนดเอง
 	$query['paged']               = $page;
-	$query['post_type']           = 'post';
+	// ผลการค้นหารวมเพจด้วย (search.php แสดงจาก main query ที่ครอบทุกชนิดที่ค้นหาได้)
+	// ถ้าบังคับเป็น post หน้าที่สองของการค้นหาจะว่างเสมอ ผลลัพธ์ใบที่ 13 ขึ้นไปจึงเข้าถึงไม่ได้
+	$query['post_type']           = ( isset( $query['s'] ) && '' !== $query['s'] ) ? 'any' : 'post';
 	$query['post_status']         = 'publish';
 	$query['posts_per_page']      = (int) get_option( 'posts_per_page' );
 	$query['ignore_sticky_posts'] = true;

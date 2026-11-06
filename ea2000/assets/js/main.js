@@ -846,6 +846,9 @@
 		}
 		consentView(view);
 		consentBox.hidden = false;
+		/* จอกว้างย้ายการ์ดไปมุมขวาล่าง ซึ่งเป็นที่ของปุ่มลอย LINE
+		   style.css 61.1 ใช้คลาสนี้ซ่อนปุ่มลอยระหว่างที่การ์ดยังเปิดอยู่ */
+		document.documentElement.classList.add('has-consent');
 		if (focus) {
 			var title = consentBox.querySelector('.consent-title');
 			if (title) {
@@ -859,6 +862,7 @@
 			return;
 		}
 		consentBox.hidden = true;
+		document.documentElement.classList.remove('has-consent');
 		if (consentTrigger && document.contains(consentTrigger)) {
 			consentTrigger.focus();
 		}

@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.5.0
+Version: 4.6.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -413,7 +413,9 @@ p:last-child {
 }
 
 section[id],
-footer[id] {
+footer[id],
+.doc-section,
+.entry-content :is(h2, h3, h4)[id] {
 	scroll-margin-top: calc(var(--header-h) + 14px);
 }
 
@@ -8292,9 +8294,17 @@ a.lh-feature-frame:hover {
 
 /* ---------- 44.9 หัวข้อ section แบบเก่า (เหลือใช้ที่หน้าแพ็กเกจ) ---------- */
 .sec-head {
-	max-width: 720px;
+	/* เดิม 720px · section 52 ให้ border-top กับกล่องนี้ เส้นคาดจึงสั้นกว่า
+	   การ์ดราคาและตารางเปรียบเทียบที่อยู่ใต้มัน (เห็นชัดที่ 1920 และ 1440)
+	   ความกว้างอ่านง่ายย้ายไปไว้ที่ตัวข้อความแทน ข้อความจึงไม่ขยับเลย */
+	max-width: none;
 	margin: 0 0 32px;
 	text-align: left;
+}
+
+.sec-head h2,
+.sec-head p {
+	max-width: 720px;
 }
 
 .sec-head h2 {
@@ -10649,8 +10659,8 @@ hr,
 	.doc-table tbody td,
 	.doc-table tbody tr:last-child th,
 	.doc-table tbody tr:last-child td,
-	.entry-content .table-scroll th,
-	.entry-content .table-scroll td {
+	.entry-content .table-scroll .doc-table th,
+	.entry-content .table-scroll .doc-table td {
 		border: 0;
 	}
 
@@ -11237,4 +11247,289 @@ hr,
 	.guide-step-body {
 		column-gap: 12px;
 	}
+}
+
+/* ==========================================================
+   61) ส่วนที่ชุดตรวจรอบสองไล่เจอ (6 พ.ย. 2569)
+   หน้า 404 · หน้าผลการค้นหา · เทมเพลตบทความเดี่ยว
+   การ์ดคุกกี้ · ความกว้างที่ยังไม่เคยวัด (1920 1024 480)
+   และสถานะที่ต้องกดหรือปิด JavaScript ถึงจะเห็น
+   ลบทั้งบล็อกแล้วหน้าตาก่อนตรวจกลับมา
+   ========================================================== */
+
+/* ---------- 61.1 การ์ดคุกกี้ทับปุ่มหลักในส่วนเปิดของหน้าแรก ----------
+   การ์ดเกาะมุมซ้ายล่าง ส่วนปุ่ม "สอบถามทาง LINE" กับ "EA2000 ทำงานอย่างไร"
+   อยู่ท้ายคอลัมน์ข้อความ บนจอเตี้ยสองอย่างนี้จึงมาซ้อนกันพอดี
+   วัดด้วยการสแกน elementFromPoint ทั่วพื้นที่ปุ่ม: ที่ 1440x640 กดไม่โดนปุ่มเลย
+   สักจุด (0 จาก 160) เช่นเดียวกับ 1024x568, 1024x640, 480x568, 480x640, 390x640
+   และที่ 390x812 ปุ่มที่สองถูกบังมิดทั้งปุ่ม
+   คอมเมนต์หัวบล็อก Consent เขียนไว้เองว่าการ์ดนี้ "ไม่บังการใช้เว็บ"
+   จอกว้างย้ายการ์ดไปขวา (ปุ่มกว้างตามเนื้อหา ยังมีที่ว่างแนวนอน)
+   จอแคบเลิกเกาะขอบล่าง ขึ้นไปอยู่ใต้แถบหัวเว็บ (ปุ่มกินเต็มความกว้าง ไม่มีที่ให้หลบ) */
+@media (min-width: 961px) {
+	.consent {
+		left: auto;
+		right: 24px;
+	}
+
+	/* การ์ดย้ายมาอยู่ที่เดิมของปุ่มลอย · ตอนการ์ดเปิด ปุ่ม LINE ในส่วนเปิดกดได้แล้ว
+	   ปุ่มลอยจึงเป็นของซ้ำซ้อน ซ่อนไว้จนกว่าผู้ใช้จะตอบการ์ด (main.js ตั้งคลาสให้) */
+	.has-consent .line-fab {
+		display: none;
+	}
+}
+
+@media (max-width: 960px) and (max-height: 860px) {
+	body:not(.link-hub-page) .consent {
+		top: calc(var(--header-h) + 8px);
+		bottom: auto;
+		max-height: calc(100vh - var(--header-h) - 100px);
+		max-height: calc(100dvh - var(--header-h) - 100px);
+	}
+}
+
+/* ---------- 61.2 ปุ่มบนการ์ดคุกกี้ไม่มีเส้นกรอบที่มองเห็น ----------
+   พื้นปุ่มเท่าพื้นการ์ดเป๊ะ เหลือกรอบจางเป็นตัวบอกว่าเป็นปุ่ม
+   ซึ่งจางกว่า .btn-ghost ของเว็บ (6.26:1) ชัดเจน
+   0.55 ขาวบนพื้นการ์ด #101010 ผสมแล้วได้ #939393 = 6.23:1 เท่ากัน
+   ต้องเขียนครบสี่กฎ ไม่งั้นปุ่มตัวลิงก์จะมีกรอบโผล่และ hover ตาย */
+.consent-btn {
+	background-color: transparent;
+	border-color: rgba(255, 255, 255, 0.55);
+}
+
+.consent-btn--link {
+	border-color: transparent;
+}
+
+@media (hover: hover) and (pointer: fine) {
+	.consent-btn:hover {
+		border-color: var(--ink-accent);
+	}
+
+	.consent-btn--link:hover {
+		border-color: transparent;
+	}
+}
+
+/* ---------- 61.3 ลิงก์บรรทัดสุดท้ายในชั้นตั้งค่าแปะติดปุ่มบันทึก ----------
+   เส้นใต้คำว่าอ่านนโยบายเกือบชนกรอบปุ่ม และบนมือถือกดพลาดได้
+   เขียนเป็น longhand เพราะ .consent-note ตั้ง margin-top: 0 ไว้แล้ว */
+.consent-prefs > .consent-note:last-child {
+	margin-bottom: 14px;
+}
+
+@media (max-width: 760px) {
+	.consent-prefs > .consent-note:last-child {
+		margin-bottom: 10px;
+	}
+
+	/* ---------- 61.4 ปุ่มการ์ดคุกกี้ตกสองบรรทัดบนมือถือ ----------
+	   section 14.1 ใส่ !important ให้ padding และขนาดอักษรของปุ่มทั้งเว็บ
+	   กฎ .consent-btn { font-size: 0.82rem } ที่ธีมเขียนไว้จึงไม่เคยมีผล
+	   ที่ 390 กล่องในเหลือ 83.2px แต่คำว่า ปฏิเสธทั้งหมด ต้องใช้ 96px
+	   แถวปุ่มสูง 62.8px และปุ่ม ตั้งค่า ถูกยืดสูงตาม
+	   ลด padding คู่กับคืนขนาดอักษร จึงผ่านตั้งแต่ 320 ถึง 760 */
+	.consent-actions .consent-btn {
+		padding-left: 12px !important;
+		padding-right: 12px !important;
+		font-size: 0.82rem !important;
+	}
+}
+
+/* ---------- 61.5 ป้ายข้ามไปเนื้อหาตอนชี้เมาส์ค้างอยู่ ----------
+   ป้ายเป็นแถบเขียว แต่ a:hover ของ 49.3 เปลี่ยนตัวอักษรเป็นขาว
+   ได้ขาวบนเขียว 1.84:1 · ตำแหน่งที่ป้ายโผล่คือที่เดียวกับโลโก้
+   ผู้ใช้คีย์บอร์ดที่วางเมาส์ไว้เฉย ๆ จึงอ่านไม่ออก */
+.skip-link,
+.skip-link:hover,
+.skip-link:focus,
+.skip-link:focus-visible {
+	color: var(--on-primary);
+}
+
+/* ---------- 61.6 ปุ่มลอย LINE ทับปุ่มในแถบ CTA ท้ายหน้า ----------
+   .container ใช้ margin ขอบขวาของแถบจึงอยู่ที่ W-24 เมื่อจอไม่เกิน 1168
+   ส่วนปุ่มลอยเริ่มที่ W-84 สองอย่างวิ่งตามกันจึงซ้อน 60px คงที่ตั้งแต่ 961 ถึง 1287
+   อ่านได้แค่ "ทัก LINE Official Acc" และกดปลายปุ่มไปโดนปุ่มลอย · 14 หน้า
+   ปิดช่วงที่ 1319 เพราะ 1288 ถึง 1319 ช่องไฟตามธรรมชาติยังเหลือ 0 ถึง 16px
+   76px ให้ช่องไฟ 16px เท่ากับค่าธรรมชาติที่ 1320 รอยต่อจึงไม่กระโดด */
+@media (min-width: 961px) and (max-width: 1319px) {
+	.cta-console-inner {
+		padding-right: 76px;
+	}
+}
+
+/* ---------- 61.7 คำโปรยการ์ด VIP สองบรรทัด ดันของทั้งใบต่ำกว่าเพื่อน ----------
+   ในโหมดสามคอลัมน์ช่วง 961 ถึงราว 1090 คำโปรยของ VIP ตัดบรรทัด
+   เส้นประ ราคา และรายการข้อดีของใบนั้นจึงต่ำกว่าอีกสองใบทั้งก้อน
+   3.5em ของ font-size ตัวเอง = 51.5px เท่ากับความสูงสองบรรทัดที่วัดได้ */
+@media (min-width: 1024px) and (max-width: 1100px) {
+	.price-card .price-tag {
+		min-height: 3.5em;
+	}
+}
+
+/* ---------- 61.8 เส้นคั่นเหนือหมายเหตุในการ์ดดาวน์โหลดไม่ตรงแนว ----------
+   .dl-note ใช้ margin-top: auto จึงชิดก้นการ์ด แต่จำนวนบรรทัดของหมายเหตุ
+   ไม่เท่ากัน ใบที่สั้นกว่าเส้นจึงต่ำกว่าอีกสองใบ เห็นชัดที่ /mt5-login/ @1024
+   subgrid ให้สี่แถวของทุกใบตรงกัน (hud-c เป็น absolute ไม่กินแถว)
+   จำกัดที่ data-count="3" และห่อ @supports เพราะ grid-row: span 4
+   สมมติว่าการ์ดพิมพ์ครบสี่ชิ้น ถ้าเจ้าของล้างช่องหมายเหตุหรือขั้นตอน
+   ของใบใดใบหนึ่งใน Customizer ปุ่มจะเลื่อนขึ้นไปอยู่ผิดแถว */
+@supports (grid-template-rows: subgrid) {
+	.dl-cards[data-count="3"] {
+		grid-template-rows: auto auto 1fr auto;
+	}
+
+	.dl-cards[data-count="3"] > .dl-card {
+		display: grid;
+		grid-template-rows: subgrid;
+		grid-row: span 4;
+		row-gap: 14px;
+	}
+
+	.dl-cards[data-count="3"] > .dl-card .dl-note {
+		margin-top: 0;
+		margin-bottom: 4px;
+	}
+
+	.dl-cards[data-count="3"] > .dl-card .keycap.dl-btn {
+		justify-self: start;
+		align-self: end;
+	}
+}
+
+/* ---------- 61.9 หน้าผลการค้นหา ----------
+   ช่องค้นหาซ้ำในหัวหน้าลอยอยู่กลางหน้า (margin auto ของ .error-search
+   ที่หน้า 404 ต้องใช้) ขณะที่ป้ายเส้นทาง หัวเรื่อง และบรรทัดนับผลชิดซ้ายทั้งหมด
+   และคำค้นยาวติดกันไม่มีช่องว่างดันหัวเรื่องทะลุขอบขวา ที่ 390 หน้าเลื่อนข้าง 54px */
+.search-hero-form {
+	margin-top: 22px;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+.archive-hero h1,
+.no-posts {
+	overflow-wrap: anywhere;
+}
+
+/* กรอบช่องค้นหาสูง 66px แต่พื้นที่ที่แตะแล้วเคอร์เซอร์เข้าช่องสูงแค่ 22px
+   เพราะฟอร์มเป็น flex ที่ align-items: center ทำให้ input หดเท่าเนื้อข้อความ
+   ย้ายระยะซ้าย 18px ของฟอร์มไปเป็น padding-left 14px ของ input เพื่อให้
+   พื้นที่กดกินถึงขอบในของกรอบ โดยตำแหน่งตัวอักษรอยู่ที่เดิมเป๊ะ
+   มีผลกับหน้า 404 ด้วย ซึ่งเป็นสิ่งที่ต้องการ */
+.error-search {
+	padding: 6px;
+}
+
+.error-search input {
+	align-self: stretch;
+	min-height: 44px;
+	padding: 1px 2px 1px 14px;
+}
+
+/* ---------- 61.10 การ์ดผลการค้นหา กดได้แค่ชื่อเรื่อง ----------
+   คำว่า "อ่านต่อ →" สีสว่างมีลูกศรที่ขยับตอนชี้เมาส์ และทั้งการ์ดก็ยกตัว
+   เปลี่ยนสีกรอบตอน hover แต่กดได้เฉพาะชื่อเรื่อง
+   ลิงก์ชื่อเรื่องแผ่เต็มการ์ดด้วย ::after จึงไม่ต้องเพิ่มลิงก์ซ้อน
+   ตัวอ่านหน้าจอยังเห็นลิงก์เดียวเหมือนเดิม
+   ข้อแลก: เลือกคลุมข้อความในการ์ดด้วยเมาส์ไม่ได้
+   และบรรทัด "อ่านต่อ" ของแต่ละใบอยู่คนละระดับเพราะคำโปรยยาวไม่เท่ากัน
+   4px ต้องย้ายไปเป็น padding ไม่งั้น margin auto ดูดไปจนการ์ดเตี้ยลง 4px */
+.post-card {
+	position: relative;
+	cursor: pointer;
+}
+
+.post-card-body {
+	flex: 1 1 auto;
+}
+
+.post-card-body h3 a::after {
+	content: "";
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+}
+
+.post-card-more {
+	margin-top: auto;
+	padding-top: 4px;
+	cursor: pointer;
+}
+
+/* ---------- 61.11 คำโปรยการ์ดถูกตัดกลางคำ ----------
+   wp_trim_words 22 คำ ตัดภาษาไทยที่ไม่มีช่องว่างไม่ได้ จึงตัดกลางคำ
+   (เชื่อมต่อ VPS จากเครื่… ) · functions.php ส่งข้อความเต็มมาแล้ว
+   ให้ CSS เป็นคนตัดที่สองบรรทัดพร้อมจุดไข่ปลา */
+.post-card-body p {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+}
+
+/* ---------- 61.12 ย่อหน้าในบทความที่มี path หรือ URL ยาว ----------
+   .entry-content ไม่มี overflow-wrap ที่ไหนเลย ที่อยู่โฟลเดอร์ MQL5
+   หรือลิงก์ยาวจึงดันหน้าให้เลื่อนข้าง (วัดได้ 921 และ 1005 ที่จอ 390)
+   เรื่องนี้จะเกิดกับชุดบทความ MT5 ที่กำลังจะลงแน่นอน
+   break-word ไม่เปลี่ยนค่า min-content จึงไม่ไปบีบคอลัมน์ตารางหรือ flex item */
+.entry-content p,
+.entry-content li,
+.entry-content dd,
+.entry-content a,
+.entry-content code,
+.doc-section p,
+.doc-section li,
+.doc-section a,
+.doc-section code,
+.guide-step-text p,
+.guide-step-text li,
+.lh-doc p,
+.lh-doc li {
+	overflow-wrap: break-word;
+}
+
+/* บล็อกโค้ดไม่มีกฎ overflow เลย white-space: pre จึงล้น 198px ที่จอ 390 */
+.entry-content pre {
+	max-width: 100%;
+	overflow-x: auto;
+}
+
+/* ---------- 61.13 ตารางในบทความที่เขียนด้วยตัวแก้ไข WordPress ----------
+   ตารางพวกนี้ไม่ได้ยุบเป็นการ์ดเหมือน .doc-table (กฎถอดเส้นใน 55.3
+   ถูกจำกัดให้คลุมแค่ .doc-table แล้ว เส้นฐานของตารางจึงกลับมาเอง)
+   ที่เหลือคือหัวตารางไทยถูกตัวแบ่งคำหั่นกลางคำเมื่อคอลัมน์แคบ
+   (ออเดอร์ -> ออเด + อร์) · nowrap เป็นแพตเทิร์นเดิมของ .doc-table thead th
+   บังคับให้คอลัมน์กว้างพอตามหัวตารางเองโดยไม่ต้องกำหนด min-width */
+.entry-content .table-scroll table:not(.doc-table) thead th {
+	white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+	.entry-content .table-scroll table:not(.doc-table) th,
+	.entry-content .table-scroll table:not(.doc-table) td {
+		padding: 11px 14px;
+	}
+}
+
+/* ---------- 61.14 ปุ่มไอคอนในเทมเพลตบทความเล็กกว่าเกณฑ์ ----------
+   ปุ่มแชร์และปุ่มเลื่อนแถบบทความที่เกี่ยวข้องเป็น 42x42 ไม่มีตัวหนังสือ
+   width/height ถูกตรึงไว้ min-* จึงไม่มีผล ต้องแก้ค่าตรง
+   ไอคอนข้างในขนาดเท่าเดิม ได้ขอบเพิ่มข้างละ 1px */
+.share-btn,
+.rail-btn {
+	width: 44px;
+	height: 44px;
+}
+
+/* ---------- 61.15 ปุ่มเมนูตอนปิด JavaScript ----------
+   ลิ้นชักเปิดด้วย body.nav-open ที่ main.js ตั้งให้เท่านั้น
+   ไม่มี JS ปุ่มขีดสามเส้นจึงกดแล้วไม่เกิดอะไร แต่ยังเปลี่ยนสีตอนชี้เมาส์
+   เมนูทั้งชุดยังเข้าถึงได้จากดัชนีหน้าในฟุตเตอร์
+   ห้ามแก้ด้วยการเปิดลิ้นชักค้าง เพราะ ≤960px มันเป็น fixed เต็มจอ */
+.no-js .nav-toggle {
+	display: none;
 }
