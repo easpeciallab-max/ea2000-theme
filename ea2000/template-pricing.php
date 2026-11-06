@@ -105,7 +105,7 @@ if ( count( $ea2000_rows ) >= 2 ) :
 					<thead>
 						<tr>
 							<?php foreach ( $ea2000_head as $idx => $ea2000_cell ) : ?>
-								<th class="<?php echo 0 === $idx ? 'compare-rowhead' : ''; ?>"><?php echo esc_html( $ea2000_cell ); ?></th>
+								<th class="<?php echo 0 === $idx ? 'compare-rowhead' : ''; ?>"><?php echo ea2000_text( $ea2000_cell ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></th>
 							<?php endforeach; ?>
 						</tr>
 					</thead>
@@ -130,7 +130,7 @@ if ( count( $ea2000_rows ) >= 2 ) :
 											echo ea2000_icon( 'x', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput
 											echo '<span class="sr-only">ไม่มี</span>';
 										} else {
-											echo esc_html( $ea2000_cell );
+											echo ea2000_text( $ea2000_cell ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text
 										}
 										?>
 									</td>
