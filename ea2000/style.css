@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.2.1
+Version: 4.2.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -10992,4 +10992,17 @@ hr,
 	.guide-step-media {
 		padding-left: 44px;
 	}
+}
+
+/* ---------- 55.20 เลข 404 บนหน้าไม่พบหน้า ----------
+   .error-code ระบายตัวเลขด้วย background-clip: text คู่กับ color: transparent
+   พอ --grad-text กลายเป็น none ตอนพลิกทั้งเว็บเป็นโทนมืด พื้นก็ไม่มีอะไรให้ตัด
+   เลข 404 จึงไม่ถูกวาดเลย เหลือเป็นช่องว่างสูง 144px (มือถือ 80px) เหนือหัวข้อ
+   คืนเป็นสีทึบกลาง ๆ ให้อ่านออก แต่ไม่แย่งความเด่นไปจาก h1 */
+.error-code {
+	background: none;
+	-webkit-background-clip: border-box;
+	background-clip: border-box;
+	color: var(--muted);
+	-webkit-text-fill-color: var(--muted);
 }
