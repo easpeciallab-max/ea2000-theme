@@ -285,6 +285,9 @@
 		   นี่เป็นที่เดียวที่ JS แตะ aria-current เพราะเป็นการบอกตำแหน่งจริง ไม่ใช่ผลของการกด */
 		if (!dock.querySelector('.dock-key.is-active')) {
 			var dockHere = window.location.pathname.replace(/\/+$/, '') || '/';
+			/* route ที่ไม่มี path เช่น /?s=... ให้ pathname เป็น '/' เหมือนหน้าแรก
+			   ถ้าไม่กันไว้ หน้าผลการค้นหาจะติดไฟว่าอยู่หน้าแรก (ฝั่ง PHP กันด้วย is_front_page) */
+			var dockIsHome = !/[?&]s=/.test(window.location.search);
 			var dockBest = -1;
 			var dockPick = null;
 			var dockSeat = -1;
@@ -301,7 +304,7 @@
 					return;
 				}
 
-				var hit = path === '/' ? dockHere === '/' : (dockHere === path || dockHere.indexOf(path + '/') === 0);
+				var hit = path === '/' ? (dockHere === '/' && dockIsHome) : (dockHere === path || dockHere.indexOf(path + '/') === 0);
 				if (hit && path.length > dockBest) {
 					dockBest = path.length;
 					dockPick = key;
