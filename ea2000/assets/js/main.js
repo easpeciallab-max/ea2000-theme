@@ -179,12 +179,38 @@
 		});
 	}
 
-	/* Parent menu items with a submenu toggle the dropdown instead of navigating */
+	/* Parent menu items with a submenu toggle the dropdown instead of navigating
+
+	   ยกเว้นในลิ้นชักมือถือ (ไม่เกิน 960px ตรงกับเบรกพอยต์ของ style.css)
+	   ที่นั่นเมนูย่อยกางอยู่เสมอ ปุ่มลูกศรถูกซ่อน และคลาส is-open ไม่เปลี่ยนอะไรเลย
+	   การกั้น preventDefault จึงทำให้แถวพ่อกลายเป็นพื้นที่กด 344x54 ที่ไม่ทำอะไร
+	   วัดแล้วที่ 390 480 และ 768: แตะ "คู่มือการใช้งาน" แล้ว url เท่าเดิม
+	   และความสูงเมนูย่อยเท่าเดิม 341.1px · ในลิ้นชักจึงต้องปล่อยให้ลิงก์พาไปหน้านั้น */
+	var drawerQuery = window.matchMedia('(max-width: 960px)');
 	var parentLinks = document.querySelectorAll('.nav-list .menu-item-has-children > a');
+
+	function syncParentAria() {
+		parentLinks.forEach(function (link) {
+			if (drawerQuery.matches) {
+				/* ในลิ้นชัก เมนูย่อยกางอยู่ตลอด จึงไม่ใช่ปุ่มเปิด·ปิด */
+				link.removeAttribute('aria-haspopup');
+				link.setAttribute('aria-expanded', 'true');
+			} else {
+				link.setAttribute('aria-haspopup', 'true');
+				link.setAttribute('aria-expanded', link.parentNode.classList.contains('is-open') ? 'true' : 'false');
+			}
+		});
+	}
+	syncParentAria();
+	if (drawerQuery.addEventListener) {
+		drawerQuery.addEventListener('change', syncParentAria);
+	}
+
 	parentLinks.forEach(function (link) {
-		link.setAttribute('aria-haspopup', 'true');
-		link.setAttribute('aria-expanded', 'false');
 		link.addEventListener('click', function (e) {
+			if (drawerQuery.matches) {
+				return;
+			}
 			e.preventDefault();
 			var li = link.parentNode;
 			var willOpen = !li.classList.contains('is-open');

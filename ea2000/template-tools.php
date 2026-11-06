@@ -35,7 +35,7 @@ $ea2000_dd_rows = array( 5, 10, 20, 30, 40, 50, 60, 70 );
 			<!-- เครื่องมือที่ 1 · ขนาดออเดอร์ -->
 			<section class="tool-card" aria-labelledby="lot-title">
 				<p class="tool-step">01</p>
-				<h2 class="tool-title" id="lot-title"><?php echo esc_html( ea2000_mod( 'tools_lot_title' ) ); ?></h2>
+				<h2 class="tool-title" id="lot-title"><?php echo ea2000_text( ea2000_mod( 'tools_lot_title' ) ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
 				<p class="tool-lead"><?php echo esc_html( ea2000_mod( 'tools_lot_intro' ) ); ?></p>
 
 				<form class="tool-form" id="lot-form" novalidate>
