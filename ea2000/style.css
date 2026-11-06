@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวการ์ดแบบกระจกฝ้า ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 3.2.1
+Version: 3.2.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -9415,3 +9415,34 @@ input::placeholder, textarea::placeholder { color: var(--muted); }
 	text-decoration: none;
 }
 .diag .strike::after { display: none; }
+
+/* 51.8 ปุ่ม LINE บน /go/ และป้ายแนะนำ · แก้สีที่ตกค้างจากตอนพลิกเป็นโทนมืด
+   กฎผิวกระจกในข้อ 49.1 คลุม .lh-btn ด้วย จึงทับพื้นสีเขียวของปุ่ม LINE
+   แต่สีตัวอักษรยังเป็นสีเข้มเดิม กลายเป็นตัวเข้มบนพื้นเข้ม อ่านไม่ออก */
+.lh-btn-line,
+.lh-btn-line:hover,
+.lh-btn-line-step,
+.lh-btn-line-bottom {
+	background: var(--line-green);
+	border-color: var(--line-green);
+	color: #03240F;
+}
+.lh-btn-line:hover,
+.lh-btn-line-step:hover,
+.lh-btn-line-bottom:hover {
+	background: var(--line-green-dark);
+	border-color: var(--line-green-dark);
+}
+.lh-btn-line .lh-ic,
+.lh-btn-line .lh-lbl,
+.lh-btn-line .lh-ar {
+	color: #03240F;
+}
+
+/* ป้าย "แนะนำ" เคยเป็นเขียวอ่อนกับตัวหนังสือเขียวเข้ม พอพลิกโทน
+   พื้นกลายเป็นขาวโปร่งและตัวหนังสือกลายเป็นขาว จึงจมหายไป */
+.lh-step-badge {
+	border-color: var(--primary);
+	background: var(--primary);
+	color: var(--on-primary);
+}
