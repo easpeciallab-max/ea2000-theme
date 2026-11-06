@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.7.0
+Version: 4.8.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -11532,4 +11532,66 @@ hr,
    ห้ามแก้ด้วยการเปิดลิ้นชักค้าง เพราะ ≤960px มันเป็น fixed เต็มจอ */
 .no-js .nav-toggle {
 	display: none;
+}
+
+
+/* ==========================================================
+   62. กล่องผู้เขียนใต้บทความ
+   ลบทั้งบล็อกแล้วกล่องจะเหลือเป็นข้อความเปล่า ไม่พัง
+   ========================================================== */
+.author-box {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 18px;
+	align-items: start;
+	margin: 36px 0 0;
+	padding: 22px 24px;
+	background: var(--surface);
+	border: 1px solid var(--line);
+}
+
+.author-box:not(:has(.author-box-img)) {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.author-box-img {
+	width: 72px;
+	height: 72px;
+	object-fit: cover;
+	border: 1px solid var(--line);
+}
+
+.author-box-label {
+	margin: 0 0 4px;
+	font-size: .78rem;
+	letter-spacing: .12em;
+	text-transform: uppercase;
+	color: var(--muted);
+}
+
+.author-box-name {
+	margin: 0 0 8px;
+	font-family: var(--font-display);
+	font-size: 1.1rem;
+	font-weight: 600;
+	color: var(--text);
+}
+
+.author-box-bio {
+	margin: 0;
+	font-size: .95rem;
+	line-height: 1.7;
+	color: var(--muted);
+}
+
+@media (max-width: 600px) {
+	.author-box {
+		padding: 18px 16px;
+		gap: 14px;
+	}
+
+	.author-box-img {
+		width: 56px;
+		height: 56px;
+	}
 }

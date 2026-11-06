@@ -747,6 +747,8 @@ function ea2000_defaults() {
 		'risk_more_text'   => 'อ่านประกาศความเสี่ยงฉบับเต็ม',
 		'risk_margin_note' => 'ผลในอดีตไม่รับประกันผลในอนาคต · การเทรดมีความเสี่ยง โปรดอ่านประกาศฉบับเต็มก่อนตัดสินใจ', // บรรทัดเตือนใต้ตัวเลือกแพ็กเกจ
 		'risk_title' => 'ก่อนตัดสินใจ อ่านความเสี่ยงก่อน',
+		'author_bio'  => 'ทีมงาน EA2000 ทำงานกับ MetaTrader 5 และระบบเทรดอัตโนมัติ บทความทุกชิ้นเขียนจากขั้นตอนที่ทดสอบบนโปรแกรมจริง ไม่ใช่การแปลจากเว็บต่างประเทศ',
+		'author_avatar' => '',
 		'risk_text'  => 'การเทรด Forex, CFD หรือสินทรัพย์ทางการเงินอื่น ๆ มีความเสี่ยงสูง ผู้ใช้งานอาจขาดทุนได้ทั้งบางส่วนหรือทั้งหมดของเงินทุน ผลการทดสอบหรือผลลัพธ์ในอดีตไม่ได้รับประกันผลลัพธ์ในอนาคต EA2000 เป็นเครื่องมือช่วยเทรดตามเงื่อนไขที่กำหนด ไม่ใช่ระบบรับประกันผลกำไร ผู้ใช้งานควรศึกษาข้อมูล เข้าใจข้อจำกัดของระบบ และบริหารความเสี่ยงให้เหมาะสมกับตนเองก่อนใช้งานจริง',
 
 		/* CTA ปิดท้าย · รวมอยู่ในบล็อก 10 · ปุ่ม LINE ปุ่มเดียว */
@@ -1472,6 +1474,50 @@ function ea2000_social_row( $class = 'social-row' ) {
 		echo '</a>';
 	}
 	echo '</div>';
+}
+
+/* --------------------------------------------------------------
+ * เวลาอ่านโดยประมาณ
+ *
+ * ภาษาไทยไม่มีช่องว่างคั่นคำ นับคำด้วย str_word_count ไม่ได้ จึงนับตัวอักษร
+ * ใช้ 350 ตัวอักษรต่อนาที ซึ่งช้ากว่าค่ามาตรฐานของภาษาอังกฤษเพราะบทความ
+ * มีศัพท์โปรแกรมและตาราง ปัดขึ้นเสมอ ต่ำสุด 1 นาที
+ * -------------------------------------------------------------- */
+function ea2000_reading_time( $post_id = 0 ) {
+	$post_id = $post_id ? $post_id : get_the_ID();
+	$text    = wp_strip_all_tags( (string) get_post_field( 'post_content', $post_id ) );
+	$len     = function_exists( 'mb_strlen' ) ? mb_strlen( $text, 'UTF-8' ) : strlen( $text );
+	return max( 1, (int) ceil( $len / 350 ) );
+}
+
+/* --------------------------------------------------------------
+ * กล่องผู้เขียนใต้บทความ
+ *
+ * คำอธิบายมาจากช่อง Biographical Info ของผู้ใช้ ถ้าว่างใช้ค่าในธีม
+ * ไม่ลิงก์ไปหน้ารวมของผู้เขียน เพราะ archive ของผู้เขียนถูกปิดไว้ (301)
+ * -------------------------------------------------------------- */
+function ea2000_author_box() {
+	$ea2000_author_name = get_the_author();
+	if ( ! $ea2000_author_name ) {
+		return;
+	}
+	$ea2000_author_bio = trim( (string) get_the_author_meta( 'description' ) );
+	if ( '' === $ea2000_author_bio ) {
+		$ea2000_author_bio = (string) ea2000_mod( 'author_bio' );
+	}
+	if ( '' === $ea2000_author_bio ) {
+		return;
+	}
+	$ea2000_author_img = ea2000_mod( 'author_avatar' );
+	echo '<aside class="author-box">';
+	if ( $ea2000_author_img ) {
+		echo '<img class="author-box-img" src="' . esc_url( $ea2000_author_img ) . '" alt="" width="72" height="72" loading="lazy" decoding="async" />';
+	}
+	echo '<div class="author-box-body">';
+	echo '<p class="author-box-label mono keep-case">เขียนโดย</p>';
+	echo '<p class="author-box-name">' . esc_html( $ea2000_author_name ) . '</p>';
+	echo '<p class="author-box-bio">' . ea2000_text( $ea2000_author_bio ) . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text
+	echo '</div></aside>';
 }
 
 /* --------------------------------------------------------------

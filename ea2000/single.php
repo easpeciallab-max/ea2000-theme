@@ -43,7 +43,9 @@ while ( have_posts() ) :
 					<div class="article-meta">
 						<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 						<span class="article-meta-sep" aria-hidden="true">·</span>
-						<span><?php echo esc_html( 'เข้าชม ' . number_format_i18n( ea2000_get_post_views( get_the_ID() ) ) . ' ครั้ง' ); ?></span>
+						<span><?php echo esc_html( get_the_author() ); ?></span>
+						<span class="article-meta-sep" aria-hidden="true">·</span>
+						<span><?php echo esc_html( 'อ่าน ' . number_format_i18n( ea2000_reading_time() ) . ' นาที' ); ?></span>
 					</div>
 				</div>
 			</header>
@@ -105,6 +107,8 @@ while ( have_posts() ) :
 						<a href="<?php echo esc_url( home_url( '/risk-disclosure/' ) ); ?>">อ่านคำเตือนฉบับเต็ม</a>
 					</p>
 				</div>
+
+				<?php ea2000_author_box(); ?>
 			</div>
 
 		</article>
