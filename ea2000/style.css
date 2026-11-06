@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.1.2
+Version: 4.2.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -10608,4 +10608,388 @@ hr,
 	border: 0;
 	border-bottom: 1px solid var(--line);
 	background: transparent;
+}
+
+/* ============================================================
+   55) ผลตรวจทั้งเว็บ 21 หน้า x 3 ขนาดจอ (6 พ.ย. 2569)
+   ชุดตรวจ 109 ตัววัดทีละจุดบนเว็บจริงแล้วผู้หักล้างยืนยัน 76 รายการ
+   เกือบทั้งหมดมาจากต้นเหตุร่วมไม่กี่อย่างของ section 52 ถึง 54
+   คือเติมกรอบหรือพื้นให้ของที่ไม่เคยเป็นกล่อง แล้วไม่ได้คืนระยะใน
+   ของที่เคยมีเส้นอยู่แล้วจึงกลายเป็นเส้นคู่
+   ลบทั้งบล็อกแล้วจะกลับไปเป็นสภาพก่อนตรวจ
+   ============================================================ */
+
+/* ---------- 55.1 เส้นใต้หัวหน้าเพจเป็นเส้นคู่ ----------
+   .phero มีเส้นล่าง และ .section แรกใน main มีเส้นบน มาเจอกันพอดี
+   ได้เส้นหนา 2px สองโทน เป็นเส้นแรกที่ผู้เข้าชมเห็นในทุกหน้าย่อย
+   เจอที่ /ea2000/ /pricing/ /tools/ /backtest/ /forward-test/
+   /mt5-login/ /deposit/ /vps-windows/ /vps-android/ */
+.phero + main > .section:first-of-type,
+.page-hero + main > .section:first-of-type {
+	border-top: 0;
+}
+
+/* ---------- 55.2 แถบบทหน้าแรกที่เป็นพื้นต่าง ----------
+   .band-surface มีเส้นบนล่างของตัวเอง ซ้อนกับเส้นล่างของบทก่อนหน้า */
+.home-v3 .ch.band-surface {
+	border-top: 0;
+	border-bottom: 1px solid var(--line);
+}
+
+/* ---------- 55.3 ตารางที่ยุบเป็นการ์ดบนมือถือ ----------
+   section 52 ให้เส้นล่างกับ th และ td ของทุกตาราง
+   ในโหมดการ์ดเส้นพวกนี้ซ้อนกับเส้นคั่นการ์ด (tr) จนเห็นเป็นเส้นคู่
+   และเพราะกฎเดิมปิดเส้นให้แถวสุดท้ายไว้ การ์ดใบสุดท้ายจึงไม่มีเส้นในเลย
+   จึงดูไม่เหมือนใบอื่น · คืนแบบเดิมคือการ์ดไม่มีเส้นใน เหลือเส้นคั่นการ์ดเส้นเดียว
+   เจอที่ /tools/ /backtest/ /forward-test/ /how-to-install/
+   /open-mt5-account/ /mt5-login/ /deposit/ /vps-windows/ /vps-ios/
+   /vps-macos/ /privacy-policy/ (รวม 16 รายการ) */
+@media (max-width: 640px) {
+	.doc-table tbody th,
+	.doc-table tbody td,
+	.doc-table tbody tr:last-child th,
+	.doc-table tbody tr:last-child td,
+	.entry-content .table-scroll th,
+	.entry-content .table-scroll td {
+		border: 0;
+	}
+
+	/* ตารางที่ใช้ th เป็นหัวแถว (เครื่องมือ drawdown, สเปกสินค้า)
+	   ต้องยุบเป็นบล็อกเหมือน td ไม่งั้นค้างเป็นกล่องเทาแคบ ๆ ลอยกลางการ์ด */
+	.doc-table tbody th {
+		display: block;
+		width: 100%;
+		padding: 3px 0;
+		background: none;
+		text-transform: none;
+		letter-spacing: normal;
+		white-space: normal;
+		font-size: 0.9375rem;
+	}
+
+	/* หัวแถวที่มี data-label ให้ขึ้นป้ายเองเหมือน td */
+	.doc-table tbody th[data-label]::before {
+		content: attr(data-label);
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.72rem;
+		font-weight: 400;
+		letter-spacing: 0.04em;
+		color: var(--muted);
+	}
+
+	/* หัวแถวที่ไม่มี data-label เป็นชื่อการ์ดอยู่แล้ว ช่องถัดไปจึงไม่ต้องขึ้นป้ายซ้ำ
+	   แก้ตารางสเปกหน้า /ea2000/ ที่เคยพิมพ์หัวข้อซ้ำสองครั้งทุกแถว */
+	.doc-table tbody th:not([data-label]) {
+		color: var(--text);
+		font-weight: 600;
+		padding-bottom: 6px;
+	}
+
+	/* ป้ายที่มีวรรณยุกต์ลอยเคยเกือบชนเส้นคั่นการ์ดด้านบน เหลือช่องไฟ 3px */
+	.doc-table tbody td {
+		padding-top: 7px;
+	}
+
+	/* เส้นคั่นการ์ดเส้นเดียว */
+	.doc-table tbody tr {
+		border-bottom: 1px solid var(--line);
+	}
+
+	.doc-table tbody tr:last-child {
+		border-bottom: 0;
+	}
+
+	/* แถวสุดท้ายเคยไม่ได้ระยะในเหมือนแถวอื่น ข้อความจึงหลุดแนวไป 18px
+	   (เจอในตารางที่อยู่ในเนื้อหาของ WordPress เช่น /privacy-policy/) */
+	.entry-content .table-scroll .doc-table tbody th,
+	.entry-content .table-scroll .doc-table tbody td,
+	.entry-content .table-scroll .doc-table tbody tr:last-child th,
+	.entry-content .table-scroll .doc-table tbody tr:last-child td {
+		padding: 7px 0 3px;
+	}
+}
+
+/* ---------- 55.4 ตารางบนจอกว้าง ----------
+   เส้นคั่นแถวเคยเปลี่ยนความสว่างกลางคันตรงรอยต่อคอลัมน์
+   เพราะ th ใช้ --line แต่ td ใช้ --line-soft ในแถวเดียวกัน */
+.doc-table tbody th {
+	border-bottom-color: var(--line-soft);
+}
+
+/* ตารางที่อยู่ในการ์ดสองคอลัมน์ · min-width 520px ของตารางเต็มหน้า
+   ใหญ่กว่าพื้นที่ในการ์ด 504px จึงเกิดแถบเลื่อนและขอบขวาถูกตัด */
+.tool-card .doc-table-wrap .doc-table {
+	min-width: 0;
+	width: 100%;
+}
+
+/* คอลัมน์หัวแถวเคยแคบจนตัดกลางคำไทย (สิ่งที่ต้องเตรี กับ ยม) */
+.doc-section .doc-table tbody tr > th:first-child,
+.doc-section .doc-table tbody tr > td:first-child,
+.doc-section .doc-table thead th:first-child {
+	min-width: 160px;
+	word-break: keep-all;
+}
+
+@media (max-width: 640px) {
+	.doc-section .doc-table tbody tr > th:first-child,
+	.doc-section .doc-table tbody tr > td:first-child {
+		min-width: 0;
+	}
+}
+
+/* ---------- 55.5 เลขลำดับขั้นที่เป็นแผ่นเขียว ----------
+   section 52 เปลี่ยนเลขขั้นจากตัวหนังสือสีเขียวเป็นแผ่นพื้นเขียว
+   แต่ของเดิมไม่มีระยะใน และเป็นลูกกริดที่ยืดเต็มช่อง
+   ผลคือแท่งเขียวสูงไม่เท่ากัน 109 ถึง 161px และตัวเลขชิดขอบซ้าย 0px */
+.ledger-idx,
+.guide-step-num,
+.step-n,
+.install-step-n {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	align-self: start;
+	justify-self: start;
+	min-width: 2.75rem;
+	min-height: 1.7rem;
+	padding: 2px 10px;
+	line-height: 1.2;
+	text-align: center;
+	font-variant-numeric: tabular-nums;
+}
+
+.guide-step-num {
+	min-width: 52px;
+	min-height: 2.1rem;
+}
+
+@media (max-width: 640px) {
+	.guide-step-num {
+		min-width: 40px;
+	}
+}
+
+/* ขั้นตอนที่ไม่มีภาพ เคยประกาศคอลัมน์ 52px ทับมีเดียควีรีที่ย่อเป็น 40px
+   ทำให้หัวข้อของขั้นนั้นเยื้องขวา 12px ไม่ตรงกับขั้นอื่นบนมือถือ */
+@media (max-width: 640px) {
+	.guide-step--wide .guide-step-body {
+		grid-template-columns: 40px minmax(0, 1fr);
+	}
+}
+
+/* ---------- 55.6 ปุ่มลอย LINE ทับลิงก์ กลับด้านบน ----------
+   ปุ่มลอยแสดงตั้งแต่ 761px ขึ้นไป แต่คอนเทนเนอร์ยังไม่ถึงความกว้างสูงสุด
+   จนถึงราว 1150px ช่วงนั้นปุ่มจึงนั่งทับลิงก์ท้ายเว็บ บังข้อความและกินการกด
+   เจอที่หน้าแรกและอีก 8 หน้าที่ 768px */
+@media (min-width: 761px) and (max-width: 1180px) {
+	.site-footer .status-top,
+	.site-footer.console .status-top {
+		margin-right: 76px;
+	}
+}
+
+/* ---------- 55.7 ฟิล์มภาพในบทติดตั้งหน้าแรก ----------
+   .film มี margin ติดลบ 4px คู่กับ padding 4px เพื่อไม่ให้เงา focus ถูกตัด
+   กฎรีเซ็ตของโครงใหม่ลบ padding-left ทิ้ง เหลือ margin ติดลบลอยอยู่
+   ขอบซ้ายจึงยื่นล้ำบล็อกอื่นในคอลัมน์เดียวกัน 4px */
+.home-v3 .ch > .container > .film {
+	padding-left: 4px;
+}
+
+/* ---------- 55.8 แผงแพ็กเกจหน้าแรก ----------
+   พื้นสีเส้นกับกรอบของ .home-v3 .tier-panels ถูกใส่ไว้ทุกขนาดจอ
+   แต่โหมดคอลัมน์ที่ต้องใช้พื้นนั้นเป็นตัวคั่นเริ่มที่ 1100px
+   ต่ำกว่านั้นแผงเป็นแท็บทีละใบ พื้นสีเส้นบวก padding-top 32px
+   จึงโผล่เป็นแผ่นเทาเปล่าคาดเต็มความกว้างเหนือการ์ด */
+@media (max-width: 1099px) {
+	.home-v3 .tier-panels {
+		border: 0;
+		background: transparent;
+	}
+}
+
+@media (min-width: 1100px) {
+	.home-v3 .tier-panels {
+		padding-top: 0;
+	}
+
+	/* ปุ่มในการ์ดแพ็กเกจกว้าง 245.8px ในกล่องเนื้อหา 198.5px
+	   กรอบเขียวจึงพาดข้ามเส้นคั่นคอลัมน์เข้าไปในการ์ดข้าง ๆ */
+	.home-v3 .tier-panels .tier-panel > .key {
+		align-self: stretch;
+		max-width: 100%;
+	}
+}
+
+.tier-tabs {
+	margin-bottom: 32px;
+}
+
+/* ---------- 55.9 การ์ดราคา ----------
+   คำบรรยายใต้ชื่อแพ็กเกจนั่งทับเส้นประ เหลือช่องไฟ 1 ถึง 2px
+   ขณะที่อีกด้านของกล่องเดียวกันเว้น 16 ถึง 20px */
+.price-card .price-tag {
+	margin-bottom: 14px;
+}
+
+/* การ์ดราคาในช่วงคอลัมน์เดียวเคยถูกหุบมาอยู่กลาง ห่างขอบ 154px
+   ขณะที่หัวข้อและตารางเปรียบเทียบในส่วนเดียวกันชิดซ้ายที่ 24px */
+@media (max-width: 1023px) {
+	.pricing-grid {
+		max-width: none;
+		margin-inline: 0;
+	}
+}
+
+/* ---------- 55.10 รายการคู่มือที่เกี่ยวข้อง ----------
+   ใบสุดท้ายในจำนวนคี่เคยถูกยืดเต็มสองคอลัมน์ เพื่อไม่ให้เห็นช่องพื้นเทา
+   วิธีที่ดีกว่าคือเติมเซลล์อุดช่องด้วยสีพื้น การ์ดจึงกว้างเท่ากันทุกใบ
+   และเส้นคั่นกลางวาดต่อเนื่องถึงแถวสุดท้าย */
+.guide-more-item:last-child:nth-child(odd) {
+	grid-column: auto;
+}
+
+.guide-more::after {
+	content: "";
+	background: var(--bg);
+}
+
+@media (max-width: 640px) {
+	.guide-more::after {
+		display: none;
+	}
+}
+
+/* ลิงก์ในการ์ดเคยสูงไม่เท่า li ที่กริดยืดไว้ เหลือแถบกดไม่ได้ 25.5px
+   และลูกศรของการ์ดในแถวเดียวกันอยู่คนละระดับ */
+.guide-more-item {
+	display: grid;
+}
+
+.guide-more-item > a {
+	height: 100%;
+}
+
+/* ---------- 55.11 การ์ดดาวน์โหลดแอป ----------
+   auto-fit ยุบคอลัมน์ที่ว่างเหลือ 0 แล้วยกทั้งแถวให้การ์ดใบเดียว
+   หน้า /vps-macos/ ที่มีการ์ดใบเดียวจึงยืดกว้าง 1064px เหลือพื้นว่าง 59% */
+.dl-cards {
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* ---------- 55.12 คอลัมน์ท้ายเว็บ ----------
+   คอลัมน์ ข้อมูลระบบ ใช้เส้นบน อีกสามคอลัมน์ใช้เส้นล่าง
+   เส้นแรกของสี่คอลัมน์จึงอยู่คนละระดับ ห่างกัน 39.5px */
+.site-footer .index-col .sheet {
+	border-top: 0;
+}
+
+.site-footer .index-col .sheet-row {
+	padding-top: 8px;
+	padding-bottom: 7px;
+	border-bottom-color: var(--line-soft);
+}
+
+/* ---------- 55.13 แถบ CTA ทักทีมงาน ----------
+   แถบกินเต็มความกว้างจอแต่มีกรอบครบสี่ด้าน เส้นซ้ายขวาจึงพาดชิดริมจอ
+   เหมือนกล่องที่ถูกจอตัดขอบ · แบบแผนของแถบทั้งเว็บคือเส้นคาดบนล่าง */
+.cta-console {
+	border-width: 1px 0;
+}
+
+/* คำโปรยถูกจำกัดความกว้าง 56ch ทำให้หน้า /tools/ เหลือคำว่า ไม่ ห้อยบรรทัดเดียว */
+.cta-console-sub {
+	max-width: 60ch;
+	text-wrap: pretty;
+}
+
+/* ---------- 55.14 เนื้อหาหัวข้อที่ซ้อนอยู่ใน section ----------
+   /tools/ และ /ea2000/ ห่อ .doc-sections ไว้ใน section อีกชั้น
+   padding ล่างจึงบวกกัน เกิดช่องดำว่าง 210px ก่อนแถบ LINE */
+.section > .container > .doc-sections,
+.section > .container-narrow > .doc-sections {
+	padding-bottom: 0;
+}
+
+/* ---------- 55.15 หน้า /articles/ ----------
+   ประโยคแจ้งว่ายังไม่มีบทความจัดกึ่งกลาง ขณะที่ทุกบล็อกอื่นชิดซ้าย */
+.no-posts {
+	text-align: left;
+}
+
+/* ---------- 55.16 หน้าเอกสารความเสี่ยง ----------
+   แท่งเขียวหน้าหัวข้อยึดขอบบนของ h2 ส่วนป้ายเลขถูกจัดกึ่งกลาง
+   เมื่อหัวข้อตกสองบรรทัดบนมือถือ สองชิ้นนี้จึงเหลื่อมกัน 10.9px */
+.riskdoc-block h2::before {
+	top: 50%;
+	bottom: auto;
+	transform: translateY(-50%);
+}
+
+/* บรรทัดวันที่ปรับปรุงนั่งทับเส้นบนของแถบ LINE เหลือช่องไฟ 4.4px */
+.riskdoc-updated {
+	padding-bottom: 96px;
+}
+
+@media (max-width: 760px) {
+	.riskdoc-updated {
+		padding-bottom: 64px;
+	}
+}
+
+/* ---------- 55.17 ปุ่มคู่ในแถบติดต่อท้ายเว็บ ----------
+   บนมือถือปุ่มตกสองแถวแต่กว้างไม่เท่ากัน ขอบขวาเหลื่อม 4px
+   เพราะ .keycap เป็น inline-flex จึงหดตามเนื้อหา ตั้งที่กล่องห่ออย่างเดียวไม่พอ */
+@media (max-width: 640px) {
+	.launch-keys {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.launch-keys > * {
+		width: 100%;
+	}
+
+	.launch-keys > .keycap-wrap > .keycap {
+		display: flex !important;
+		width: 100%;
+		justify-content: center;
+	}
+
+	.launch-keys > .textlink {
+		justify-content: center;
+	}
+}
+
+/* ---------- 55.18 บาร์ล่างมือถือ ----------
+   สระและวรรณยุกต์ด้านบนของป้ายเกือบชนเส้นบัส เหลือช่องไฟ 2px
+   เลื่อนเส้นขึ้นชิดขอบล่างของแถวไอคอน ได้ช่องไฟ 5px เท่ากันทุกป้าย
+   ความสูงบาร์ --dock-h และ .dock-spacer ไม่เปลี่ยน */
+@media (max-width: 760px) {
+	.dock-keys {
+		background-position: 0 var(--cap-h);
+	}
+}
+
+/* ---------- 55.19 ภาพในขั้นตอนคู่มือ ----------
+   เมื่อกริดยุบเหลือคอลัมน์เดียว กรอบภาพถูกจัดกึ่งกลาง
+   ขอบซ้ายจึงไม่ตรงกับข้อความของขั้นเดียวกันที่ร่นเข้ามา 56px */
+@media (max-width: 900px) {
+	.guide-step-media > .media-frame,
+	.guide-step-media > .img-slot {
+		margin-left: 0;
+		margin-right: auto;
+	}
+
+	.guide-step-media {
+		padding-left: 52px;
+	}
+}
+
+@media (max-width: 640px) {
+	.guide-step-media {
+		padding-left: 40px;
+	}
 }

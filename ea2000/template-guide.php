@@ -86,7 +86,7 @@ ea2000_page_hero( $ea2000_kick, $ea2000_title ? $ea2000_title : 'คู่มื
 							<span class="guide-step-num mono keep-case"><?php echo esc_html( str_pad( (string) $ea2000_step[0], 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<div class="guide-step-text">
 								<h2><?php echo ea2000_text( $ea2000_step[1] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></h2>
-								<p><?php echo ea2000_text( $ea2000_step[2] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></p>
+								<p><?php echo ea2000_rich_inline( $ea2000_step[2] ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_rich_inline ?></p>
 								<?php
 								if ( $ea2000_has_cards ) {
 									ea2000_guide_store_cards( $ea2000_p );

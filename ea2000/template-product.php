@@ -63,7 +63,7 @@ for ( $ea2000_i = 1; $ea2000_i <= 3; $ea2000_i++ ) {
 						<?php foreach ( $ea2000_spec as $ea2000_row ) : ?>
 							<tr>
 								<th scope="row"><?php echo esc_html( $ea2000_row[0] ); ?></th>
-								<td data-label="<?php echo esc_attr( $ea2000_row[0] ); ?>"><?php echo esc_html( $ea2000_row[1] ); ?></td>
+								<td><?php echo esc_html( $ea2000_row[1] ); ?></td>
 							</tr>
 						<?php endforeach; ?>
 						</tbody>

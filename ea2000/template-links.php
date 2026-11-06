@@ -65,7 +65,7 @@ $lh_button = static function ( $class, $label, $url, $icon, $extra = '' ) use ( 
 		?>
 		<a class="<?php echo esc_attr( $class ); ?>" href="<?php echo esc_url( $href ); ?>"<?php echo $external ? ' target="_blank" rel="noopener"' : ''; ?><?php echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput -- escaped by caller ?>>
 			<span class="lh-ic"><?php echo ea2000_icon( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-			<span class="lh-lbl"><?php echo esc_html( $label ); ?></span>
+			<span class="lh-lbl"><?php echo ea2000_text( $label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 			<?php if ( $is_btn ) : ?>
 				<span class="lh-ar" aria-hidden="true">&rsaquo;</span>
 			<?php endif; ?>
@@ -76,7 +76,7 @@ $lh_button = static function ( $class, $label, $url, $icon, $extra = '' ) use ( 
 	?>
 	<span class="<?php echo esc_attr( $class ); ?> is-pending" aria-disabled="true">
 		<span class="lh-ic"><?php echo ea2000_icon( $icon ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-		<span class="lh-lbl"><?php echo esc_html( $label ); ?></span>
+		<span class="lh-lbl"><?php echo ea2000_text( $label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 		<?php if ( '' !== $lh_pending ) : ?>
 			<span class="lh-pending-tag"><?php echo esc_html( $lh_pending ); ?></span>
 		<?php endif; ?>
@@ -92,7 +92,7 @@ $lh_line_button = static function ( $label, $pos ) use ( $lh_line, $lh_has_line 
 	?>
 	<a class="lh-btn lh-btn-line lh-btn-line-step" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="<?php echo esc_attr( $pos ); ?>">
 		<span class="lh-ic"><?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
-		<span class="lh-lbl"><?php echo esc_html( $label ); ?></span>
+		<span class="lh-lbl"><?php echo ea2000_text( $label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 	</a>
 	<?php
 };
