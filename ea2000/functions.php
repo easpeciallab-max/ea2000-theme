@@ -1480,14 +1480,14 @@ function ea2000_social_row( $class = 'social-row' ) {
  * เวลาอ่านโดยประมาณ
  *
  * ภาษาไทยไม่มีช่องว่างคั่นคำ นับคำด้วย str_word_count ไม่ได้ จึงนับตัวอักษร
- * ใช้ 350 ตัวอักษรต่อนาที ซึ่งช้ากว่าค่ามาตรฐานของภาษาอังกฤษเพราะบทความ
+ * ใช้ 700 ตัวอักษรต่อนาที ซึ่งช้ากว่าคนอ่านคล่องเล็กน้อยเพราะบทความ
  * มีศัพท์โปรแกรมและตาราง ปัดขึ้นเสมอ ต่ำสุด 1 นาที
  * -------------------------------------------------------------- */
 function ea2000_reading_time( $post_id = 0 ) {
 	$post_id = $post_id ? $post_id : get_the_ID();
 	$text    = wp_strip_all_tags( (string) get_post_field( 'post_content', $post_id ) );
 	$len     = function_exists( 'mb_strlen' ) ? mb_strlen( $text, 'UTF-8' ) : strlen( $text );
-	return max( 1, (int) ceil( $len / 350 ) );
+	return max( 1, (int) ceil( $len / 700 ) );
 }
 
 /* --------------------------------------------------------------
