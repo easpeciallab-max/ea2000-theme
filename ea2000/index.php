@@ -11,6 +11,7 @@ get_header();
 
 $ea2000_desc  = get_the_archive_description();
 $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
+$ea2000_has_posts = have_posts();
 ?>
 
 <main id="main">
@@ -107,7 +108,12 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 					<p class="no-posts">กำลังเตรียมบทความอยู่ ระหว่างนี้อ่านคู่มือที่เขียนไว้แล้วได้เลย</p>
 				<?php endif; ?>
 
-				<?php
+			<?php endif; ?>
+
+			<?php
+			/* รายการคู่มือ: ขึ้นเมื่อยังไม่มีบทความ หรือบนหน้าแรกของหน้ารวมบทความ
+			   เพื่อไม่ให้ลิงก์ภายในชุดนี้หายไปเมื่อเริ่มมีบทความแล้ว */
+			if ( ! $ea2000_has_posts || ( is_home() && ! is_paged() ) ) :
 				$ea2000_hub = array();
 				/* เรียงตามลำดับที่คนทำจริง ตั้งแต่ยังไม่มีบัญชีจนระบบทำงานเอง
 				   เพิ่มคู่มือใหม่ให้เติมที่นี่ด้วย ไม่งั้นหน้านี้จะไม่ขึ้น */
@@ -134,7 +140,7 @@ $ea2000_found = (int) $GLOBALS['wp_query']->found_posts;
 				?>
 
 				<?php if ( ! empty( $ea2000_hub ) ) : ?>
-					<h2 class="guide-more-title">คู่มือที่อ่านได้ตอนนี้</h2>
+					<h2 class="guide-more-title"><?php echo $ea2000_has_posts ? 'คู่มือการใช้งานทั้งหมด' : 'คู่มือที่อ่านได้ตอนนี้'; ?></h2>
 					<ul class="guide-more">
 						<?php foreach ( $ea2000_hub as $ea2000_idx => $ea2000_row ) : ?>
 							<li class="guide-more-item">
