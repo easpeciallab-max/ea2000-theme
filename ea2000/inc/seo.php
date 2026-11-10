@@ -1059,6 +1059,32 @@ function ea2000_noindex_empty_terms( $robots ) {
 add_filter( 'wpseo_robots', 'ea2000_noindex_empty_terms' );
 
 /**
+ * รุ่นอาเรย์ของกฎเดียวกัน
+ *
+ * Yoast ตั้งแต่ 14 ขึ้นไปส่ง robots เป็นอาเรย์ผ่าน wpseo_robots_array
+ * ฟิลเตอร์ wpseo_robots แบบสตริงไม่ได้ทำงานแล้วในหลายรุ่น หมวดที่ยังไม่มีบทความ
+ * จึงขึ้นเป็น index ทั้งที่หน้าว่างเปล่า
+ *
+ * @param array $robots ค่าที่ Yoast จะพิมพ์
+ * @return array
+ */
+function ea2000_noindex_empty_terms_array( $robots ) {
+	if ( ! is_array( $robots ) ) {
+		return $robots;
+	}
+	if ( ! ( is_category() || is_tag() || is_tax() ) ) {
+		return $robots;
+	}
+	$term = get_queried_object();
+	if ( $term instanceof WP_Term && 0 === (int) $term->count ) {
+		$robots['index'] = 'noindex';
+		$robots['follow'] = 'follow';
+	}
+	return $robots;
+}
+add_filter( 'wpseo_robots_array', 'ea2000_noindex_empty_terms_array' );
+
+/**
  * ลิงก์โปรไฟล์ของแบรนด์จาก Customizer เข้า sameAs ของ Organization ที่ Yoast ออก
  *
  * Yoast ไม่อ่านช่องโซเชียลของธีมเอง เจ้าของจึงกรอกที่ Customizer ข้อ 1 ที่เดียวพอ
