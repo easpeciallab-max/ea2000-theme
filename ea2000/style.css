@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.18.7
+Version: 4.19.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12198,4 +12198,45 @@ h6 {
 
 .launch-title {
 	margin-bottom: 17px;
+}
+
+/* ============================================================
+   64) บาร์ล่างมือถือ · เตี้ยลงและทุกคีย์หน้าตาเดียวกัน (11 พ.ย. 2569)
+       เขียวแปลว่า "คุณอยู่หน้านี้" เท่านั้น ไม่ใช่สีประดับ
+       (ทับคำสั่งเดิมในข้อ 38 ที่ให้ป้ายทุกคีย์เป็นสีเขียว)
+   ============================================================ */
+@media (max-width: 760px) {
+	html {
+		/* 85px เหลือ 71px · --dock-key-min ต้องเท่ากับ cap + gap + label เสมอ (30 + 6 + 16) */
+		--dock-pad-top-base: 10px;
+		--dock-pad-bottom-base: 8px;
+		--cap-h-base: 30px;
+		--dock-key-min: 52px;
+	}
+
+	/* ค่าตั้งต้นของทุกคีย์ · เทากลาง ไม่มีสีแบรนด์ */
+	.dock-key,
+	.dock-key .dock-glyph,
+	.dock-label {
+		color: var(--ink-muted);
+	}
+
+	/* ไอคอน LINE เคยถูกบังคับเป็นเขียวด้วย !important ในบล็อกสีธรรมชาติ */
+	.dock-key.is-action .dock-cap,
+	.dock-key.is-action .dock-glyph {
+		color: var(--ink-muted) !important;
+	}
+
+	/* หน้าที่เปิดอยู่ · เขียวทั้งไอคอนและป้าย */
+	.dock-key.is-active,
+	.dock-key.is-active .dock-cap,
+	.dock-key.is-active .dock-glyph,
+	.dock-key.is-active .dock-label {
+		color: var(--lime);
+	}
+
+	/* ไฟดวงเล็กมุมคีย์ · ทำให้คีย์ไม่เหมือนกัน */
+	.dock-led {
+		display: none;
+	}
 }
