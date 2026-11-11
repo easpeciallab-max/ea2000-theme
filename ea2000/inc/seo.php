@@ -616,6 +616,11 @@ function ea2000_register_yoast_meta_rest() {
 		'_yoast_wpseo_title',
 		'_yoast_wpseo_metadesc',
 		'_yoast_wpseo_focuskw',
+
+		/* คะแนนที่ Yoast คำนวณในหน้าแก้ไข ถ้าไม่มีค่า จุดในรายการจะเป็นสีเทา
+		   ตัววิเคราะห์เป็น JavaScript จึงคำนวณฝั่ง PHP ไม่ได้ ต้องอ่านจากหน้าแก้ไขมาเขียน */
+		'_yoast_wpseo_linkdex',
+		'_yoast_wpseo_content_score',
 		'_yoast_wpseo_opengraph-title',
 		'_yoast_wpseo_opengraph-description',
 		'_yoast_wpseo_twitter-title',
