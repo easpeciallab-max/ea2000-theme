@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.18.0
+Version: 4.18.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12098,4 +12098,74 @@ h6 {
    ตอนนี้ป้ายกับหัวข้อย้ายเข้าคอลัมน์ซ้ายเหมือนบทอื่นแล้ว */
 .hazard-head .hazard-title {
 	margin-bottom: 0;
+}
+
+/* ============================================================
+   63) ระยะระหว่างหัวข้อกับคำอธิบาย · วัดจากหมึกจริงของตัวอักษรไทย
+       (11 พ.ย. 2569)
+
+   คู่ "หัวข้อ แล้วบรรทัดคำอธิบาย" ทั่วเว็บเว้นไว้ 4 ถึง 10px
+   ซึ่งพอดีสำหรับอักษรละติน แต่ภาษาไทยมีสระกับวรรณยุกต์ซ้อนขึ้นไปอีกสองชั้น
+   หมึกจึงล้นเหนือกล่องบรรทัดราว 2 ถึง 3px และอ่านว่าชิดกันจนแน่น
+
+   วัดด้วย scratchpad cover/inkgap.js ซึ่งคำนวณตำแหน่งหมึกจริงจาก
+   canvas.measureText (actualBoundingBoxAscent) ไม่ใช่จาก getBoundingClientRect
+   ที่คืนกล่องบรรทัด · เครื่องมือตรวจชุดเดิมทุกตัววัดจากกล่อง จึงมองไม่เห็นปัญหานี้
+
+   ตั้งระยะที่หัวข้อ ไม่ใช่ที่คำอธิบาย เพราะในสายบล็อกปกติ margin ของพี่น้อง
+   จะยุบรวมกันโดยเอาค่ามากสุด การไปเพิ่ม margin-top ให้คำอธิบายจึงไม่ได้ผล
+   ============================================================ */
+
+.guide-more-name,
+.lh-step-title,
+.module-title,
+.start-step-title,
+.ledger-body h3,
+.prod-get h3,
+.diag-title {
+	margin-bottom: 14px;
+}
+
+.dl-card-title {
+	margin-bottom: 13px;
+}
+
+.tool-title,
+.lh-socials {
+	margin-bottom: 15px;
+}
+
+.diag-resolved-label {
+	margin-bottom: 12px;
+}
+
+.riskdoc-block h2 {
+	margin-bottom: 18px;
+}
+
+/* คำบรรยายใต้ภาพ · ติดขอบล่างของกรอบรูปพอดี */
+.hud-frame .media-open {
+	margin-bottom: 10px;
+}
+
+/* กล่องที่ใช้ gap แทน margin · margin ไม่ยุบรวมในกริดกับเฟล็กซ์ แต่ระยะเดิมก็ยังน้อยอยู่ดี */
+.post-card-body {
+	gap: 14px;
+}
+
+.read-item > a {
+	gap: 10px;
+}
+
+.sheet-row {
+	gap: 8px;
+}
+
+.dl-steps li + li {
+	margin-top: 9px;
+}
+
+/* หัวหน้าเพจ · เส้นทางนำทางกับ h1 */
+.page-hero .breadcrumb {
+	margin-bottom: 18px;
 }
