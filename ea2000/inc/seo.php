@@ -707,6 +707,11 @@ function ea2000_seo_option_whitelist() {
 		'disable-post_format'  => 'bool',
 		'disable-attachment'   => 'bool',
 		'title-tax-category'   => 'text',
+		/* คำโปรยของหน้าหมวดหมู่ · ตั้งเป็น %%term_description%% แล้วเขียนคำอธิบายจริงที่ตัวหมวด
+		   คำอธิบายเดียวกันจะขึ้นเป็นข้อความนำบนหน้าหมวดด้วย (index.php อ่านจาก get_the_archive_description) */
+		'metadesc-tax-category' => 'text',
+		'metadesc-tax-post_tag' => 'text',
+		'social-description-tax-category' => 'text',
 		'title-tax-post_tag'   => 'text',
 		'social-title-tax-category' => 'text',
 		'social-title-tax-post_tag' => 'text',
