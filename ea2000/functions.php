@@ -2252,6 +2252,11 @@ function ea2000_post_card() {
 			   160 เป็นเพดานกันข้อความยาวผิดปกติเท่านั้น */
 			$ea2000_card_ex = html_entity_decode( wp_strip_all_tags( get_the_excerpt() ), ENT_QUOTES, 'UTF-8' );
 			$ea2000_card_ex = trim( preg_replace( '/\s*\[\x{2026}\]\s*$/u', '', $ea2000_card_ex ) );
+			if ( '' === $ea2000_card_ex ) {
+				/* เพจที่เนื้อหาอยู่ในธีม the_excerpt จึงว่าง การ์ดเลยเหลือแค่ชื่อเรื่องลอย ๆ
+				   ใช้คำโปรยของ Yoast ที่เขียนไว้ครบทุกหน้าแล้ว เป็นประโยคสรุปของหน้านั้นจริง */
+				$ea2000_card_ex = trim( (string) get_post_meta( get_the_ID(), '_yoast_wpseo_metadesc', true ) );
+			}
 			if ( '' !== $ea2000_card_ex ) :
 				?>
 				<p><?php echo esc_html( wp_trim_words( $ea2000_card_ex, 160, "\xE2\x80\xA6" ) ); ?></p>
