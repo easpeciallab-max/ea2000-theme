@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.18.6
+Version: 4.18.7
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12037,6 +12037,16 @@ body.search .posts-grid {
 	   ต้องเขียนให้น้ำหนักเท่ากับ .mobile-app-nav.is-lit .dock-lamp ของ section 41 ถึงจะทับได้ */
 	.mobile-app-nav .dock-lamp,
 	.mobile-app-nav.is-lit .dock-lamp {
+		display: none;
+	}
+
+	/* เส้นบัสที่พาดขวางใต้แถวไอคอน และรอยขีดแบ่งช่องระหว่างคีย์ · เจ้าของสั่งเอาออก
+	   เหลือเส้นเดียวคือขอบบนของบาร์ที่แยกบาร์ออกจากเนื้อหา */
+	.dock-keys {
+		background-image: none;
+	}
+
+	.dock-key + .dock-key::before {
 		display: none;
 	}
 
