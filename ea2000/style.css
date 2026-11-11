@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.10.0
+Version: 4.11.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -11594,4 +11594,69 @@ hr,
 		width: 56px;
 		height: 56px;
 	}
+}
+
+
+/* ==========================================================
+   63. ขอบรูปสีเขียว · แถบ LINE ให้อ่านเป็นแถบ · สีตอนชี้เมาส์ของชิปหมวด
+   ลบทั้งบล็อกแล้วทุกอย่างกลับไปเป็นแบบ section 62
+   ========================================================== */
+
+:root {
+	/* เส้นขอบรูป · เขียวธีมแบบโปร่ง ให้เป็นเส้นบางไม่ใช่กรอบหนา */
+	--img-edge: rgba(158, 240, 26, 0.5);
+}
+
+/* 63.1 รูปที่ยังไม่มีกรอบ ใส่เส้นที่ตัวรูปเอง
+   ภาพในบทความอยู่ใน figure.wp-block-image ซึ่งไม่มีเส้น */
+.entry-content img,
+.post-card-thumb img,
+.qr-flyout img,
+.qr-mobile img {
+	border: 1px solid var(--img-edge);
+}
+
+/* 63.2 กรอบที่มีเส้นอยู่แล้ว เปลี่ยนสีเส้น ไม่เพิ่มเส้นที่สอง
+   (.media-frame คือช่องรูปจริง ส่วน .img-slot คือกรอบเส้นประรอรูป จึงไม่โดน) */
+.media-frame,
+.guide-step-media,
+.article-thumb,
+.riskdoc-figure,
+.lh-feature-frame,
+.author-box-img {
+	border-color: var(--img-edge);
+}
+
+/* 63.3 โลโก้ไม่ต้องมีขอบ */
+.brand-logo,
+.brand-wordmark,
+.lh-logo img,
+.footer-logo img {
+	border: 0;
+}
+
+/* 63.4 แถบ LINE ท้ายหน้า
+   พื้นเดิมเป็น --ink (#0A0A0A) ซึ่งเกือบเท่าพื้นหน้า (#070707)
+   ช่วงเว้นด้านบนจึงอ่านเป็นที่ว่างเปล่าก่อนจะถึงตัวหนังสือ
+   เปลี่ยนเป็นแผ่นเดียวกับการ์ดทั้งเว็บ และลดระยะเว้นลง
+   ไม่ใส่เส้นล่าง เพราะฟุตเตอร์มี border-top ของตัวเองอยู่แล้ว */
+.cta-console {
+	padding: clamp(32px, 4vw, 52px) 0;
+	background-color: var(--surface);
+	border-top: 1px solid var(--line);
+}
+
+/* 63.5 ชิปหมวดหมู่เหนือหัวบทความ
+   เดิมตอนชี้เมาส์พื้นเป็นขาวโปร่ง 70% แต่ตัวอักษรยังเป็น #EDEDED
+   จึงได้ตัวสว่างบนพื้นสว่าง อ่านไม่ออกและไม่เข้ากับธีม */
+.article-cat {
+	border-color: rgba(255, 255, 255, 0.16);
+	transition: color 0.16s ease, border-color 0.16s ease, background-color 0.16s ease;
+}
+
+.article-cat:hover,
+.article-cat:focus-visible {
+	background: transparent;
+	border-color: var(--primary);
+	color: var(--primary);
 }
