@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.13.2
+Version: 4.14.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -11741,4 +11741,13 @@ hr,
    หน้า /articles/ ยังยืดเท่ากันเหมือนเดิม เพราะการ์ดเป็นบทความทั้งหมด */
 body.search .posts-grid {
 	align-items: start;
+}
+
+/* 65.5 หัวข้อ "คู่มือการใช้งานทั้งหมด" ในหน้ารวมบทความไปเกาะกริดการ์ดด้านบน
+   .guide-more-title ตั้ง margin: 0 0 22px ไว้ เพราะในหน้าคู่มือมันเป็นลูกตัวแรกของ section
+   ที่มี padding ของตัวเองอยู่แล้ว แต่ในหน้ารวมบทความมันต่อท้ายกริดการ์ดโดยตรง
+   ที่ว่างด้านบนจึงเป็น 0 ขณะที่ด้านล่าง 22 หัวข้อเลยอ่านเหมือนเป็นส่วนหนึ่งของก้อนก่อนหน้า
+   :not(:first-child) จึงแยกสองกรณีนี้ออกจากกันได้โดยไม่ต้องเพิ่มคลาส */
+.guide-more-title:not(:first-child) {
+	margin-top: clamp(44px, 5vw, 72px);
 }
