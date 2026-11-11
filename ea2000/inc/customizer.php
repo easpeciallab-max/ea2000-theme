@@ -126,8 +126,82 @@ function ea2000_customize_register( $wp_customize ) {
 				'pain3_desc'    => array( 'ข้อ 3 · รายละเอียด', 'textarea' ),
 				'pain4_title'   => array( 'ข้อ 4 · หัวข้อ', 'text' ),
 				'pain4_desc'    => array( 'ข้อ 4 · รายละเอียด', 'textarea' ),
+				'pain5_title'   => array( 'ข้อ 5 · หัวข้อ', 'text' ),
+				'pain5_desc'    => array( 'ข้อ 5 · รายละเอียด', 'textarea' ),
+				'pain6_title'   => array( 'ข้อ 6 · หัวข้อ', 'text' ),
+				'pain6_desc'    => array( 'ข้อ 6 · รายละเอียด', 'textarea' ),
 				'pain_resolved_label' => array( 'แถวสรุป · ป้าย', 'text', $rule ),
 				'pain_resolved_text'  => array( 'แถวสรุป · ข้อความ', 'textarea', $rule ),
+			),
+		),
+
+		'ea2000_fit' => array(
+			'title'       => '4b) บล็อก · EA2000 เหมาะกับใคร',
+			'description' => 'สองคอลัมน์บนหน้าแรก ซ้ายคือกลุ่มที่เหมาะ ขวาคือกลุ่มที่ยังไม่เหมาะ · เขียนตามความจริง ไม่ต้องกลัวว่าจะเสียลูกค้า การคัดคนที่ไม่พร้อมออกตั้งแต่ต้นช่วยลดปัญหาภายหลัง',
+			'fields'      => array(
+				'show_fit'       => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'fit_kicker'     => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'fit_title'      => array( 'หัวข้อ', 'text' ),
+				'fit_subtitle'   => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
+				'fit_good_title' => array( 'คอลัมน์ซ้าย · หัวข้อ', 'text' ),
+				'fit_good_items' => array( 'คอลัมน์ซ้าย · รายการ (บรรทัดละ 1 ข้อ)', 'textarea' ),
+				'fit_bad_title'  => array( 'คอลัมน์ขวา · หัวข้อ', 'text' ),
+				'fit_bad_items'  => array( 'คอลัมน์ขวา · รายการ (บรรทัดละ 1 ข้อ)', 'textarea' ),
+			),
+		),
+
+		'ea2000_start' => array(
+			'title'       => '9b) บล็อก · เริ่มต้นใช้งานจริง 6 ขั้น',
+			'description' => 'สิ่งที่ต้องมีก่อนเริ่ม แล้วตามด้วย 6 ขั้นเรียงตามลำดับที่คนทำจริง · แต่ละขั้นจะขึ้นลิงก์ไปหน้าคู่มือให้เองเมื่อหน้านั้นเผยแพร่แล้ว ลำดับหน้าคือ เปิดบัญชี, ล็อกอิน MT5, ฝากเงิน, VPS, ติดตั้ง EA, เครื่องมือคำนวณ',
+			'fields'      => array(
+				'show_start'        => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'start_kicker'      => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'start_title'       => array( 'หัวข้อ', 'text' ),
+				'start_subtitle'    => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
+				'start_req_label'   => array( 'กล่องสิ่งที่ต้องเตรียม · หัวข้อ', 'text' ),
+				'start_req1'        => array( 'สิ่งที่ต้องเตรียม ข้อ 1', 'text' ),
+				'start_req2'        => array( 'สิ่งที่ต้องเตรียม ข้อ 2', 'text' ),
+				'start_req3'        => array( 'สิ่งที่ต้องเตรียม ข้อ 3', 'text' ),
+				'start_req4'        => array( 'สิ่งที่ต้องเตรียม ข้อ 4', 'text' ),
+				'start_step1_title' => array( 'ขั้น 1 · หัวข้อ', 'text' ),
+				'start_step1_desc'  => array( 'ขั้น 1 · รายละเอียด', 'textarea' ),
+				'start_step2_title' => array( 'ขั้น 2 · หัวข้อ', 'text' ),
+				'start_step2_desc'  => array( 'ขั้น 2 · รายละเอียด', 'textarea' ),
+				'start_step3_title' => array( 'ขั้น 3 · หัวข้อ', 'text' ),
+				'start_step3_desc'  => array( 'ขั้น 3 · รายละเอียด', 'textarea' ),
+				'start_step4_title' => array( 'ขั้น 4 · หัวข้อ', 'text' ),
+				'start_step4_desc'  => array( 'ขั้น 4 · รายละเอียด', 'textarea' ),
+				'start_step5_title' => array( 'ขั้น 5 · หัวข้อ', 'text' ),
+				'start_step5_desc'  => array( 'ขั้น 5 · รายละเอียด', 'textarea' ),
+				'start_step6_title' => array( 'ขั้น 6 · หัวข้อ', 'text' ),
+				'start_step6_desc'  => array( 'ขั้น 6 · รายละเอียด', 'textarea' ),
+				'start_link_text'   => array( 'ข้อความลิงก์ไปคู่มือของแต่ละขั้น', 'text', $rule ),
+				'start_note'        => array( 'หมายเหตุท้ายส่วน', 'textarea' ),
+			),
+		),
+
+		'ea2000_terms' => array(
+			'title'       => '10b) บล็อก · คำศัพท์ที่ต้องรู้',
+			'description' => 'คำศัพท์พร้อมคำอธิบายสั้น · ช่อง slug คือชื่อลิงก์ของบทความ เช่น what-is-lot · หน้าแรกจะขึ้นลิงก์ให้เองเฉพาะบทความที่เผยแพร่แล้ว ถ้ายังไม่ถึงวันเผยแพร่จะแสดงเฉพาะคำอธิบาย ไม่มีลิงก์เสีย · มีช่องให้ 12 คำ ข้อไหนเว้นว่างจะไม่แสดง',
+			'fields'      => array(
+				'show_terms'     => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'terms_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'terms_title'    => array( 'หัวข้อ', 'text' ),
+				'terms_subtitle' => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
+				'terms_note'     => array( 'หมายเหตุท้ายส่วน', 'textarea' ),
+			),
+		),
+
+		'ea2000_read' => array(
+			'title'       => '10c) บล็อก · บทความล่าสุด',
+			'description' => 'ดึงบทความที่เผยแพร่แล้วล่าสุดมาแสดงอัตโนมัติ ไม่ต้องมาแก้เองทุกครั้ง · บทความที่ตั้งเวลาไว้จะยังไม่ขึ้นจนถึงวันเผยแพร่',
+			'fields'      => array(
+				'show_read'      => array( 'แสดงส่วนนี้', 'checkbox' ),
+				'read_kicker'    => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
+				'read_title'     => array( 'หัวข้อ', 'text' ),
+				'read_subtitle'  => array( 'คำอธิบายใต้หัวข้อ', 'textarea' ),
+				'read_count'     => array( 'จำนวนบทความที่แสดง (3 ถึง 12)', 'text' ),
+				'read_more_text' => array( 'ข้อความปุ่มไปหน้ารวมบทความ', 'text', $rule ),
 			),
 		),
 
@@ -295,7 +369,7 @@ function ea2000_customize_register( $wp_customize ) {
 
 		'ea2000_faq' => array(
 			'title'       => '10) บล็อก 8 · คำถามที่พบบ่อย (query log)',
-			'description' => 'มีช่องให้ 10 ข้อ ข้อไหนเว้นว่างไว้จะไม่แสดงผล · ทุกข้อที่กรอกจะถูกส่งให้ Google เป็นข้อมูลโครงสร้าง FAQPage อัตโนมัติ ตอบตามจริง ไม่อ้างผลกำไร',
+			'description' => 'มีช่องให้ 16 ข้อ ข้อไหนเว้นว่างไว้จะไม่แสดงผล · ทุกข้อที่กรอกจะถูกส่งให้ Google เป็นข้อมูลโครงสร้าง FAQPage อัตโนมัติ ตอบตามจริง ไม่อ้างผลกำไร',
 			'fields'      => array(
 				'show_faq'     => array( 'แสดงส่วนนี้', 'checkbox' ),
 				'faq_kicker'   => array( 'ป้ายบท (แสดงบนรางเลขบทและหัวบท)', 'text', $rule ),
@@ -762,10 +836,17 @@ function ea2000_customize_register( $wp_customize ) {
 		}
 	}
 
-	/* เพิ่ม FAQ 10 ข้อเข้า section FAQ */
-	for ( $i = 1; $i <= 10; $i++ ) {
+	/* เพิ่ม FAQ 16 ข้อเข้า section FAQ */
+	for ( $i = 1; $i <= 16; $i++ ) {
 		$sections['ea2000_faq']['fields'][ 'faq' . $i . '_q' ] = array( 'คำถามข้อ ' . $i, 'text' );
 		$sections['ea2000_faq']['fields'][ 'faq' . $i . '_a' ] = array( 'คำตอบข้อ ' . $i, 'textarea' );
+	}
+
+	/* เพิ่มคำศัพท์ 12 ชุดเข้า section คำศัพท์ */
+	for ( $i = 1; $i <= 12; $i++ ) {
+		$sections['ea2000_terms']['fields'][ 'term' . $i . '_name' ] = array( 'คำที่ ' . $i . ' · คำศัพท์', 'text' );
+		$sections['ea2000_terms']['fields'][ 'term' . $i . '_desc' ] = array( 'คำที่ ' . $i . ' · คำอธิบายสั้น', 'textarea' );
+		$sections['ea2000_terms']['fields'][ 'term' . $i . '_slug' ] = array( 'คำที่ ' . $i . ' · slug ของบทความ', 'text' );
 	}
 
 	$priority = 10;

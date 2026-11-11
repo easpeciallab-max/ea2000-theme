@@ -157,12 +157,16 @@ if ( ! function_exists( 'ea2000_front_contact_key' ) ) {
 $ea2000_chapter_defs = array(
 	'what'     => array( 'show_what', 'what_kicker' ),
 	'pain'     => array( 'show_pain', 'pain_kicker' ),
+	'fit'      => array( 'show_fit', 'fit_kicker' ),
 	'how'      => array( 'show_how', 'how_kicker' ),
 	'features' => array( 'show_features', 'features_kicker' ),
 	'tests'    => array( 'show_tests', 'tests_kicker' ),
 	'install'  => array( 'show_install', 'install_kicker' ),
+	'start'    => array( 'show_start', 'start_kicker' ),
 	'pricing'  => array( 'show_pricing_home', 'pricing_kicker' ),
 	'faq'      => array( 'show_faq', 'faq_kicker' ),
+	'terms'    => array( 'show_terms', 'terms_kicker' ),
+	'read'     => array( 'show_read', 'read_kicker' ),
 	'risk'     => array( 'show_risk', 'risk_kicker' ),
 );
 $ea2000_chapters = array();
@@ -317,7 +321,7 @@ $ea2000_hud_note   = trim( (string) ea2000_mod( 'hero_hud_note' ) );
 <?php if ( isset( $ea2000_chapters['pain'] ) ) : ?>
 <?php
 $ea2000_pains = array();
-for ( $i = 1; $i <= 4; $i++ ) {
+for ( $i = 1; $i <= 6; $i++ ) {
 	$ea2000_p_title = trim( (string) ea2000_mod( 'pain' . $i . '_title' ) );
 	$ea2000_p_desc  = trim( (string) ea2000_mod( 'pain' . $i . '_desc' ) );
 	if ( '' === $ea2000_p_title && '' === $ea2000_p_desc ) {
@@ -353,6 +357,41 @@ $ea2000_resolved_text  = trim( (string) ea2000_mod( 'pain_resolved_text' ) );
 				</div></li>
 			<?php endif; ?>
 		</ol>
+	</div>
+</section>
+<?php endif; ?>
+
+<?php /* ============ 02b) FIT · #fit (สองคอลัมน์ เหมาะกับใคร / ยังไม่เหมาะกับใคร) ============ */ ?>
+<?php if ( isset( $ea2000_chapters['fit'] ) ) : ?>
+<?php
+$ea2000_fit_good = ea2000_lines( ea2000_mod( 'fit_good_items' ) );
+$ea2000_fit_bad  = ea2000_lines( ea2000_mod( 'fit_bad_items' ) );
+?>
+<section class="ch ch-fit" id="fit"<?php ea2000_front_ch_attrs( $ea2000_chapters['fit'] ); ?>>
+	<div class="container">
+		<?php ea2000_front_ch_head( $ea2000_chapters['fit'], $ea2000_ch_total, ea2000_mod( 'fit_title' ), ea2000_mod( 'fit_subtitle' ) ); ?>
+		<div class="fit-grid">
+			<?php if ( $ea2000_fit_good ) : ?>
+			<div class="fit-col fit-yes">
+				<h3 class="fit-col-title"><?php echo esc_html( ea2000_mod( 'fit_good_title' ) ); ?></h3>
+				<ul class="fit-list">
+					<?php foreach ( $ea2000_fit_good as $ea2000_fi ) : ?>
+					<li><?php echo ea2000_icon( 'check', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo ea2000_text( $ea2000_fi ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<?php endif; ?>
+			<?php if ( $ea2000_fit_bad ) : ?>
+			<div class="fit-col fit-no">
+				<h3 class="fit-col-title"><?php echo esc_html( ea2000_mod( 'fit_bad_title' ) ); ?></h3>
+				<ul class="fit-list">
+					<?php foreach ( $ea2000_fit_bad as $ea2000_fi ) : ?>
+					<li><?php echo ea2000_icon( 'x', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?><span><?php echo ea2000_text( $ea2000_fi ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span></li>
+					<?php endforeach; ?>
+				</ul>
+			</div>
+			<?php endif; ?>
+		</div>
 	</div>
 </section>
 <?php endif; ?>
@@ -610,6 +649,65 @@ $ea2000_install_href  = '' !== $ea2000_install_url ? ea2000_link_url( $ea2000_in
 </section>
 <?php endif; ?>
 
+<?php /* ============ 06b) START · #start (สิ่งที่ต้องเตรียม + 6 ขั้น ลิงก์เข้าคู่มือแต่ละหน้า) ============ */ ?>
+<?php if ( isset( $ea2000_chapters['start'] ) ) : ?>
+<?php
+$ea2000_start_reqs = array();
+for ( $i = 1; $i <= 4; $i++ ) {
+	$ea2000_r = trim( (string) ea2000_mod( 'start_req' . $i ) );
+	if ( '' !== $ea2000_r ) {
+		$ea2000_start_reqs[] = $ea2000_r;
+	}
+}
+$ea2000_start_slugs = array( 'open-mt5-account', 'mt5-login', 'deposit', 'vps-windows', 'how-to-install', 'tools' );
+$ea2000_start_link  = trim( (string) ea2000_mod( 'start_link_text' ) );
+$ea2000_start_note  = trim( (string) ea2000_mod( 'start_note' ) );
+?>
+<section class="ch ch-start band-surface" id="start"<?php ea2000_front_ch_attrs( $ea2000_chapters['start'] ); ?>>
+	<div class="container">
+		<?php ea2000_front_ch_head( $ea2000_chapters['start'], $ea2000_ch_total, ea2000_mod( 'start_title' ), ea2000_mod( 'start_subtitle' ) ); ?>
+		<?php if ( $ea2000_start_reqs ) : ?>
+		<div class="start-req">
+			<h3 class="start-req-title"><?php echo esc_html( ea2000_mod( 'start_req_label' ) ); ?></h3>
+			<ul class="start-req-list">
+				<?php foreach ( $ea2000_start_reqs as $ea2000_r ) : ?>
+				<li><?php echo ea2000_text( $ea2000_r ); // phpcs:ignore WordPress.Security.EscapeOutput ?></li>
+				<?php endforeach; ?>
+			</ul>
+		</div>
+		<?php endif; ?>
+		<ol class="start-steps">
+			<?php
+			foreach ( $ea2000_start_slugs as $ea2000_si => $ea2000_slug ) :
+				$ea2000_st = trim( (string) ea2000_mod( 'start_step' . ( $ea2000_si + 1 ) . '_title' ) );
+				$ea2000_sd = trim( (string) ea2000_mod( 'start_step' . ( $ea2000_si + 1 ) . '_desc' ) );
+				if ( '' === $ea2000_st ) {
+					continue;
+				}
+				$ea2000_sp  = get_page_by_path( $ea2000_slug );
+				$ea2000_url = ( $ea2000_sp && 'publish' === $ea2000_sp->post_status ) ? get_permalink( $ea2000_sp ) : '';
+				?>
+			<li class="start-step">
+				<span class="start-step-n mono keep-case"><?php echo esc_html( sprintf( '%02d', $ea2000_si + 1 ) ); ?></span>
+				<div class="start-step-body">
+					<h3 class="start-step-title"><?php echo ea2000_text( $ea2000_st ); // phpcs:ignore WordPress.Security.EscapeOutput ?></h3>
+					<?php if ( '' !== $ea2000_sd ) : ?>
+					<p class="start-step-desc"><?php echo ea2000_text( $ea2000_sd ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+					<?php endif; ?>
+					<?php if ( '' !== $ea2000_url && '' !== $ea2000_start_link ) : ?>
+					<a class="textlink start-step-link" href="<?php echo esc_url( $ea2000_url ); ?>"><?php echo esc_html( $ea2000_start_link ); ?><?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
+					<?php endif; ?>
+				</div>
+			</li>
+			<?php endforeach; ?>
+		</ol>
+		<?php if ( '' !== $ea2000_start_note ) : ?>
+		<p class="start-note"><?php echo ea2000_text( $ea2000_start_note ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+		<?php endif; ?>
+	</div>
+</section>
+<?php endif; ?>
+
 <?php /* ============ 07) TIER SELECTOR · #pricing (แท็บ radio < 1100px · ตาราง 3 คอลัมน์ >= 1100px) ============ */ ?>
 <?php if ( isset( $ea2000_chapters['pricing'] ) ) : ?>
 <?php
@@ -707,7 +805,7 @@ $ea2000_pricing_note  = trim( (string) ea2000_mod( 'pricing_note' ) );
 		<div class="qlog">
 			<?php
 			$ea2000_qn = 0;
-			for ( $i = 1; $i <= 10; $i++ ) :
+			for ( $i = 1; $i <= 16; $i++ ) :
 				$ea2000_q = trim( (string) ea2000_mod( 'faq' . $i . '_q' ) );
 				$ea2000_a = trim( (string) ea2000_mod( 'faq' . $i . '_a' ) );
 				if ( '' === $ea2000_q || '' === $ea2000_a ) {
@@ -723,6 +821,86 @@ $ea2000_pricing_note  = trim( (string) ea2000_mod( 'pricing_note' ) );
 		</div>
 	</div>
 </section>
+<?php endif; ?>
+
+<?php /* ============ 08b) GLOSSARY · #terms (ลิงก์ไปบทความเฉพาะที่เผยแพร่แล้ว) ============ */ ?>
+<?php if ( isset( $ea2000_chapters['terms'] ) ) : ?>
+<?php
+$ea2000_terms = array();
+for ( $i = 1; $i <= 12; $i++ ) {
+	$ea2000_tn = trim( (string) ea2000_mod( 'term' . $i . '_name' ) );
+	$ea2000_td = trim( (string) ea2000_mod( 'term' . $i . '_desc' ) );
+	if ( '' === $ea2000_tn || '' === $ea2000_td ) {
+		continue;
+	}
+	$ea2000_terms[] = array( $ea2000_tn, $ea2000_td, ea2000_term_link( ea2000_mod( 'term' . $i . '_slug' ) ) );
+}
+$ea2000_terms_note = trim( (string) ea2000_mod( 'terms_note' ) );
+?>
+<?php if ( $ea2000_terms ) : ?>
+<section class="ch ch-terms" id="terms"<?php ea2000_front_ch_attrs( $ea2000_chapters['terms'] ); ?>>
+	<div class="container">
+		<?php ea2000_front_ch_head( $ea2000_chapters['terms'], $ea2000_ch_total, ea2000_mod( 'terms_title' ), ea2000_mod( 'terms_subtitle' ) ); ?>
+		<dl class="term-grid">
+			<?php foreach ( $ea2000_terms as $ea2000_t ) : ?>
+			<div class="term">
+				<dt class="term-name keep-case"><?php echo esc_html( $ea2000_t[0] ); ?></dt>
+				<dd class="term-desc">
+					<?php echo ea2000_text( $ea2000_t[1] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+					<?php if ( '' !== $ea2000_t[2] ) : ?>
+					<a class="term-link" href="<?php echo esc_url( $ea2000_t[2] ); ?>">อ่านเรื่อง <?php echo esc_html( $ea2000_t[0] ); ?> แบบเต็ม<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
+					<?php endif; ?>
+				</dd>
+			</div>
+			<?php endforeach; ?>
+		</dl>
+		<?php if ( '' !== $ea2000_terms_note ) : ?>
+		<p class="term-note"><?php echo ea2000_text( $ea2000_terms_note ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+		<?php endif; ?>
+	</div>
+</section>
+<?php endif; ?>
+<?php endif; ?>
+
+<?php /* ============ 08c) READ · #read (บทความล่าสุดที่เผยแพร่แล้วเท่านั้น) ============ */ ?>
+<?php if ( isset( $ea2000_chapters['read'] ) ) : ?>
+<?php
+$ea2000_read_n = max( 3, min( 12, (int) ea2000_mod( 'read_count' ) ) );
+$ea2000_read_q = new WP_Query(
+	array(
+		'post_type'           => 'post',
+		'post_status'         => 'publish',
+		'posts_per_page'      => $ea2000_read_n,
+		'ignore_sticky_posts' => true,
+		'no_found_rows'       => true,
+	)
+);
+?>
+<?php if ( $ea2000_read_q->have_posts() ) : ?>
+<section class="ch ch-read band-surface" id="read"<?php ea2000_front_ch_attrs( $ea2000_chapters['read'] ); ?>>
+	<div class="container">
+		<?php ea2000_front_ch_head( $ea2000_chapters['read'], $ea2000_ch_total, ea2000_mod( 'read_title' ), ea2000_mod( 'read_subtitle' ) ); ?>
+		<ul class="read-list">
+			<?php
+			while ( $ea2000_read_q->have_posts() ) :
+				$ea2000_read_q->the_post();
+				$ea2000_rc = get_the_category();
+				?>
+			<li class="read-item">
+				<a href="<?php the_permalink(); ?>">
+					<?php if ( ! empty( $ea2000_rc ) ) : ?>
+					<span class="read-cat mono keep-case"><?php echo esc_html( $ea2000_rc[0]->name ); ?></span>
+					<?php endif; ?>
+					<span class="read-title"><?php echo ea2000_text( get_the_title() ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
+					<span class="read-date mono keep-case"><?php echo esc_html( get_the_date() ); ?></span>
+				</a>
+			</li>
+			<?php endwhile; ?>
+		</ul>
+		<p class="ch-actions"><a class="key key-ghost" href="<?php echo esc_url( home_url( '/articles/' ) ); ?>"><?php echo esc_html( ea2000_mod( 'read_more_text' ) ); ?><?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a></p>
+	</div>
+</section>
+<?php endif; wp_reset_postdata(); ?>
 <?php endif; ?>
 
 <?php /* ============ 09) HAZARD BAND · #risk (ข้อความเต็ม ไม่พับ ไม่ตัด · ห้ามลดทอน) ============ */ ?>

@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.14.0
+Version: 4.15.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -11750,4 +11750,263 @@ body.search .posts-grid {
    :not(:first-child) จึงแยกสองกรณีนี้ออกจากกันได้โดยไม่ต้องเพิ่มคลาส */
 .guide-more-title:not(:first-child) {
 	margin-top: clamp(44px, 5vw, 72px);
+}
+
+
+/* ==========================================================
+   66. บล็อกใหม่บนหน้าแรก · เหมาะกับใคร · เริ่มต้นใช้งาน · คำศัพท์ · บทความล่าสุด
+   ใช้ผิวเดียวกับบล็อกเดิม (แผ่นทึบ เส้น 1px มุมเหลี่ยม กริดช่องไฟ 1px)
+   ลบทั้งบล็อกแล้วบล็อกใหม่จะไม่มีสไตล์ แต่เนื้อหายังอ่านได้ตามลำดับ
+   ========================================================== */
+
+/* ---------- 66.1 เหมาะกับใคร / ยังไม่เหมาะกับใคร ---------- */
+.fit-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1px;
+	border: 1px solid var(--line);
+	background: var(--line);
+}
+
+.fit-col {
+	min-width: 0;
+	padding: 26px;
+	background: var(--surface);
+}
+
+.fit-col-title {
+	margin: 0 0 16px;
+	font-size: 1rem;
+	letter-spacing: 0.02em;
+}
+
+.fit-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: grid;
+	gap: 12px;
+}
+
+.fit-list li {
+	display: grid;
+	grid-template-columns: 18px minmax(0, 1fr);
+	gap: 0 12px;
+	align-items: start;
+	color: var(--muted);
+	line-height: 1.65;
+}
+
+.fit-list .icon {
+	width: 18px;
+	height: 18px;
+	margin-top: 3px;
+}
+
+.fit-yes .fit-list .icon {
+	color: var(--primary);
+}
+
+.fit-no .fit-list .icon {
+	color: var(--steel-text);
+}
+
+@media (max-width: 760px) {
+	.fit-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* ---------- 66.2 เริ่มต้นใช้งานจริง ---------- */
+.start-req {
+	margin: 0 0 28px;
+	padding: 24px;
+	border: 1px solid var(--line);
+	background: var(--surface);
+}
+
+.start-req-title {
+	margin: 0 0 14px;
+	font-size: 0.98rem;
+	letter-spacing: 0.02em;
+}
+
+.start-req-list {
+	margin: 0;
+	padding: 0 0 0 20px;
+	display: grid;
+	gap: 10px;
+	color: var(--muted);
+	line-height: 1.65;
+}
+
+.start-steps {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--line);
+}
+
+.start-step {
+	display: grid;
+	grid-template-columns: 56px minmax(0, 1fr);
+	gap: 0 20px;
+	padding: 22px 0;
+	border-bottom: 1px solid var(--line);
+}
+
+.start-step-n {
+	font-size: 0.86rem;
+	line-height: 1.5;
+	color: var(--primary);
+}
+
+.start-step-body {
+	min-width: 0;
+}
+
+.start-step-title {
+	margin: 0 0 8px;
+	font-size: 1.05rem;
+}
+
+.start-step-desc {
+	margin: 0;
+	color: var(--muted);
+	line-height: 1.7;
+}
+
+.start-step-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 12px;
+	font-size: 0.92rem;
+}
+
+.start-note {
+	margin: 22px 0 0;
+	color: var(--muted);
+	font-size: 0.94rem;
+}
+
+@media (max-width: 560px) {
+	.start-step {
+		grid-template-columns: 38px minmax(0, 1fr);
+		gap: 0 12px;
+	}
+}
+
+/* ---------- 66.3 คำศัพท์ ---------- */
+.term-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 1px;
+	margin: 0;
+	border: 1px solid var(--line);
+	background: var(--line);
+}
+
+.term {
+	min-width: 0;
+	padding: 24px;
+	background: var(--surface);
+}
+
+.term-name {
+	margin: 0 0 8px;
+	font-family: var(--font-display);
+	font-weight: 700;
+	font-size: 1.05rem;
+	color: var(--text);
+}
+
+.term-desc {
+	margin: 0;
+	color: var(--muted);
+	line-height: 1.7;
+}
+
+.term-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 6px;
+	margin-top: 10px;
+	font-size: 0.9rem;
+	color: var(--primary);
+}
+
+.term-link .icon {
+	width: 14px;
+	height: 14px;
+}
+
+.term-note {
+	margin: 20px 0 0;
+	color: var(--muted);
+	font-size: 0.92rem;
+}
+
+@media (max-width: 760px) {
+	.term-grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+}
+
+/* ---------- 66.4 บทความล่าสุด ---------- */
+.read-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	border-top: 1px solid var(--line);
+}
+
+.read-item {
+	border-bottom: 1px solid var(--line);
+}
+
+.read-item > a {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) auto;
+	gap: 4px 20px;
+	align-items: baseline;
+	padding: 18px 4px;
+	color: var(--text);
+	text-decoration: none;
+	transition: background-color 0.16s ease;
+}
+
+.read-item > a:hover,
+.read-item > a:focus-visible {
+	background: rgba(255, 255, 255, 0.04);
+}
+
+.read-cat {
+	grid-column: 1 / -1;
+	font-size: 0.74rem;
+	letter-spacing: 0.1em;
+	color: var(--primary);
+}
+
+.read-title {
+	min-width: 0;
+	font-family: var(--font-display);
+	font-weight: 600;
+	line-height: 1.5;
+}
+
+.read-item > a:hover .read-title {
+	color: var(--primary);
+}
+
+.read-date {
+	font-size: 0.82rem;
+	color: var(--muted);
+	white-space: nowrap;
+}
+
+@media (max-width: 560px) {
+	.read-item > a {
+		grid-template-columns: minmax(0, 1fr);
+	}
 }
