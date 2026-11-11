@@ -286,6 +286,8 @@ function ea2000_defaults() {
 		'mobile_nav_price_url'     => '/pricing/',
 		'mobile_nav_install_label' => 'วิธีติดตั้ง',
 		'mobile_nav_install_url'   => '/how-to-install/',
+		'mobile_nav_dash_label'    => 'แดชบอร์ด',
+		'mobile_nav_dash_url'      => 'https://dashboard.ea2000.co/',
 		'mobile_nav_line_label'    => 'ทัก LINE',
 
 		/* SEO / แชร์ลิงก์ (Open Graph) */

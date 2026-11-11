@@ -131,7 +131,8 @@ if ( preg_match( '/^(\D*)(\d.*)$/u', $ea2000_wm, $ea2000_wm_parts ) ) {
 
 $ea2000_bkk = new DateTimeZone( 'Asia/Bangkok' );
 
-/* Mobile dock · LINE อยู่กลาง (ตำแหน่งที่ 3 ของ 5) เมื่อมี LINE */
+/* Mobile dock · สี่ช่อง หน้าแรก · แพ็กเกจ · LINE · แดชบอร์ด
+   ช่อง LINE หายไปเองเมื่อยังไม่มีลิงก์ เหลือสามช่อง */
 $ea2000_mobile_nav = array(
 	array(
 		'label' => ea2000_mod( 'mobile_nav_home_label' ),
@@ -139,9 +140,9 @@ $ea2000_mobile_nav = array(
 		'icon'  => 'home',
 	),
 	array(
-		'label' => ea2000_mod( 'mobile_nav_test_label' ),
-		'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_test_url' ) ),
-		'icon'  => 'flask',
+		'label' => ea2000_mod( 'mobile_nav_price_label' ),
+		'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_price_url' ) ),
+		'icon'  => 'tag',
 	),
 );
 if ( $ea2000_line ) {
@@ -154,16 +155,14 @@ if ( $ea2000_line ) {
 		'line_pos'     => 'dock',
 	);
 }
-$ea2000_mobile_nav[] = array(
-	'label' => ea2000_mod( 'mobile_nav_price_label' ),
-	'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_price_url' ) ),
-	'icon'  => 'tag',
-);
-$ea2000_mobile_nav[] = array(
-	'label' => ea2000_mod( 'mobile_nav_install_label' ),
-	'url'   => ea2000_link_url( ea2000_mod( 'mobile_nav_install_url' ) ),
-	'icon'  => 'guide',
-);
+$ea2000_dash_url = trim( (string) ea2000_mod( 'mobile_nav_dash_url' ) );
+if ( '' !== $ea2000_dash_url ) {
+	$ea2000_mobile_nav[] = array(
+		'label' => ea2000_mod( 'mobile_nav_dash_label' ),
+		'url'   => ea2000_link_url( $ea2000_dash_url ),
+		'icon'  => 'gauge',
+	);
+}
 ?>
 
 <?php if ( ! function_exists( 'elementor_theme_do_location' ) || ! elementor_theme_do_location( 'footer' ) ) : ?>

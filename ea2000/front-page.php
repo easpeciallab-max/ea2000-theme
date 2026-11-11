@@ -911,8 +911,11 @@ $ea2000_risk_more  = trim( (string) ea2000_mod( 'risk_more_text' ) );
 ?>
 <section class="ch ch-risk hazard" id="risk"<?php ea2000_front_ch_attrs( $ea2000_chapters['risk'] ); ?>>
 	<div class="container hazard-inner">
-		<p class="hazard-label mono keep-case"><?php if ( '' !== $ea2000_risk_label ) : ?><span class="hazard-stamp"><?php echo esc_html( $ea2000_risk_label ); ?></span><?php endif; ?><span class="hazard-topic"><?php echo esc_html( $ea2000_chapters['risk']['label'] ); ?></span></p>
-		<h2 class="hazard-title"><?php echo esc_html( ea2000_mod( 'risk_title' ) ); ?></h2>
+		<?php /* หัวบทอยู่คอลัมน์ซ้ายเหมือนบทอื่น ไม่งั้นครึ่งซ้ายของแถบจะว่างเปล่า */ ?>
+		<header class="ch-head hazard-head">
+			<p class="hazard-label mono keep-case"><?php if ( '' !== $ea2000_risk_label ) : ?><span class="hazard-stamp"><?php echo esc_html( $ea2000_risk_label ); ?></span><?php endif; ?><span class="hazard-topic"><?php echo esc_html( $ea2000_chapters['risk']['label'] ); ?></span></p>
+			<h2 class="hazard-title"><?php echo esc_html( ea2000_mod( 'risk_title' ) ); ?></h2>
+		</header>
 		<p class="hazard-text"><?php echo nl2br( esc_html( ea2000_mod( 'risk_text' ) ) ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
 		<?php if ( '' !== $ea2000_risk_more ) : ?>
 		<a class="key key-warn" href="<?php echo esc_url( home_url( '/risk-disclosure/' ) ); ?>"><?php echo esc_html( $ea2000_risk_more ); ?><?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>

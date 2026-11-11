@@ -254,10 +254,7 @@
 	if (dock) {
 		var dockKeys = Array.prototype.slice.call(dock.querySelectorAll('.dock-key'));
 		var dockSeats = Math.max(1, dockKeys.length);
-		var dockNarrow = window.matchMedia('(max-width: 760px)');
 		var dockWait = 0;
-		var dockLastY = Math.max(0, window.pageYOffset || 0);
-		var dockDrift = 0;
 
 		/* คลาสเดิมของธีม เก็บไว้เป็นจุดเกาะให้โค้ดอื่น · การเว้นที่ท้ายหน้าเป็นงานของ div.dock-spacer แล้ว */
 		document.body.classList.add('has-mobile-app-nav');
@@ -335,8 +332,6 @@
 
 		/* แตะบาร์ตอนที่มันย่ออยู่ = คลี่กลับมาเต็มก่อน จะได้อ่านป้ายก่อนเลือก */
 		dock.addEventListener('pointerdown', function () {
-			dock.classList.remove('is-slim');
-			dockDrift = 0;
 		});
 
 		/* กดคีย์แล้วไฟวิ่งไปจอดช่องนั้นทันที พร้อมแถบสแกนบนราง ค้างไว้จนหน้าใหม่มาแทน
@@ -369,58 +364,7 @@
 		/* กลับมาด้วยปุ่มย้อนกลับ (bfcache) ต้องไม่ค้างสถานะกำลังโหลด */
 		window.addEventListener('pageshow', dockRest);
 
-		/* ย่อบาร์เมื่อเลื่อนอ่านลงต่อเนื่อง คลี่กลับทันทีเมื่อเลื่อนขึ้น · ย่อ ไม่ใช่ ซ่อน
-		   ปุ่ม LINE จึงอยู่บนจอตลอด เพราะคนที่กำลังอ่านกลางหน้าคือคนที่พร้อมทักที่สุด
-		   ติดหัวหน้าและท้ายหน้าให้กางไว้เสมอ */
-		function dockScroll() {
-			if (!dockNarrow.matches || reduced) {
-				return;
-			}
-
-			var y = Math.max(0, window.pageYOffset || 0);
-			var step = y - dockLastY;
-			dockLastY = y;
-			if (Math.abs(step) < 2) {
-				return;
-			}
-
-			var toEnd = document.documentElement.scrollHeight - window.innerHeight - y;
-			if (y < 220 || toEnd < 140) {
-				dockDrift = 0;
-				dock.classList.remove('is-slim');
-				return;
-			}
-
-			dockDrift = (dockDrift > 0) === (step > 0) ? dockDrift + step : step;
-			if (dockDrift > 56) {
-				dockDrift = 0;
-				dock.classList.add('is-slim');
-			} else if (dockDrift < -18) {
-				dockDrift = 0;
-				dock.classList.remove('is-slim');
-			}
-		}
-
-		window.addEventListener('scroll', dockScroll, { passive: true });
-
-		/* หมุนจอหรือแถบ URL ของเบราว์เซอร์ยืดหด: ตั้งจุดวัดใหม่
-		   คลี่บาร์กลับเฉพาะตอนหน้าเลื่อนแทบไม่ได้แล้วหรือออกจากช่วงจอมือถือ */
-		function dockRecalibrate() {
-			dockLastY = Math.max(0, window.pageYOffset || 0);
-			dockDrift = 0;
-			if (!dockNarrow.matches || document.documentElement.scrollHeight - window.innerHeight < 260) {
-				dock.classList.remove('is-slim');
-			}
-		}
-
-		window.addEventListener('resize', dockRecalibrate, { passive: true });
-		window.addEventListener('orientationchange', dockRecalibrate);
-
-		if (dockNarrow.addEventListener) {
-			dockNarrow.addEventListener('change', dockRecalibrate);
-		} else if (dockNarrow.addListener) {
-			dockNarrow.addListener(dockRecalibrate);
-		}
+		/* การย่อบาร์ตอนเลื่อนอ่านถูกถอดออก 11 พ.ย. 2569 ตามคำสั่งเจ้าของ · บาร์สูงคงที่เสมอ */
 	}
 
 	/* นับคลิก LINE · แยกบัญชี LINE OA (line_click) กับกลุ่ม OpenChat (openchat_click)
