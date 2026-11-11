@@ -1583,6 +1583,39 @@ function ea2000_reading_time( $post_id = 0 ) {
 	return max( 1, (int) ceil( $len / 700 ) );
 }
 
+/**
+ * แปลงปีที่แสดงให้คนอ่านเป็น พ.ศ.
+ *
+ * ทั้งเว็บเขียนวันที่เป็น พ.ศ. อยู่แล้ว (หน้าความเสี่ยง เงื่อนไข ความเป็นส่วนตัว)
+ * แต่ WordPress พิมพ์ ค.ศ. ทำให้สองแบบปนกัน
+ *
+ * แปลงเฉพาะตอนที่เรียกด้วยรูปแบบของ Settings > General เท่านั้น
+ * ถ้าเรียกด้วยรูปแบบอื่น เช่น get_the_date( 'c' ) ที่ใช้กับ datetime, og:article
+ * และ schema จะไม่แตะเลย ค่าที่ส่งให้เสิร์ชเอนจินจึงยังเป็น ค.ศ. ตามมาตรฐาน
+ *
+ * @param string $the_date วันที่ที่จัดรูปแบบแล้ว
+ * @param string $d_format รูปแบบที่ผู้เรียกส่งมา
+ * @return string
+ */
+function ea2000_buddhist_year( $the_date, $d_format = '' ) {
+	if ( ! is_string( $the_date ) || '' === $the_date ) {
+		return $the_date;
+	}
+	if ( '' !== $d_format && get_option( 'date_format' ) !== $d_format ) {
+		return $the_date;
+	}
+
+	return preg_replace_callback(
+		'/\b(19|20)\d{2}\b/',
+		static function ( $m ) {
+			return (string) ( (int) $m[0] + 543 );
+		},
+		$the_date
+	);
+}
+add_filter( 'get_the_date', 'ea2000_buddhist_year', 10, 2 );
+add_filter( 'get_the_modified_date', 'ea2000_buddhist_year', 10, 2 );
+
 /* --------------------------------------------------------------
  * กล่องผู้เขียนใต้บทความ
  *
