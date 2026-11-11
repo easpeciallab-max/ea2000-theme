@@ -841,21 +841,21 @@ $ea2000_terms_note = trim( (string) ea2000_mod( 'terms_note' ) );
 <section class="ch ch-terms" id="terms"<?php ea2000_front_ch_attrs( $ea2000_chapters['terms'] ); ?>>
 	<div class="container">
 		<?php ea2000_front_ch_head( $ea2000_chapters['terms'], $ea2000_ch_total, ea2000_mod( 'terms_title' ), ea2000_mod( 'terms_subtitle' ) ); ?>
-		<dl class="term-grid">
+		<dl class="gloss-grid">
 			<?php foreach ( $ea2000_terms as $ea2000_t ) : ?>
-			<div class="term">
-				<dt class="term-name keep-case"><?php echo esc_html( $ea2000_t[0] ); ?></dt>
-				<dd class="term-desc">
+			<div class="gloss">
+				<dt class="gloss-name keep-case"><?php echo esc_html( $ea2000_t[0] ); ?></dt>
+				<dd class="gloss-desc">
 					<?php echo ea2000_text( $ea2000_t[1] ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 					<?php if ( '' !== $ea2000_t[2] ) : ?>
-					<a class="term-link" href="<?php echo esc_url( $ea2000_t[2] ); ?>">อ่านเรื่อง <?php echo esc_html( $ea2000_t[0] ); ?> แบบเต็ม<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
+					<a class="gloss-link" href="<?php echo esc_url( $ea2000_t[2] ); ?>">อ่านเรื่อง <?php echo esc_html( $ea2000_t[0] ); ?> แบบเต็ม<?php echo ea2000_icon( 'arrow', 'icon icon-sm key-arrow' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></a>
 					<?php endif; ?>
 				</dd>
 			</div>
 			<?php endforeach; ?>
 		</dl>
 		<?php if ( '' !== $ea2000_terms_note ) : ?>
-		<p class="term-note"><?php echo ea2000_text( $ea2000_terms_note ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
+		<p class="gloss-note"><?php echo ea2000_text( $ea2000_terms_note ); // phpcs:ignore WordPress.Security.EscapeOutput ?></p>
 		<?php endif; ?>
 	</div>
 </section>
