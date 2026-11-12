@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.23.0
+Version: 4.23.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12731,4 +12731,66 @@ h6 {
 
 .link-hub .lh-account-actions {
 	gap: 10px;
+}
+
+/* ---------- 67.1 ทับกฎที่ใช้ !important ----------
+   ข้อ 14.1 บังคับ min-height, padding และ font-size ของปุ่มทั้งเว็บ
+   และข้อ 49.5 บังคับให้ปุ่ม LINE เป็นพื้นใสขอบเขียว
+   สองกฎนั้นใช้ !important จึงต้องเขียนให้เท่ากันเฉพาะในหน้านี้ */
+.link-hub .lh-btn,
+.link-hub .lh-btn-line,
+.link-hub .lh-btn-line-step,
+.link-hub .lh-btn-line-bottom,
+.link-hub .lh-btn-openchat,
+.link-hub .lh-btn-signup,
+.link-hub .lh-mini-btn {
+	min-height: 54px !important;
+	padding: 13px 16px !important;
+	border: 1px solid var(--line) !important;
+	background: var(--surface-2) !important;
+	color: var(--text) !important;
+	font-size: 0.88rem !important;
+}
+
+.link-hub .lh-btn:hover,
+.link-hub .lh-btn-line:hover,
+.link-hub .lh-btn-line-step:hover,
+.link-hub .lh-btn-line-bottom:hover,
+.link-hub .lh-btn-openchat:hover,
+.link-hub .lh-btn-signup:hover,
+.link-hub .lh-mini-btn:hover,
+.link-hub .lh-btn:focus-visible,
+.link-hub .lh-btn-line:focus-visible,
+.link-hub .lh-btn-line-step:focus-visible,
+.link-hub .lh-btn-openchat:focus-visible,
+.link-hub .lh-btn-signup:focus-visible {
+	border-color: var(--lime) !important;
+	background: var(--surface-3) !important;
+	color: var(--text) !important;
+}
+
+.link-hub .lh-btn .lh-ic,
+.link-hub .lh-btn-line .lh-ic,
+.link-hub .lh-btn-line-step .lh-ic,
+.link-hub .lh-btn-line-bottom .lh-ic,
+.link-hub .lh-btn-openchat .lh-ic,
+.link-hub .lh-btn-signup .lh-ic {
+	color: var(--lime) !important;
+}
+
+.link-hub .lh-btn .lh-lbl,
+.link-hub .lh-btn-line .lh-lbl,
+.link-hub .lh-btn-line-step .lh-lbl,
+.link-hub .lh-btn-openchat .lh-lbl,
+.link-hub .lh-btn-signup .lh-lbl,
+.link-hub .lh-btn-signup .lh-signup-copy {
+	color: var(--text) !important;
+	font-size: 0.88rem !important;
+}
+
+/* ปุ่มที่ยังไม่มีลิงก์ ยังต้องดูต่างจากปุ่มที่กดได้ */
+.link-hub .lh-vps-item-pending,
+.link-hub .lh-btn-pending {
+	border-style: dashed !important;
+	background: transparent !important;
 }
