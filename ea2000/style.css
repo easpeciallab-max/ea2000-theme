@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.29.0
+Version: 4.29.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12970,3 +12970,10 @@ h6 {
 	color: var(--lime);
 }
 
+
+/* ---------- 67.7 กริด VPS เหลือสามช่อง (12 พ.ย. 2569) ----------
+   คู่มือ macOS ถูกลบ กริดสองคอลัมน์จึงเหลือ 2 + 1 มีช่องโหว่ท้ายแถว
+   ให้ใบสุดท้ายกินเต็มแถวเมื่อจำนวนเป็นเลขคี่ · ยกเว้นกริดแอป MT5 ซึ่งเป็นสามคอลัมน์อยู่แล้ว */
+.link-hub .lh-vps-grid:not(.lh-mt5-grid) > :nth-child(odd):last-child {
+	grid-column: 1 / -1;
+}
