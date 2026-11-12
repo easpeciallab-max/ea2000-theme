@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.22.1
+Version: 4.23.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12563,4 +12563,172 @@ h6 {
 
 .link-hub .lh-ar {
 	display: none;
+}
+
+/* ============================================================
+   67) /go/ ใช้ชิ้นส่วนแบบเดียวกันทั้งหน้า (12 พ.ย. 2569)
+
+   เจ้าของบอกว่า "ส่วนประกอบดูไม่เข้ากัน การจัดอ่ะ"
+   ต้นเหตุไม่ใช่การจัดกลาง แต่เป็นชนิดของปุ่มที่ปนกันทั้งหน้า
+   ปุ่มเต็มแถวมุมมน · การ์ดสามช่องไอคอนอยู่บนข้อความ · การ์ดสองคูณสอง
+   · ปุ่ม LINE พื้นเขียวทึบ · ปุ่ม LINE ขอบเขียว รวมห้าแบบในหน้าเดียว
+
+   บล็อกนี้ยุบให้เหลือแบบเดียว: สี่เหลี่ยมมุมแหลม เส้นขอบ 1px
+   ไอคอนกับข้อความอยู่กลางเป็นก้อนเดียว สูงเท่ากันทุกใบ
+   สีเขียวทึบใช้ที่ปุ่มเดียวคือปุ่มทัก LINE ด้านบนสุด
+   ============================================================ */
+
+.link-hub .lh-btn,
+.link-hub .lh-secondary,
+.link-hub .lh-mini-btn,
+.link-hub .lh-vps-item {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	width: 100%;
+	min-height: 54px;
+	margin: 0 0 10px;
+	padding: 13px 16px;
+	border: 1px solid var(--line);
+	border-radius: 0;
+	background: var(--surface-2);
+	color: var(--text);
+	font-family: var(--font-display);
+	font-size: 0.88rem;
+	font-weight: 600;
+	line-height: 1.35;
+	text-decoration: none;
+	box-shadow: none;
+	transition: border-color 0.15s var(--ease-mech), background-color 0.15s var(--ease-mech);
+}
+
+.link-hub .lh-btn:hover,
+.link-hub .lh-secondary:hover,
+.link-hub .lh-mini-btn:hover,
+.link-hub .lh-vps-item:hover,
+.link-hub .lh-btn:focus-visible,
+.link-hub .lh-secondary:focus-visible,
+.link-hub .lh-mini-btn:focus-visible,
+.link-hub .lh-vps-item:focus-visible {
+	border-color: var(--lime);
+	background: var(--surface-3);
+}
+
+/* ไอคอนขนาดเดียวกันหมด สีเขียวเป็นตัวนำสายตา */
+.link-hub .lh-ic,
+.link-hub .lh-vps-ic {
+	display: flex;
+	flex: none;
+	align-items: center;
+	justify-content: center;
+	width: 20px;
+	height: 20px;
+	color: var(--lime);
+}
+
+.link-hub .lh-ic svg,
+.link-hub .lh-vps-ic svg {
+	width: 20px;
+	height: 20px;
+}
+
+.link-hub .lh-vps-item:hover .lh-vps-ic {
+	color: var(--lime);
+}
+
+/* ข้อความในปุ่มขนาดเดียวกันหมด */
+.link-hub .lh-lbl,
+.link-hub .lh-vps-lbl,
+.link-hub .lh-signup-copy {
+	flex: 0 1 auto;
+	min-width: 0;
+	max-width: 100%;
+	overflow: visible;
+	font-family: var(--font-display);
+	font-size: 0.88rem;
+	font-weight: 600;
+	line-height: 1.35;
+	color: var(--text);
+	text-align: center;
+	text-overflow: clip;
+	white-space: normal;
+}
+
+/* กริดยังเป็นกริด แต่ลูกในกริดคือปุ่มแบบเดียวกับที่เหลือ */
+.link-hub .lh-vps-grid {
+	gap: 10px;
+	margin-bottom: 10px;
+}
+
+.link-hub .lh-vps-grid .lh-vps-item {
+	margin: 0;
+	min-height: 54px;
+}
+
+/* ปุ่มเดียวที่เป็นพื้นเขียวทึบ คือปุ่มทัก LINE ด้านบน */
+.link-hub .lh-primary {
+	min-height: 54px;
+	margin: 0 0 10px;
+	padding: 13px 16px;
+	border: 1px solid var(--lime);
+	background: var(--lime);
+	color: var(--on-primary);
+	font-size: 0.92rem;
+}
+
+.link-hub .lh-primary .lh-ic,
+.link-hub .lh-primary .lh-lbl {
+	color: var(--on-primary);
+}
+
+.link-hub .lh-primary:hover,
+.link-hub .lh-primary:focus-visible {
+	border-color: var(--lime-deep);
+	background: var(--lime-deep);
+}
+
+/* ปุ่มที่เคยมีสีของตัวเอง กลับมาใช้แบบกลาง */
+.link-hub .lh-btn-line,
+.link-hub .lh-btn-line-step,
+.link-hub .lh-btn-openchat,
+.link-hub .lh-btn-signup {
+	border-color: var(--line);
+	background: var(--surface-2);
+	color: var(--text);
+}
+
+.link-hub .lh-btn-line .lh-lbl,
+.link-hub .lh-btn-line-step .lh-lbl,
+.link-hub .lh-btn-openchat .lh-lbl,
+.link-hub .lh-btn-signup .lh-lbl,
+.link-hub .lh-btn-line .lh-signup-copy,
+.link-hub .lh-btn-signup .lh-signup-copy {
+	color: var(--text);
+}
+
+.link-hub .lh-btn-line .lh-ic,
+.link-hub .lh-btn-line-step .lh-ic,
+.link-hub .lh-btn-openchat .lh-ic,
+.link-hub .lh-btn-signup .lh-ic {
+	color: var(--lime);
+}
+
+/* ปุ่มที่ยังไม่มีลิงก์ · เส้นประจาง คงไว้ให้ต่างจากปุ่มที่กดได้ */
+.link-hub .lh-vps-item-pending,
+.link-hub .lh-btn-pending {
+	border-style: dashed;
+	background: transparent;
+	opacity: 0.55;
+}
+
+/* ระยะระหว่างกลุ่มปุ่มในแต่ละขั้น */
+.link-hub .lh-step-body > :last-child,
+.link-hub .lh-account-actions > :last-child {
+	margin-bottom: 0;
+}
+
+.link-hub .lh-account-actions {
+	gap: 10px;
 }
