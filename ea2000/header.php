@@ -49,6 +49,19 @@ defined( 'ABSPATH' ) || exit;
 			<?php ea2000_social_row( 'nav-social' ); ?>
 		</nav>
 
+		<?php
+		$ea2000_dash_href  = trim( (string) ea2000_mod( 'header_dash_url' ) );
+		$ea2000_dash_label = trim( (string) ea2000_mod( 'header_dash_label' ) );
+		if ( '' !== $ea2000_dash_href && '' !== $ea2000_dash_label ) :
+			$ea2000_dash_out = (bool) wp_parse_url( $ea2000_dash_href, PHP_URL_HOST )
+				&& wp_parse_url( $ea2000_dash_href, PHP_URL_HOST ) !== wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+			?>
+		<a class="header-dash" href="<?php echo esc_url( ea2000_link_url( $ea2000_dash_href ) ); ?>"<?php echo $ea2000_dash_out ? ' target="_blank" rel="noopener"' : ''; ?>>
+			<?php echo ea2000_icon( 'gauge', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<span class="header-dash-label"><?php echo esc_html( $ea2000_dash_label ); ?></span>
+		</a>
+		<?php endif; ?>
+
 		<?php ea2000_language_switcher(); ?>
 
 		<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="เปิด/ปิดเมนู">

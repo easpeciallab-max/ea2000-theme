@@ -52,6 +52,13 @@ function ea2000_redirect_map() {
 		'/ea-products/'  => '/pricing/',
 	);
 
+	/* หน้าเครื่องคำนวณถูกลบ 12 พ.ย. 2569 · บทความ 81 บทเคยลิงก์มาที่นี่
+	   ส่งไปบทที่อธิบายวิธีคำนวณขนาดออเดอร์เมื่อบทนั้นเผยแพร่แล้ว ระหว่างนี้ส่งไปหน้ารวมบทความ */
+	$lot = get_page_by_path( 'lot-size-meaning', OBJECT, 'post' );
+	$map['/tools/'] = ( $lot && 'publish' === $lot->post_status )
+		? '/articles/lot-size-meaning/'
+		: '/articles/';
+
 	/**
 	 * แก้ตาราง redirect ได้จากภายนอก
 	 *

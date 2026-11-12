@@ -659,7 +659,7 @@ for ( $i = 1; $i <= 4; $i++ ) {
 		$ea2000_start_reqs[] = $ea2000_r;
 	}
 }
-$ea2000_start_slugs = array( 'open-mt5-account', 'mt5-login', 'deposit', 'vps-windows', 'how-to-install', 'tools' );
+$ea2000_start_slugs = array( 'open-mt5-account', 'mt5-login', 'deposit', 'vps-windows', 'how-to-install', 'risk-disclosure' );
 $ea2000_start_link  = trim( (string) ea2000_mod( 'start_link_text' ) );
 $ea2000_start_note  = trim( (string) ea2000_mod( 'start_note' ) );
 ?>

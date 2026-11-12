@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.19.1
+Version: 4.20.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12247,5 +12247,69 @@ h6 {
 
 	.dock-lamp::before {
 		background-image: radial-gradient(64px 46px at 50% 0, rgba(var(--primary-rgb), 0.22), transparent 72%);
+	}
+}
+
+/* ============================================================
+   65) ปุ่มแดชบอร์ดบนแถบหัวเว็บ (12 พ.ย. 2569)
+       อยู่ก่อนปุ่มขีดสามเส้น · บนจอแคบเหลือไอคอนอย่างเดียว
+       เพราะบาร์ล่างมีช่องแดชบอร์ดอยู่แล้ว ปุ่มนี้จึงเป็นทางลัดไม่ใช่ทางเดียว
+   ============================================================ */
+.header-dash {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	margin-left: auto;
+	padding: 9px 16px;
+	border: 1px solid var(--lime);
+	color: var(--lime);
+	font-family: var(--font-display);
+	font-size: 0.86rem;
+	font-weight: 600;
+	line-height: 1.35;
+	white-space: nowrap;
+	text-decoration: none;
+	transition: background-color 0.15s var(--ease-mech), color 0.15s var(--ease-mech);
+}
+
+.header-dash .icon {
+	flex: none;
+	width: 1.05rem;
+	height: 1.05rem;
+}
+
+.header-dash:hover,
+.header-dash:focus-visible {
+	background-color: var(--lime);
+	color: var(--on-primary);
+}
+
+/* เมนูหลักเคยดันตัวเองไปขวาสุด · ตอนนี้ปุ่มแดชบอร์ดทำหน้าที่นั้นแทน */
+@media (min-width: 961px) {
+	.site-nav {
+		margin-left: auto;
+	}
+
+	.header-dash {
+		margin-left: 20px;
+	}
+}
+
+@media (max-width: 600px) {
+	.header-dash {
+		gap: 0;
+		padding: 9px 11px;
+	}
+
+	.header-dash-label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		padding: 0;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
 	}
 }

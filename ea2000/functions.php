@@ -73,7 +73,7 @@ function ea2000_assets() {
 	}
 
 	/* หน้าเครื่องมือคำนวณเท่านั้น */
-	if ( is_page_template( 'template-tools.php' ) ) {
+	if ( false ) { // phpcs:ignore -- หน้า /tools/ ถูกลบ 12 พ.ย. 2569 เก็บโครงไว้เผื่อกลับมา
 		$tools_path = get_template_directory() . '/assets/js/tools.js';
 		if ( file_exists( $tools_path ) ) {
 			wp_enqueue_script( 'ea2000-tools', get_template_directory_uri() . '/assets/js/tools.js', array(), filemtime( $tools_path ), true );
@@ -287,6 +287,9 @@ function ea2000_defaults() {
 		'mobile_nav_install_label' => 'วิธีติดตั้ง',
 		'mobile_nav_install_url'   => '/how-to-install/',
 		'mobile_nav_dash_label'    => 'แดชบอร์ด',
+		/* ปุ่มแดชบอร์ดบนแถบหัวเว็บ · แยกจากช่องในบาร์ล่าง เว้นค่าใดค่าหนึ่งว่างแล้วปุ่มหาย */
+		'header_dash_label'        => 'แดชบอร์ด',
+		'header_dash_url'          => 'https://dashboard.ea2000.co/',
 		'mobile_nav_dash_url'      => 'https://dashboard.ea2000.co/',
 		'mobile_nav_line_label'    => 'ทัก LINE',
 

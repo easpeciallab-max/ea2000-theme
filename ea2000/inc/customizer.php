@@ -56,6 +56,8 @@ function ea2000_customize_register( $wp_customize ) {
 				'brand_name'      => array( 'ชื่อแบรนด์ (แสดงข้างโลโก้)', 'text', 'ค่าเริ่มต้น EA2000' ),
 				'brand_tagline'   => array( 'คำต่อท้ายชื่อแบรนด์ (บรรทัดเล็กใต้ชื่อ)', 'text', 'เช่น EA for MT5' ),
 				'brand_wordmark'  => array( 'โลโก้แบบ wordmark (แนวนอน)', 'image', 'แสดงแทนโลโก้กลม + ชื่อแบรนด์บนเมนูและ footer · เว้นว่างเพื่อกลับไปแสดงโลโก้กลมพร้อมชื่อแบรนด์ · แนะนำ PNG พื้นโปร่ง กว้างประมาณ 660px (สูง 120px)' ),
+				'header_dash_label' => array( 'ปุ่มแดชบอร์ดบนแถบหัวเว็บ · ข้อความ', 'text', 'เว้นว่างเพื่อซ่อนปุ่ม · บนจอแคบเหลือไอคอนอย่างเดียว' ),
+				'header_dash_url'   => array( 'ปุ่มแดชบอร์ดบนแถบหัวเว็บ · ลิงก์', 'url', 'ช่องของบาร์ล่างมือถือตั้งแยกที่หมวดเมนูลัดด้านล่าง' ),
 				'line_url'        => array( 'ลิงก์ LINE OA', 'url', 'เช่น https://lin.ee/xxxxx หรือ https://line.me/R/ti/p/@xxxxx' ),
 				'facebook_url'    => array( 'ลิงก์ Facebook Page (ถ้ามี)', 'url' ),
 				'instagram_url'   => array( 'ลิงก์ Instagram (ถ้ามี)', 'url' ),
@@ -756,30 +758,7 @@ function ea2000_customize_register( $wp_customize ) {
 		}
 	}
 
-	$sections['ea2000_tools'] = array(
-		'title'       => '30) หน้าเครื่องมือคำนวณ',
-		'description' => 'หน้า /tools/ · สร้างเพจใหม่แล้วเลือกเทมเพลต "EA2000 · หน้าเครื่องมือคำนวณ" · การคำนวณทำในเบราว์เซอร์ ไม่ส่งค่าออกไปที่ใด',
-		'fields'      => array(
-			'tools_kicker'    => array( 'ป้ายเหนือหัวข้อ', 'text' ),
-			'tools_sub'       => array( 'คำโปรยใต้หัวข้อ', 'textarea' ),
-			'tools_lot_title' => array( 'เครื่องมือ 1 · หัวข้อ', 'text' ),
-			'tools_lot_intro' => array( 'เครื่องมือ 1 · คำอธิบาย', 'textarea' ),
-			'tools_lot_f1'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 1', 'text' ),
-			'tools_lot_f2'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 2', 'text' ),
-			'tools_lot_f3'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 3', 'text' ),
-			'tools_lot_f4'    => array( 'เครื่องมือ 1 · ป้ายช่องที่ 4', 'text' ),
-			'tools_lot_out'   => array( 'เครื่องมือ 1 · ป้ายผลลัพธ์', 'text' ),
-			'tools_lot_money' => array( 'เครื่องมือ 1 · บรรทัดใต้ผลลัพธ์ (ใช้ {amount} แทนจำนวนเงิน · ห้ามใช้ %s)', 'text' ),
-			'tools_lot_note'  => array( 'เครื่องมือ 1 · หมายเหตุ', 'textarea' ),
-			'tools_dd_title'  => array( 'เครื่องมือ 2 · หัวข้อ', 'text' ),
-			'tools_dd_intro'  => array( 'เครื่องมือ 2 · คำอธิบาย', 'textarea' ),
-			'tools_dd_col1'   => array( 'เครื่องมือ 2 · หัวคอลัมน์ซ้าย', 'text' ),
-			'tools_dd_col2'   => array( 'เครื่องมือ 2 · หัวคอลัมน์ขวา', 'text' ),
-			'tools_dd_note'   => array( 'เครื่องมือ 2 · หมายเหตุ', 'textarea' ),
-			'tools_cta_title' => array( 'แถบ LINE ท้ายหน้า · หัวข้อ', 'text' ),
-			'tools_cta_text'  => array( 'แถบ LINE ท้ายหน้า · คำอธิบาย', 'textarea' ),
-		),
-	);
+	/* หมวดเครื่องมือคำนวณถูกถอดออก 12 พ.ย. 2569 พร้อมหน้า /tools/ */
 
 	$sections['ea2000_product'] = array(
 		'title'       => '31) หน้าสินค้า',
@@ -821,7 +800,6 @@ function ea2000_customize_register( $wp_customize ) {
 			'ea2000_install'       => array( 'installdoc', 8 ),
 			'ea2000_riskpage'      => array( 'riskdoc', 6 ),
 			'ea2000_links'         => array( 'linksdoc', 4 ),
-			'ea2000_tools'         => array( 'toolsdoc', 4 ),
 			'ea2000_product'       => array( 'proddoc', 4 ),
 		);
 		foreach ( $ea2000_docs as $ea2000_sec => $ea2000_doc ) {
