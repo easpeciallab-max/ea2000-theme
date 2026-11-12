@@ -55,6 +55,9 @@ function ea2000_redirect_map() {
 	/* หน้าเครื่องคำนวณถูกลบ 12 พ.ย. 2569 · บทความ 81 บทเคยลิงก์มาที่นี่
 	   ส่งไปบทที่อธิบายวิธีคำนวณขนาดออเดอร์เมื่อบทนั้นเผยแพร่แล้ว ระหว่างนี้ส่งไปหน้ารวมบทความ */
 	$lot = get_page_by_path( 'lot-size-meaning', OBJECT, 'post' );
+	/* คู่มือ VPS บน macOS ถูกลบ 12 พ.ย. 2569 · ส่งไปคู่มือ VPS บน Windows ซึ่งเป็นเครื่องที่รัน EA จริง */
+	$map['/vps-macos/'] = '/vps-windows/';
+
 	$map['/tools/'] = ( $lot && 'publish' === $lot->post_status )
 		? '/articles/lot-size-meaning/'
 		: '/articles/';

@@ -749,7 +749,6 @@ function ea2000_customize_register( $wp_customize ) {
 			'gvios' => '25) หน้าคู่มือ · VPS บน iPhone',
 			'gmt5'  => '26) หน้าคู่มือ · ติดตั้ง MT5 และล็อกอิน',
 			'gacct' => '27) หน้าคู่มือ · เปิดบัญชี MT5',
-			'gvmac' => '28) หน้าคู่มือ · VPS บน macOS',
 			'gdep' => '29) หน้าคู่มือ · ฝากเงินเข้าบัญชี',
 		);
 		foreach ( $ea2000_guides as $ea2000_gp => $ea2000_gtitle ) {
