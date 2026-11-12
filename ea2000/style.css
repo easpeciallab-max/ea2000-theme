@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.30.1
+Version: 4.30.2
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -13012,4 +13012,21 @@ h6 {
    ขณะที่ห่างจากภาพด้านบน 13px · เติมระยะล่างให้สมดุลกัน */
 .hud-frame.media-frame {
 	padding-bottom: 4px;
+}
+
+/* ---------- 69.4 สองจุดสุดท้ายจากรอบไล่เช็ก (12 พ.ย. 2569) ----------
+   ปุ่มแดชบอร์ดบนจอแคบใช้ระยะใน 8px ขณะที่ปุ่มอื่นทั้งเว็บใช้ 10px
+   ปรับให้เท่ากัน ปุ่มจึงสูง 39px เท่ากับบนเดสก์ท็อปด้วย */
+@media (max-width: 600px) {
+	.header-dash {
+		padding: 10px 12px;
+	}
+}
+
+/* ปุ่ม LINE ที่ข้อความตกสองบรรทัด (การ์ดราคาที่ 961 ถึง 1100px)
+   ระยะใน 10px จากกฎ 14.1 ทำให้หมึกห่างขอบบนแค่ 7.1px
+   ปุ่มบรรทัดเดียวไม่เปลี่ยน เพราะความสูงถูกคุมด้วย min-height 52px อยู่แล้ว */
+.key.key-line {
+	padding-top: 14px !important;
+	padding-bottom: 14px !important;
 }
