@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.27.0
+Version: 4.27.1
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12891,15 +12891,34 @@ h6 {
    ช่องในกริดแอป MT5 กว้าง 97px ที่จอ 390 แต่เนื้อในต้องการราว 112px
    (ไอคอน 20 + ช่องไฟ 8 + คำว่า Windows ราว 60 + ระยะใน 24) ข้อความจึงล้นออกนอกกรอบ
    จอแคบจึงให้เหลือคอลัมน์เดียว กลายเป็นปุ่มเต็มแถวเหมือนปุ่มอื่นทั้งหน้า */
-@media (max-width: 430px) {
-	.link-hub .lh-vps-grid.lh-mt5-grid {
-		grid-template-columns: minmax(0, 1fr);
-	}
+/* แถวแอป MT5 มีสามช่องเสมอ ช่องจึงแคบ · วางไอคอนไว้เหนือข้อความ
+   ข้อความจึงได้ความกว้างของช่องทั้งหมด ไม่ต้องแบ่งกับไอคอน และหน้าไม่ยาวขึ้น
+   ผิวยังเป็นแบบเดียวกับปุ่มอื่น เปลี่ยนแค่ทิศทางการวางเนื้อใน */
+.link-hub .lh-vps-grid.lh-mt5-grid .lh-vps-item {
+	flex-direction: column;
+	gap: 7px;
+	min-height: 72px;
+	padding: 12px 8px;
+	text-align: center;
 }
 
-@media (max-width: 380px) {
-	.link-hub .lh-vps-grid {
-		grid-template-columns: minmax(0, 1fr);
+.link-hub .lh-vps-grid.lh-mt5-grid .lh-vps-lbl {
+	flex: none;
+	text-align: center;
+}
+
+/* กริด VPS สองช่องกว้างพอสำหรับแนวนอน ยกเว้นจอเล็กสุด */
+@media (max-width: 360px) {
+	.link-hub .lh-vps-grid:not(.lh-mt5-grid) .lh-vps-item {
+		flex-direction: column;
+		gap: 7px;
+		min-height: 72px;
+		padding: 12px 8px;
+		text-align: center;
+	}
+
+	.link-hub .lh-vps-grid:not(.lh-mt5-grid) .lh-vps-item::after {
+		content: none;
 	}
 }
 
