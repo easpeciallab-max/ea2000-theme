@@ -386,7 +386,7 @@ foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_sl
 				<?php foreach ( $lh_phases as $lh_pi => $lh_phase ) : ?>
 				<div class="lh-phase">
 					<?php if ( '' !== $lh_phase['title'] ) : ?>
-					<h3 class="lh-phase-title"><span class="lh-phase-n" aria-hidden="true"><?php echo esc_html( chr( 65 + (int) $lh_pi ) ); ?></span><?php echo esc_html( $lh_phase['title'] ); ?></h3>
+					<h3 class="lh-phase-title"><?php echo esc_html( $lh_phase['title'] ); ?></h3>
 					<?php endif; ?>
 					<ol class="lh-steps" start="<?php echo esc_attr( (string) ( $lh_num + 1 ) ); ?>">
 						<?php foreach ( $lh_phase['steps'] as $lh_step ) : ?>

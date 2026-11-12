@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.21.3
+Version: 4.22.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12324,7 +12324,7 @@ h6 {
 .link-hub .lh-card {
 	max-width: 520px;
 	padding: 28px 22px 24px;
-	text-align: left;
+	text-align: center;
 	border-radius: 0;
 	box-shadow: none;
 }
@@ -12333,24 +12333,24 @@ h6 {
 .link-hub .lh-logo {
 	width: 56px;
 	height: 56px;
-	margin: 0 0 16px;
+	margin: 0 auto 16px;
 }
 
 .link-hub .lh-title {
 	margin: 0 0 8px;
-	text-align: left;
+	text-align: center;
 	font-size: 1.3rem;
 	line-height: 1.34;
 }
 
 .link-hub .lh-tagline {
 	margin: 0 0 16px;
-	text-align: left;
+	text-align: center;
 	color: var(--muted);
 }
 
 .link-hub .lh-badges {
-	justify-content: flex-start;
+	justify-content: center;
 	margin: 0 0 26px;
 }
 
@@ -12363,6 +12363,7 @@ h6 {
 
 .lh-reach-title {
 	margin: 0 0 14px;
+	text-align: center;
 	font-family: var(--font-display);
 	font-size: 0.78rem;
 	font-weight: 600;
@@ -12392,7 +12393,7 @@ h6 {
 .lh-secondary .lh-lbl {
 	flex: 1 1 auto;
 	min-width: 0;
-	text-align: left;
+	text-align: center;
 }
 
 .lh-primary .lh-ic,
@@ -12430,7 +12431,7 @@ h6 {
 /* ---------- เส้นทางสามช่วง ---------- */
 .link-hub .lh-steps-title {
 	margin: 0 0 4px;
-	text-align: left;
+	text-align: center;
 	font-size: 1.04rem;
 	line-height: 1.34;
 }
@@ -12442,28 +12443,13 @@ h6 {
 }
 
 .lh-phase-title {
-	display: flex;
-	align-items: center;
-	gap: 10px;
-	margin: 0 0 16px;
+	margin: 0 0 18px;
+	text-align: center;
 	font-family: var(--font-display);
 	font-size: 0.92rem;
 	font-weight: 600;
 	line-height: 1.35;
 	color: var(--text);
-}
-
-.lh-phase-n {
-	display: inline-grid;
-	flex: none;
-	place-items: center;
-	width: 22px;
-	height: 22px;
-	background: var(--lime);
-	color: var(--on-primary);
-	font-size: 0.72rem;
-	font-weight: 700;
-	line-height: 1;
 }
 
 /* รายการขั้นในแต่ละช่วง · ยกเลิกเส้นคาดของกฎเก่าที่เขียนไว้ตอนมี ol เดียว */
@@ -12474,43 +12460,39 @@ h6 {
 }
 
 .link-hub .lh-step {
-	padding: 0 0 18px 38px;
+	padding: 0 0 22px;
+	text-align: center;
 }
 
 .link-hub .lh-step:last-child {
 	padding-bottom: 0;
 }
 
+/* เส้นเชื่อมระหว่างขั้นใช้ไม่ได้เมื่อเลขอยู่กลาง เพราะจะพาดทับตัวหนังสือ */
 .link-hub .lh-step::before {
-	left: 12px;
-	top: 32px;
-	bottom: 4px;
-	width: 1px;
-	border-radius: 0;
-}
-
-.link-hub .lh-step:last-child::before {
 	display: none;
 }
 
 .link-hub .lh-step-num {
-	width: 25px;
-	height: 25px;
+	position: static;
+	width: 26px;
+	height: 26px;
+	margin: 0 auto 10px;
 	border-radius: 0;
 	background: var(--lime);
 	color: var(--on-primary);
-	font-size: 0.78rem;
+	font-size: 0.8rem;
 }
 
 .link-hub .lh-step-title {
-	text-align: left;
+	text-align: center;
 	font-size: 0.98rem;
 	line-height: 1.34;
 }
 
 .link-hub .lh-step-desc,
 .link-hub .lh-step-note {
-	text-align: left;
+	text-align: center;
 }
 
 /* ---------- ข้อมูลก่อนตัดสินใจ · สองคอลัมน์ ---------- */
@@ -12522,7 +12504,7 @@ h6 {
 
 .link-hub .lh-group--info .lh-section-title {
 	margin: 0 0 14px;
-	text-align: left;
+	text-align: center;
 	font-family: var(--font-display);
 	font-size: 0.78rem;
 	font-weight: 600;
@@ -12549,7 +12531,7 @@ h6 {
 }
 
 .link-hub .lh-socials {
-	justify-content: flex-start;
+	justify-content: center;
 	margin-top: 26px;
 	padding-top: 20px;
 	border-top: 1px solid var(--line);
@@ -12557,5 +12539,5 @@ h6 {
 
 .link-hub .lh-note,
 .link-hub .lh-legal {
-	text-align: left;
+	text-align: center;
 }
