@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.24.0
+Version: 4.25.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12322,7 +12322,7 @@ h6 {
    ============================================================ */
 
 .link-hub .lh-card {
-	max-width: 520px;
+	max-width: 440px;
 	padding: 28px 22px 24px;
 	text-align: center;
 	border-radius: 0;
@@ -12825,4 +12825,28 @@ h6 {
 	gap: 8px;
 	padding-right: 12px;
 	padding-left: 12px;
+}
+
+/* ---------- 67.3 ลูกศรท้ายปุ่ม (12 พ.ย. 2569) ----------
+   ปุ่มเต็มแถวมีที่ว่างด้านขวาเยอะ เติมลูกศรให้รู้ว่ากดแล้วไปต่อ
+   วาดด้วยขอบของ ::after ไม่ต้องพึ่ง span ในมาร์กอัป จึงได้ครบทุกปุ่มแน่นอน
+   ช่องในกริดไม่ใส่ เพราะกว้างราว 98px ลูกศรจะเบียดจนข้อความตัดบรรทัด */
+.link-hub .lh-btn::after,
+.link-hub .lh-primary::after,
+.link-hub .lh-secondary::after {
+	content: "";
+	flex: none;
+	width: 7px;
+	height: 7px;
+	margin-left: 6px;
+	border-top: 1.5px solid currentColor;
+	border-right: 1.5px solid currentColor;
+	transform: rotate(45deg);
+	opacity: 0.6;
+}
+
+/* ปุ่มที่ยังกดไม่ได้ ไม่ต้องมีลูกศรชวนกด */
+.link-hub .lh-btn-pending::after,
+.link-hub .lh-vps-item-pending::after {
+	content: none;
 }
