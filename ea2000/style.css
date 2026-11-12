@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.23.2
+Version: 4.24.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -12795,3 +12795,34 @@ h6 {
 	background: transparent !important;
 }
 
+
+/* ---------- 67.2 หัวข้อจัดกลาง · เนื้อในปุ่มจัดซ้าย (12 พ.ย. 2569) ----------
+   .lh-step-title เป็น flex มาแต่เดิมเพื่อวางป้าย "แนะนำ" ต่อท้าย
+   text-align จึงไม่มีผล ต้องสั่ง justify-content */
+.link-hub .lh-step-title {
+	justify-content: center;
+}
+
+/* เนื้อในปุ่มชิดซ้าย ไอคอนนำหน้าข้อความ เหมือนกันทุกใบ */
+.link-hub .lh-btn,
+.link-hub .lh-primary,
+.link-hub .lh-secondary,
+.link-hub .lh-mini-btn,
+.link-hub .lh-vps-item {
+	justify-content: flex-start;
+	text-align: left;
+}
+
+.link-hub .lh-lbl,
+.link-hub .lh-vps-lbl,
+.link-hub .lh-signup-copy {
+	flex: 1 1 auto;
+	text-align: left;
+}
+
+/* ช่องในกริดแคบกว่าปุ่มเต็มแถว ลดระยะในกับช่องไฟไอคอนลงให้ข้อความมีที่พอ */
+.link-hub .lh-vps-grid .lh-vps-item {
+	gap: 8px;
+	padding-right: 12px;
+	padding-left: 12px;
+}
