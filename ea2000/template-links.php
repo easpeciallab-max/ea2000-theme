@@ -284,6 +284,37 @@ $lh_line_label     = $lh_mod( 'links_line_label' );
 $lh_show_line      = $lh_has_line && '' !== $lh_line_label;
 $lh_show_openchat  = $lh_has_url( $lh_openchat_url ) && '' !== $lh_openchat_label;
 
+/* สามช่วงของเส้นทาง · ขั้นที่ไม่มีปุ่มจะถูกกรองทิ้งไปแล้ว ช่วงที่ว่างจึงไม่แสดง */
+$lh_phase_map = array(
+	array( 'title' => $lh_mod( 'links_phase1_title' ), 'keys' => array( 'account', 'mt5', 'deposit' ) ),
+	array( 'title' => $lh_mod( 'links_phase2_title' ), 'keys' => array( 'download', 'install' ) ),
+	array( 'title' => $lh_mod( 'links_phase3_title' ), 'keys' => array( 'vps' ) ),
+);
+$lh_seen   = array();
+$lh_phases = array();
+foreach ( $lh_phase_map as $lh_p ) {
+	$lh_in = array();
+	foreach ( $lh_steps as $lh_s ) {
+		if ( in_array( $lh_s['key'], $lh_p['keys'], true ) ) {
+			$lh_in[]   = $lh_s;
+			$lh_seen[] = $lh_s['key'];
+		}
+	}
+	if ( $lh_in ) {
+		$lh_phases[] = array( 'title' => $lh_p['title'], 'steps' => $lh_in );
+	}
+}
+/* ขั้นที่ไม่ได้อยู่ในช่วงไหนเลย ต่อท้ายไว้ไม่ให้หาย */
+$lh_rest = array();
+foreach ( $lh_steps as $lh_s ) {
+	if ( ! in_array( $lh_s['key'], $lh_seen, true ) ) {
+		$lh_rest[] = $lh_s;
+	}
+}
+if ( $lh_rest ) {
+	$lh_phases[] = array( 'title' => '', 'steps' => $lh_rest );
+}
+
 /* ลิงก์เอกสารท้ายหน้า · ใช้ชื่อเพจจริงที่เผยแพร่อยู่ */
 $lh_legal = array();
 foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_slug ) {
@@ -324,20 +355,21 @@ foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_sl
 		<?php endif; ?>
 
 		<?php if ( $lh_show_line || $lh_show_openchat ) : ?>
-			<section class="lh-group lh-group--help"<?php echo '' !== $lh_help_title ? ' aria-labelledby="lh-help-title"' : ''; ?>>
+			<section class="lh-reach"<?php echo '' !== $lh_help_title ? ' aria-labelledby="lh-help-title"' : ''; ?>>
 				<?php if ( '' !== $lh_help_title ) : ?>
-					<h2 class="lh-section-title" id="lh-help-title"><?php echo esc_html( $lh_help_title ); ?></h2>
+					<h2 class="lh-reach-title" id="lh-help-title"><?php echo esc_html( $lh_help_title ); ?></h2>
 				<?php endif; ?>
 
 				<?php if ( $lh_show_line ) : ?>
-					<a class="lh-btn lh-btn-line" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
+					<a class="lh-primary" href="<?php echo esc_url( $lh_line ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
 						<span class="lh-ic"><?php echo ea2000_icon( 'line' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 						<span class="lh-lbl"><?php echo ea2000_text( $lh_line_label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
+						<span class="lh-ar" aria-hidden="true">&rsaquo;</span>
 					</a>
 				<?php endif; ?>
 
 				<?php if ( $lh_show_openchat ) : ?>
-					<a class="lh-btn lh-btn-openchat" href="<?php echo esc_url( $lh_openchat_url ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
+					<a class="lh-secondary" href="<?php echo esc_url( $lh_openchat_url ); ?>" target="_blank" rel="noopener" data-line-pos="go-top">
 						<span class="lh-ic"><?php echo ea2000_icon( 'users' ); // phpcs:ignore WordPress.Security.EscapeOutput ?></span>
 						<span class="lh-lbl"><?php echo ea2000_text( $lh_openchat_label ); // phpcs:ignore WordPress.Security.EscapeOutput -- escaped inside ea2000_text ?></span>
 					</a>
@@ -345,28 +377,35 @@ foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_sl
 			</section>
 		<?php endif; ?>
 
-		<?php if ( $lh_steps ) : ?>
+		<?php if ( $lh_phases ) : ?>
 			<section class="lh-journey"<?php echo '' !== $lh_steps_title ? ' aria-labelledby="lh-steps-title"' : ''; ?>>
 				<?php if ( '' !== $lh_steps_title ) : ?>
 					<h2 class="lh-steps-title" id="lh-steps-title"><?php echo esc_html( $lh_steps_title ); ?></h2>
 				<?php endif; ?>
-				<ol class="lh-steps">
-					<?php foreach ( $lh_steps as $lh_idx => $lh_step ) : ?>
+				<?php $lh_num = 0; ?>
+				<?php foreach ( $lh_phases as $lh_pi => $lh_phase ) : ?>
+				<div class="lh-phase">
+					<?php if ( '' !== $lh_phase['title'] ) : ?>
+					<h3 class="lh-phase-title"><span class="lh-phase-n" aria-hidden="true"><?php echo esc_html( chr( 65 + (int) $lh_pi ) ); ?></span><?php echo esc_html( $lh_phase['title'] ); ?></h3>
+					<?php endif; ?>
+					<ol class="lh-steps" start="<?php echo esc_attr( (string) ( $lh_num + 1 ) ); ?>">
+						<?php foreach ( $lh_phase['steps'] as $lh_step ) : ?>
 						<?php
+						$lh_num++;
 						$lh_step_title = $lh_mod( 2 === $lh_step['n'] ? 'links_mt5_install_title' : 'links_step' . $lh_step['n'] . '_title' );
 						$lh_step_desc  = $lh_mod( 'links_step' . $lh_step['n'] . '_desc' );
 						$lh_step_note  = $lh_mod( 'links_step' . $lh_step['n'] . '_note' );
 						$lh_step_badge = $lh_mod( 'links_step' . $lh_step['n'] . '_badge' );
 						?>
 						<li class="lh-step lh-step--<?php echo esc_attr( $lh_step['key'] ); ?>">
-							<span class="lh-step-num" aria-hidden="true"><?php echo esc_html( (string) ( $lh_idx + 1 ) ); ?></span>
+							<span class="lh-step-num" aria-hidden="true"><?php echo esc_html( (string) $lh_num ); ?></span>
 							<div class="lh-step-head">
-								<h3 class="lh-step-title">
-									<span class="screen-reader-text"><?php echo esc_html( 'ขั้นที่ ' . ( $lh_idx + 1 ) . ' ' ); ?></span><?php echo esc_html( $lh_step_title ); ?>
+								<h4 class="lh-step-title">
+									<span class="screen-reader-text"><?php echo esc_html( 'ขั้นที่ ' . $lh_num . ' ' ); ?></span><?php echo esc_html( $lh_step_title ); ?>
 									<?php if ( '' !== $lh_step_badge ) : ?>
 										<span class="lh-step-badge"><?php echo esc_html( $lh_step_badge ); ?></span>
 									<?php endif; ?>
-								</h3>
+								</h4>
 								<?php if ( '' !== $lh_step_desc ) : ?>
 									<p class="lh-step-desc"><?php echo esc_html( $lh_step_desc ); ?></p>
 								<?php endif; ?>
@@ -378,11 +417,12 @@ foreach ( array( 'privacy-policy', 'terms-of-use', 'risk-disclosure' ) as $lh_sl
 								<?php echo $lh_step['body']; // phpcs:ignore WordPress.Security.EscapeOutput -- built above with escaping ?>
 							</div>
 						</li>
-					<?php endforeach; ?>
-				</ol>
+						<?php endforeach; ?>
+					</ol>
+				</div>
+				<?php endforeach; ?>
 			</section>
 		<?php endif; ?>
-
 		<?php if ( '' !== trim( $lh_info_body ) ) : ?>
 			<section class="lh-group lh-group--info"<?php echo '' !== $lh_info_title ? ' aria-labelledby="lh-info-title"' : ''; ?>>
 				<?php if ( '' !== $lh_info_title ) : ?>
