@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 				&& wp_parse_url( $ea2000_dash_href, PHP_URL_HOST ) !== wp_parse_url( home_url( '/' ), PHP_URL_HOST );
 			?>
 		<a class="header-dash" href="<?php echo esc_url( ea2000_link_url( $ea2000_dash_href ) ); ?>"<?php echo $ea2000_dash_out ? ' target="_blank" rel="noopener"' : ''; ?>>
-			<?php echo ea2000_icon( 'gauge', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
+			<?php echo ea2000_icon( 'layout', 'icon icon-sm' ); // phpcs:ignore WordPress.Security.EscapeOutput ?>
 			<span class="header-dash-label"><?php echo esc_html( $ea2000_dash_label ); ?></span>
 		</a>
 		<?php endif; ?>
