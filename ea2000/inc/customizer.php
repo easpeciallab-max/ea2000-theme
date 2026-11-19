@@ -772,6 +772,7 @@ function ea2000_customize_register( $wp_customize ) {
 			'prod_img'         => array( 'ภาพสินค้า', 'image' ),
 			'prod_img_alt'     => array( 'ภาพสินค้า · ข้อความแทนภาพ', 'text' ),
 			'prod_img_note'    => array( 'ภาพสินค้า · ข้อความในกรอบเส้นประเมื่อยังไม่ใส่รูป', 'text' ),
+			'prod_img_caption' => array( 'ภาพสินค้า · คำบรรยายใต้ภาพ', 'text' ),
 			'prod_spec_title'  => array( 'ตารางสเปก · หัวข้อ', 'text' ),
 			'prod_spec'        => array( 'ตารางสเปก (บรรทัดละ 1 แถว รูปแบบ หัวข้อ | ค่า)', 'textarea' ),
 			'prod_btn1'        => array( 'ปุ่มหลัก · ข้อความ', 'text' ),
