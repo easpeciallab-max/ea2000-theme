@@ -1626,8 +1626,8 @@ function ea2000_download_meta( $url ) {
 		if ( $time > 0 ) {
 			$year   = (int) wp_date( 'Y', $time ) + 543;
 			$bits[] = sprintf(
-				/* translators: %1\$s วันและเดือนแบบย่อ · %2\$s ปี พ.ศ. */
-				__( 'อัปเดต %1\$s %2\$s', 'ea2000' ),
+				/* translators: %1$s วันและเดือนแบบย่อ · %2$s ปี พ.ศ. */
+				__( 'อัปเดต %1$s %2$s', 'ea2000' ),
 				wp_date( 'j M', $time ),
 				(string) $year
 			);
