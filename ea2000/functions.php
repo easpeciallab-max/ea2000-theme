@@ -409,6 +409,10 @@ function ea2000_defaults() {
 		'links_line_label' => 'ทัก LINE ปรึกษาทีมงาน',
 		'links_openchat_label' => 'เข้ากลุ่ม EA2000 OpenChat',
 		'links_openchat_url'   => '',
+		'links_fast_name'      => 'EA2000', // ชื่อรุ่นที่แสดงใต้ภาพการ์ดดาวน์โหลด
+		'links_fast_version'   => '', // ป้ายเวอร์ชันมุมขวาบนของภาพ · เว้นว่าง = ไม่แสดงป้าย
+		'links_fast_meta'      => '', // ข้อมูลไฟล์ใต้ชื่อรุ่น · เว้นว่าง = อ่านชนิด ขนาด และวันที่จากไฟล์เอง
+		'links_fast_btn'       => 'ดาวน์โหลดไฟล์', // ป้ายปุ่มบนการ์ด
 		'links_fast_enabled' => true,
 		'links_fast_img'     => $img_assets . 'card-download.webp',
 		'links_fast_url'     => '',
@@ -1588,6 +1592,51 @@ function ea2000_social_row( $class = 'social-row' ) {
  * ใช้ 700 ตัวอักษรต่อนาที ซึ่งช้ากว่าคนอ่านคล่องเล็กน้อยเพราะบทความ
  * มีศัพท์โปรแกรมและตาราง ปัดขึ้นเสมอ ต่ำสุด 1 นาที
  * -------------------------------------------------------------- */
+/**
+ * ข้อมูลไฟล์สำหรับการ์ดดาวน์โหลด เช่น ".zip · 253 KB · อัปเดต 19 พ.ย. 2569"
+ *
+ * อ่านจากไฟล์ในคลังสื่อเองเมื่อ setting เว้นว่าง จะได้ไม่ต้องตามแก้ทุกครั้งที่อัปไฟล์ใหม่
+ * ไฟล์ที่ไม่ได้อยู่ในคลังสื่อจะได้เฉพาะนามสกุล
+ *
+ * @param string $url ลิงก์ไฟล์.
+ * @return string ข้อความข้อมูลไฟล์ · ว่างเมื่ออ่านอะไรไม่ได้เลย.
+ */
+function ea2000_download_meta( $url ) {
+	$url = trim( (string) $url );
+	if ( '' === $url ) {
+		return '';
+	}
+
+	$bits = array();
+
+	$path = wp_parse_url( $url, PHP_URL_PATH );
+	$ext  = strtolower( (string) pathinfo( (string) $path, PATHINFO_EXTENSION ) );
+	if ( '' !== $ext ) {
+		$bits[] = '.' . $ext;
+	}
+
+	$id   = attachment_url_to_postid( $url );
+	$file = $id ? get_attached_file( $id ) : '';
+	if ( $file && file_exists( $file ) ) {
+		$size = (int) filesize( $file );
+		if ( $size > 0 ) {
+			$bits[] = size_format( $size, $size >= MB_IN_BYTES ? 1 : 0 );
+		}
+		$time = (int) filemtime( $file );
+		if ( $time > 0 ) {
+			$year   = (int) wp_date( 'Y', $time ) + 543;
+			$bits[] = sprintf(
+				/* translators: %1\$s วันและเดือนแบบย่อ · %2\$s ปี พ.ศ. */
+				__( 'อัปเดต %1\$s %2\$s', 'ea2000' ),
+				wp_date( 'j M', $time ),
+				(string) $year
+			);
+		}
+	}
+
+	return implode( ' · ', $bits );
+}
+
 function ea2000_reading_time( $post_id = 0 ) {
 	$post_id = $post_id ? $post_id : get_the_ID();
 	$text    = wp_strip_all_tags( (string) get_post_field( 'post_content', $post_id ) );

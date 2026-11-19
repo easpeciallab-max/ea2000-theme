@@ -4,7 +4,7 @@ Theme URI: https://ea2000.co/
 Author: EA2000
 Author URI: https://ea2000.co/
 Description: ธีม Landing Page ภาษาไทยสำหรับ EA2000 · Expert Advisor สำหรับ MetaTrader 5 โทนมืด พื้นดำ เขียวมะนาว ผิวแผ่นทึบ มุมแหลม เส้นคม ปรับแต่งข้อความ รูปภาพ ราคา และเปิด·ปิดทุก section ได้ผ่านหน้า "ปรับแต่ง" (Customizer) โดยไม่ต้องแก้โค้ด
-Version: 4.31.0
+Version: 4.32.0
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
@@ -13029,4 +13029,130 @@ h6 {
 .key.key-line {
 	padding-top: 14px !important;
 	padding-bottom: 14px !important;
+}
+
+/* ============================================================
+   70) การ์ดรุ่นที่ดาวน์โหลดได้บนหน้า /go/ (19 พ.ย. 2569)
+
+   เจ้าของขอป้ายดาวน์โหลดกับป้ายเวอร์ชัน และบอกว่าอนาคตจะมี EA หลายรุ่นแน่
+   จึงวางเป็นการ์ดที่อ่านเป็นชุดเดียวกันได้เมื่อเรียงหลายใบ
+
+   ป้ายเวอร์ชันลอยมุมขวาบนของภาพ เพราะเมื่อวางหลายใบ ตาจะกวาดหาเวอร์ชัน
+   ได้จากตำแหน่งเดียวกันทุกใบ และไม่ไปกินพื้นที่ของข้อความ
+   ชื่อรุ่นกับข้อมูลไฟล์เป็นข้อความจริงใต้ภาพ ไม่ฝังในรูป จะได้แก้ได้โดยไม่ต้องทำรูปใหม่
+   ปุ่มอยู่ขวาล่าง ตำแหน่งเดียวกับปุ่มอื่นทั้งเว็บ
+
+   ลบทั้งบล็อกแล้วการ์ดกลับไปเป็นภาพเปล่าแบบเดิม
+   ============================================================ */
+
+.lh-releases {
+	display: grid;
+	gap: 14px;
+	margin: 2px 0 13px;
+}
+
+.lh-rel {
+	border: 1px solid var(--line);
+	background: var(--surface-2);
+}
+
+.lh-rel-media {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	border-bottom: 1px solid var(--line);
+}
+
+.lh-rel-media img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+.lh-rel-ver {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	display: inline-block;
+	padding: 5px 11px;
+	border: 1px solid var(--lime);
+	background: rgba(7, 7, 7, 0.82);
+	color: var(--lime);
+	font-family: var(--font-display);
+	font-size: 0.74rem;
+	font-weight: 700;
+	letter-spacing: 0.08em;
+	line-height: 1.35;
+}
+
+.lh-rel-foot {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 14px 16px;
+}
+
+.lh-rel-text {
+	min-width: 0;
+}
+
+.lh-rel-name {
+	margin: 0;
+	font-family: var(--font-display);
+	font-size: 0.95rem;
+	font-weight: 700;
+	line-height: 1.38;
+	color: var(--text);
+}
+
+.lh-rel-meta {
+	margin: 4px 0 0;
+	font-size: 0.78rem;
+	line-height: 1.45;
+	color: var(--muted);
+}
+
+.lh-rel-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 9px;
+	flex: none;
+	min-height: 46px;
+	padding: 11px 18px;
+	border: 1px solid var(--lime);
+	background: var(--lime);
+	color: #07140A;
+	font-family: var(--font-display);
+	font-size: 0.86rem;
+	font-weight: 700;
+	line-height: 1.35;
+	text-decoration: none;
+	transition: background 0.16s ease, color 0.16s ease;
+}
+
+.lh-rel-btn .lh-rel-ic {
+	flex: none;
+	width: 17px;
+	height: 17px;
+	color: currentColor;
+}
+
+.lh-rel-btn:hover,
+.lh-rel-btn:focus-visible {
+	background: transparent;
+	color: var(--lime);
+}
+
+/* จอแคบ · ปุ่มกินเต็มแถวจะกดง่ายกว่าบีบอยู่ข้างข้อความ */
+@media (max-width: 420px) {
+	.lh-rel-foot {
+		align-items: stretch;
+	}
+
+	.lh-rel-btn {
+		width: 100%;
+	}
 }

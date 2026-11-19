@@ -197,10 +197,46 @@ if ( ea2000_mod( 'links_fast_enabled' ) && '' !== $lh_fast_img && $lh_has_url( $
 	$lh_fast_href    = ea2000_link_url( $lh_fast_url );
 	$lh_fast_is_file = (bool) preg_match( '/\.(zip|ex5|set|pdf)([?#]|$)/i', $lh_fast_href );
 	?>
-	<div class="lh-feature lh-feature-fast">
-		<a class="lh-feature-frame" href="<?php echo esc_url( $lh_fast_href ); ?>"<?php echo $lh_fast_is_file ? ' download' : ''; ?>>
-			<img src="<?php echo esc_url( $lh_fast_img ); ?>" alt="<?php echo esc_attr( $lh_mod( 'links_fast_alt' ) ); ?>" width="1200" height="630" loading="lazy">
-		</a>
+	<?php
+	/* การ์ดรุ่นที่ดาวน์โหลดได้ · ทำเป็นลูปไว้ เพิ่มรุ่นที่สองทีหลังได้โดยไม่ต้องแก้มาร์กอัป */
+	$lh_releases = array(
+		array(
+			'img'     => $lh_fast_img,
+			'alt'     => $lh_mod( 'links_fast_alt' ),
+			'href'    => $lh_fast_href,
+			'file'    => $lh_fast_is_file,
+			'name'    => $lh_mod( 'links_fast_name' ),
+			'version' => $lh_mod( 'links_fast_version' ),
+			'meta'    => '' !== trim( (string) $lh_mod( 'links_fast_meta' ) ) ? $lh_mod( 'links_fast_meta' ) : ea2000_download_meta( $lh_fast_href ),
+			'btn'     => $lh_mod( 'links_fast_btn' ),
+		),
+	);
+	?>
+	<div class="lh-releases">
+	<?php foreach ( $lh_releases as $lh_rel ) : ?>
+		<article class="lh-rel">
+			<a class="lh-rel-media" href="<?php echo esc_url( $lh_rel['href'] ); ?>"<?php echo $lh_rel['file'] ? ' download' : ''; ?> tabindex="-1" aria-hidden="true">
+				<img src="<?php echo esc_url( $lh_rel['img'] ); ?>" alt="<?php echo esc_attr( $lh_rel['alt'] ); ?>" width="1200" height="630" loading="lazy">
+				<?php if ( '' !== trim( (string) $lh_rel['version'] ) ) : ?>
+					<span class="lh-rel-ver keep-case"><?php echo esc_html( $lh_rel['version'] ); ?></span>
+				<?php endif; ?>
+			</a>
+			<div class="lh-rel-foot">
+				<div class="lh-rel-text">
+					<?php if ( '' !== trim( (string) $lh_rel['name'] ) ) : ?>
+						<p class="lh-rel-name"><?php echo ea2000_text( $lh_rel['name'] ); ?></p>
+					<?php endif; ?>
+					<?php if ( '' !== trim( (string) $lh_rel['meta'] ) ) : ?>
+						<p class="lh-rel-meta keep-case"><?php echo esc_html( $lh_rel['meta'] ); ?></p>
+					<?php endif; ?>
+				</div>
+				<a class="lh-rel-btn" href="<?php echo esc_url( $lh_rel['href'] ); ?>"<?php echo $lh_rel['file'] ? ' download' : ''; ?>>
+					<?php echo ea2000_icon( 'download', 'icon icon-sm lh-rel-ic' ); ?>
+					<span><?php echo ea2000_text( $lh_rel['btn'] ); ?></span>
+				</a>
+			</div>
+		</article>
+	<?php endforeach; ?>
 	</div>
 	<?php
 else :
