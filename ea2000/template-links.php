@@ -191,26 +191,30 @@ $lh_steps[] = array( 'key' => 'deposit', 'n' => 3, 'body' => ob_get_clean() );
 
 // ขั้นตอน: รับไฟล์ EA.
 ob_start();
-$lh_fast_img = $lh_mod( 'links_fast_img' );
-$lh_fast_url = $lh_mod( 'links_fast_url' );
-if ( ea2000_mod( 'links_fast_enabled' ) && '' !== $lh_fast_img && $lh_has_url( $lh_fast_url ) ) :
-	$lh_fast_href    = ea2000_link_url( $lh_fast_url );
-	$lh_fast_is_file = (bool) preg_match( '/\.(zip|ex5|set|pdf)([?#]|$)/i', $lh_fast_href );
-	?>
-	<?php
-	/* การ์ดรุ่นที่ดาวน์โหลดได้ · ทำเป็นลูปไว้ เพิ่มรุ่นที่สองทีหลังได้โดยไม่ต้องแก้มาร์กอัป */
-	$lh_releases = array(
-		array(
-			'img'     => $lh_fast_img,
-			'alt'     => $lh_mod( 'links_fast_alt' ),
-			'href'    => $lh_fast_href,
-			'file'    => $lh_fast_is_file,
-			'name'    => $lh_mod( 'links_fast_name' ),
-			'version' => $lh_mod( 'links_fast_version' ),
-			'meta'    => '' !== trim( (string) $lh_mod( 'links_fast_meta' ) ) ? $lh_mod( 'links_fast_meta' ) : ea2000_download_meta( $lh_fast_href ),
-			'btn'     => $lh_mod( 'links_fast_btn' ),
-		),
+/* การ์ดรุ่นที่ดาวน์โหลดได้ · ช่องที่ 1 ไม่มีเลขต่อท้าย ช่องถัดไปเป็น 2, 3, ...
+   เพิ่มรุ่นใหม่ = เพิ่มเลขในอาร์เรย์นี้แล้วเพิ่มชุดค่าตั้ง ไม่ต้องแก้มาร์กอัป */
+$lh_releases = array();
+foreach ( array( '', '2' ) as $lh_slot ) {
+	$lh_k   = 'links_fast' . $lh_slot;
+	$lh_img = trim( (string) $lh_mod( $lh_k . '_img' ) );
+	$lh_url = trim( (string) $lh_mod( $lh_k . '_url' ) );
+	if ( ! ea2000_mod( $lh_k . '_enabled' ) || '' === $lh_img || ! $lh_has_url( $lh_url ) ) {
+		continue;
+	}
+	$lh_href = ea2000_link_url( $lh_url );
+	$lh_meta = trim( (string) $lh_mod( $lh_k . '_meta' ) );
+	$lh_releases[] = array(
+		'img'     => $lh_img,
+		'alt'     => $lh_mod( $lh_k . '_alt' ),
+		'href'    => $lh_href,
+		'file'    => (bool) preg_match( '/\.(zip|ex5|set|pdf)([?#]|$)/i', $lh_href ),
+		'name'    => $lh_mod( $lh_k . '_name' ),
+		'version' => $lh_mod( $lh_k . '_version' ),
+		'meta'    => '' !== $lh_meta ? $lh_meta : ea2000_download_meta( $lh_href ),
+		'btn'     => $lh_mod( $lh_k . '_btn' ),
 	);
+}
+if ( ! empty( $lh_releases ) ) :
 	?>
 	<div class="lh-releases">
 	<?php foreach ( $lh_releases as $lh_rel ) : ?>
