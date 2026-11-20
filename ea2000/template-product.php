@@ -99,7 +99,7 @@ for ( $ea2000_i = 1; $ea2000_i <= 3; $ea2000_i++ ) {
 		</div>
 		<?php endif; ?>
 
-		<?php ea2000_page_sections( 'proddoc', 4 ); ?>
+		<?php ea2000_page_sections( 'proddoc', 6 ); ?>
 
 		<?php if ( '' !== trim( (string) ea2000_mod( 'prod_limit_text' ) ) ) : ?>
 		<aside class="prod-limit">

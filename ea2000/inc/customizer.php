@@ -815,7 +815,7 @@ function ea2000_customize_register( $wp_customize ) {
 			'ea2000_install'       => array( 'installdoc', 8 ),
 			'ea2000_riskpage'      => array( 'riskdoc', 6 ),
 			'ea2000_links'         => array( 'linksdoc', 4 ),
-			'ea2000_product'       => array( 'proddoc', 4 ),
+			'ea2000_product'       => array( 'proddoc', 6 ),
 		);
 		foreach ( $ea2000_docs as $ea2000_sec => $ea2000_doc ) {
 			if ( isset( $sections[ $ea2000_sec ] ) ) {
