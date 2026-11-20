@@ -69,7 +69,7 @@ $ea2000_has_line = '' !== $ea2000_line_url && '#' !== $ea2000_line_url;
 	</div>
 </section>
 
-<?php ea2000_page_sections( 'backtest', 6 ); ?>
+<?php ea2000_page_sections( 'backtest', 8 ); ?>
 
 <?php if ( $ea2000_has_line ) : ?>
 	<?php ea2000_line_cta( ea2000_mod( 'backtest_cta_title' ), ea2000_mod( 'backtest_cta_text' ) ); ?>

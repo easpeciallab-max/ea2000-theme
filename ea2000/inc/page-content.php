@@ -378,6 +378,12 @@ function ea2000_page_content_defaults() {
 	$d['proddoc_sec4_title'] = 'มีผลทดสอบให้ดูไหม';
 	$d['proddoc_sec4_text']  = "ตอนนี้ยังไม่มีรายงาน Backtest และยังไม่มีบัญชี Forward Test ที่เปิดให้ตรวจสอบต่อสาธารณะ เราจึงไม่แสดงตัวเลขผลตอบแทนใด ๆ บนเว็บ\n\nสิ่งที่ทำได้ตอนนี้คือทดสอบด้วยตัวคุณเอง หน้า[Backtest](/backtest/)สอนใช้ Strategy Tester ใน MT5 ทีละขั้น และหน้า[Forward Test](/forward-test/)อธิบายวิธีอ่านผลจากบัญชีเดโมหรือบัญชีทุนน้อย เมื่อมีรายงานที่ตรวจสอบได้ เราจะเผยแพร่พร้อมลิงก์ให้ตรวจเอง";
 
+	/* ช่องว่างของหน้า Backtest สองหัวข้อ เผื่อรายงานของ EA รุ่นถัดไป */
+	$d['backtest_sec7_title'] = '';
+	$d['backtest_sec7_text']  = '';
+	$d['backtest_sec8_title'] = '';
+	$d['backtest_sec8_text']  = '';
+
 	/* ช่องว่างไว้สองหัวข้อ เนื้อหาจริงตั้งผ่าน Customizer หรือ ea2000/v1/mods */
 	$d['proddoc_sec5_title'] = '';
 	$d['proddoc_sec5_text']  = '';

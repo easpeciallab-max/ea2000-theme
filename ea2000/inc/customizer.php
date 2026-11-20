@@ -809,7 +809,7 @@ function ea2000_customize_register( $wp_customize ) {
 	/* เนื้อหาหัวข้อของหน้าย่อย (inc/page-content.php) */
 	if ( function_exists( 'ea2000_page_section_fields' ) ) {
 		$ea2000_docs = array(
-			'ea2000_backtest'      => array( 'backtest', 6 ),
+			'ea2000_backtest'      => array( 'backtest', 8 ),
 			'ea2000_forward'       => array( 'forward', 6 ),
 			'ea2000_pricing_extra' => array( 'pricingdoc', 5 ),
 			'ea2000_install'       => array( 'installdoc', 8 ),
